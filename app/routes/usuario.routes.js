@@ -7,7 +7,7 @@ module.exports = app => {
     router.post("/", usuario.create);
   
     // Retrieve all published usuario
-    router.get("/findAll", usuario.findAll);
+    //router.get("/findAll", usuario.findAll);
       
     // Buscar un usario
     router.get("/findUser", usuario.find);
@@ -16,7 +16,7 @@ module.exports = app => {
     router.delete("/dropUser", usuario.delete);
   
     // Eliminar todos usuario
-    router.delete("/dropAll", usuario.deleteAll);
+    //router.delete("/dropAll", usuario.deleteAll);
 
     // Update a usuario with id
     router.put("/updateUser", usuario.update);
