@@ -12,7 +12,8 @@ exports.create = (req, res) => {
       copas: 0,
     };
     // Guarda al usuario en la base de datos
-    Usuario.create(usuario)
+    res.send("Usario creado")
+    /*Usuario.create(usuario)
       .then(data => {
         res.send(data);
       })
@@ -22,6 +23,7 @@ exports.create = (req, res) => {
             err.message || "Error creando usuario"
         });
       });
+      */
   };
 
 // Devuelve todos los usuarios de la base de datos 
