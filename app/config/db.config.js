@@ -8,8 +8,8 @@
 module.exports = {
     HOST: "localhost",
     USER: "las10ultimas",
-    PASSWORD: "XrPl0cat1on_",
-    DB: "las10ultimas",
-    SCHEMA: "las10ultimas_main_schema",
+    PASSWORD: "roberta_williams63",
+    DB: "las10ultimas_db",
+    SCHEMA: "public",
     dialect: "postgres",
 };
