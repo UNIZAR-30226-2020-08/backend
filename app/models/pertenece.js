@@ -1,45 +1,55 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('usuario', {
-    'username': {
+  return sequelize.define('pertenece', {
+    'jugador': {
       type: DataTypes.STRING,
       allowNull: false,
       comment: "null",
       primaryKey: true
     },
-    'password': {
+    'partida': {
       type: DataTypes.STRING,
       allowNull: false,
-      comment: "null"
+      comment: "null",
+      primaryKey: true
     },
-    'email': {
-      type: DataTypes.STRING,
-      allowNull: false,
-      comment: "null"
-    },
-    'copas': {
+    'equipo': {
       type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: '0',
       comment: "null"
     },
-    'f_perfil': {
+    'c1': {
       type: DataTypes.STRING,
       allowNull: true,
       comment: "null"
     },
-    'f_tapete': {
+    'c2': {
       type: DataTypes.STRING,
       allowNull: true,
       comment: "null"
     },
-    'f_carta': {
+    'c3': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
+    },
+    'c4': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
+    },
+    'c5': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
+    },
+    'c6': {
       type: DataTypes.STRING,
       allowNull: true,
       comment: "null"
     }
   }, {
-    tableName: 'usuario'
+    tableName: 'pertenece'
   });
 };
