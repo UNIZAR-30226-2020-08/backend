@@ -7,6 +7,7 @@
 
 module.exports = {
     HOST: "localhost",
+    PORT: "2002",
     USER: "las10ultimas",
     PASSWORD: "roberta_williams63",
     DB: "las10ultimas_db",
