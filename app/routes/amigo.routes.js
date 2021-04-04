@@ -18,7 +18,7 @@ module.exports = app => {
     // Eliminar todos amigo
     //router.delete("/dropAll", amigo.deleteAll);
 
-    // Update a amigo with id     
+    // Update a amigo with id el que sea 
     router.put("/updateFriend", amigo.update);
   
     app.use('/api/amigo', router);
