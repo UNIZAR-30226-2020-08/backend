@@ -10,7 +10,7 @@ exports.create = (req, res) => {
       amigo: req.body.amigo,
     };
     // Guarda al usuario en la base de datos
-    res.send("Amigo creado")
+    res.send("Amigo creado, ", amigo)
     /*Usuario.create(usuario)
       .then(data => {
         res.send(data);
