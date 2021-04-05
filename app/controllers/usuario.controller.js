@@ -12,7 +12,7 @@ exports.create = (req, res) => {
       copas: 0,
     };
     // Guarda al usuario en la base de datos
-    res.send("Usario creado")
+    res.send({message : "Usario creado", usuario});
     /*Usuario.create(usuario)
       .then(data => {
         res.send(data);
@@ -29,6 +29,8 @@ exports.create = (req, res) => {
 // Devuelve todos los usuarios de la base de datos 
 exports.findAll = (req, res) => {
     const nombre_usuario = req.query.usuario;
+    res.send({message : "Se ha encontrado al usuario", nombre_usuario});
+    /*
     var condition = nombre_usuario ? { nombre_usuario: { [Op.iLike]: `%${nombre_usuario}%` } } : null;
   
     Usuario.findAll({ where: condition })
@@ -41,12 +43,14 @@ exports.findAll = (req, res) => {
             err.message || "Error recuperando usuarios."
         });
       });
+    */
   };
 
 // Busca a un usuario
 exports.find = (req, res) => {
     const nombre_usuario = req.params.usuario;
-
+    res.send({message : "Se ha encontrado al usuario ", nombre_usuario});
+    /*
     Usuario.findByPk(nombre_usuario)
     .then(data => {
         res.send(data);
@@ -57,12 +61,14 @@ exports.find = (req, res) => {
                 err.message || "Error recuperando usuario con id: " + nombre_usuario
         });
     });
+    */
   };
 
 // Actualiza un usuario
 exports.update = (req, res) => {
     const nombre_usuario = req.params.usuario;
-
+    res.send({message : "Se ha actualizado al usuario ", nombre_usuario});
+    /*
     Usuario.update(req.body, {
         where: { nombre_usuario: nombre_usuario }
     })
@@ -83,12 +89,14 @@ exports.update = (req, res) => {
                 err.message || "Error actualizando usuario con id: " + nombre_usuario
         });
     });
+    */
 };
 
 // Elimina un usuario
 exports.delete = (req, res) => {
     const nombre_usuario = req.params.usuario;
-
+    res.send({message : "Se ha eliminado al usuario ", nombre_usuario});
+    /*
     Usuario.destroy({
       where: { nombre_usuario: nombre_usuario }
     })
@@ -109,11 +117,14 @@ exports.delete = (req, res) => {
                 err.message || "Error eliminando el usuario con id: " + nombre_usuario
         });
     });
+  */
 };
 
 // Elimina todos usuario
 exports.deleteAll = (req, res) => {
-    Tutorial.destroy({
+  res.send({message : "Se han eliminado todos los usuarios"});
+  /*  
+  Usuario.destroy({
       where: {},
       truncate: false
     })
@@ -126,4 +137,5 @@ exports.deleteAll = (req, res) => {
             err.message || "Error eliminando usuarios."
         });
       });
+      */
   };
