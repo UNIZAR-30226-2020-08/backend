@@ -7,7 +7,7 @@ exports.create = (req, res) => {
     // Crea un usario
     const usuario = {
       usuario: req.body.usuario,
-      contrasenya: req.body.contrasenya,
+      password: req.body.password,
       mail: req.body.mail,
       copas: 0,
     };
