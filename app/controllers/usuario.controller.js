@@ -6,14 +6,13 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
     // Crea un usario
     const usuario = {
-      usuario: req.body.usuario,
+      username: req.body.username,
       password: req.body.password,
-      mail: req.body.mail,
+      email: req.body.email,
       copas: 0,
     };
     // Guarda al usuario en la base de datos
-    res.send({message : "Usario creado", usuario});
-    /*Usuario.create(usuario)
+    Usuario.create(usuario)
       .then(data => {
         res.send(data);
       })
@@ -23,15 +22,12 @@ exports.create = (req, res) => {
             err.message || "Error creando usuario"
         });
       });
-      */
   };
 
 // Devuelve todos los usuarios de la base de datos 
 exports.findAll = (req, res) => {
-    const nombre_usuario = req.query.usuario;
-    res.send({message : "Se ha encontrado al usuario", nombre_usuario});
-    /*
-    var condition = nombre_usuario ? { nombre_usuario: { [Op.iLike]: `%${nombre_usuario}%` } } : null;
+    const n_usuario = req.query.username;;
+    var condition = n_usuario ? { n_usuario: { [Op.iLike]: `%${n_usuario}%` } } : null;
   
     Usuario.findAll({ where: condition })
       .then(data => {
@@ -43,15 +39,14 @@ exports.findAll = (req, res) => {
             err.message || "Error recuperando usuarios."
         });
       });
-    */
+
   };
 
 // Busca a un usuario
 exports.find = (req, res) => {
-    const nombre_usuario = req.params.usuario;
-    res.send({message : "Se ha encontrado al usuario ", nombre_usuario});
-    /*
-    Usuario.findByPk(nombre_usuario)
+    const n_usuario = req.params.username;
+
+    Usuario.findByPk(n_usuario)
     .then(data => {
         res.send(data);
     })
@@ -61,7 +56,6 @@ exports.find = (req, res) => {
                 err.message || "Error recuperando usuario con id: " + nombre_usuario
         });
     });
-    */
   };
 
 // Actualiza un usuario
@@ -94,11 +88,10 @@ exports.update = (req, res) => {
 
 // Elimina un usuario
 exports.delete = (req, res) => {
-    const nombre_usuario = req.params.usuario;
-    res.send({message : "Se ha eliminado al usuario ", nombre_usuario});
-    /*
+    const n_usuario = req.params.username;
+
     Usuario.destroy({
-      where: { nombre_usuario: nombre_usuario }
+      where: { n_usuario: n_usuario }
     })
     .then(num => {
         if (num == 1) {
@@ -107,23 +100,21 @@ exports.delete = (req, res) => {
             });
         } else {
             res.send({
-                status:  `No se puede eliminar el usuario con id: ${nombre_usuario}.`
+                status:  `No se puede eliminar el usuario con id: ${n_usuario}.`
             });
         }
     })
     .catch(err => {
         res.status(500).send({
             message: 
-                err.message || "Error eliminando el usuario con id: " + nombre_usuario
+                err.message || "Error eliminando el usuario con id: " + n_usuario
         });
     });
-  */
 };
 
 // Elimina todos usuario
 exports.deleteAll = (req, res) => {
   res.send({message : "Se han eliminado todos los usuarios"});
-  /*  
   Usuario.destroy({
       where: {},
       truncate: false
@@ -137,5 +128,4 @@ exports.deleteAll = (req, res) => {
             err.message || "Error eliminando usuarios."
         });
       });
-      */
   };
