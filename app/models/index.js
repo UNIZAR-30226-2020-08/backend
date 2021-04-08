@@ -15,7 +15,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.amigo = require("./amigo.js")(sequelize, Sequelize);
-db.amigo = require("./carta_disponible.js")(sequelize, Sequelize);
+db.carta_disponible = require("./carta_disponible.js")(sequelize, Sequelize);
 db.carta = require("./carta.js")(sequelize, Sequelize);
 db.chat = require("./chat.js")(sequelize, Sequelize);
 db.customizable = require("./customizable.js")(sequelize, Sequelize);
