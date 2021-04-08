@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 
 // Devuelve todos los usuarios de la base de datos 
 exports.findAll = (req, res) => {
-    const n_usuario = req.query.username;;
+    const n_usuario = req.query.username;
     var condition = n_usuario ? { n_usuario: { [Op.iLike]: `%${n_usuario}%` } } : null;
   
     Usuario.findAll({ where: condition })
@@ -47,11 +47,11 @@ exports.findAll = (req, res) => {
 
 // Busca a un usuario
 exports.find = (req, res) => {
-    const n_usuario = req.params.username;
+    const n_usuario = req.body.username;
 
     Usuario.findByPk(n_usuario)
     .then(data => {
-        res.send(data);
+        res.send({message:'parece que va bien',data});
     })
     .catch(err => {
         res.status(500).send({
