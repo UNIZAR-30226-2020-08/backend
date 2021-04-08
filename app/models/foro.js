@@ -13,6 +13,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       comment: "null",
       primaryKey: true
+    },
+    'jugador': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'foro'

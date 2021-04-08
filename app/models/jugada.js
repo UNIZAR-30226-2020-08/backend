@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('juega', {
+  return sequelize.define('jugada', {
     'jugador': {
       type: DataTypes.STRING,
       allowNull: false,
@@ -26,6 +26,6 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     }
   }, {
-    tableName: 'juega'
+    tableName: 'jugada'
   });
 };

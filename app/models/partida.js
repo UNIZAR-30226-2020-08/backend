@@ -8,6 +8,11 @@ module.exports = function(sequelize, DataTypes) {
       comment: "null",
       primaryKey: true
     },
+    'triunfo': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
+    },
     'estado': {
       type: DataTypes.INTEGER,
       allowNull: true,

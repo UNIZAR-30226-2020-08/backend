@@ -1,20 +1,20 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('participantes_torneo', {
-    'torneo': {
+  return sequelize.define('carta_disponible', {
+    'partida': {
       type: DataTypes.STRING,
       allowNull: false,
       comment: "null",
       primaryKey: true
     },
-    'jugador': {
+    'carta': {
       type: DataTypes.STRING,
       allowNull: false,
       comment: "null",
       primaryKey: true
     }
   }, {
-    tableName: 'participantes_torneo'
+    tableName: 'carta_disponible'
   });
 };

@@ -9,12 +9,12 @@ module.exports = function(sequelize, DataTypes) {
       comment: "null",
       primaryKey: true
     },
-    'mensaje': {
+    'usuario': {
       type: DataTypes.STRING,
       allowNull: true,
       comment: "null"
     },
-    'usuario': {
+    'mensaje': {
       type: DataTypes.STRING,
       allowNull: true,
       comment: "null"

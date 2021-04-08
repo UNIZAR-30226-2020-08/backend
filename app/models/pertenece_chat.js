@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('pertence_chat', {
+  return sequelize.define('pertenece_chat', {
     'usuario': {
       type: DataTypes.STRING,
       allowNull: false,
@@ -15,6 +15,6 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     }
   }, {
-    tableName: 'pertence_chat'
+    tableName: 'pertenece_chat'
   });
 };
