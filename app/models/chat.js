@@ -20,6 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       comment: "null"
     }
   }, {
-    tableName: 'chat'
+    tableName: 'chat',
+    timestamps: false
   });
 };
