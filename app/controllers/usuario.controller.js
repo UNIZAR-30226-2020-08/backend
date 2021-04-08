@@ -10,6 +10,9 @@ exports.create = (req, res) => {
       password: req.body.password,
       email: req.body.email,
       copas: 0,
+      f_perfil: req.body.f_perfil ? req.body.f_perfil: 'p_default',
+      f_tapete: req.body.f_tapete ? req.body.f_tapete: 't_default',
+      f_carta: req.body.f_carta ? req.body.f_carta: 'c_default',
     };
     // Guarda al usuario en la base de datos
     Usuario.create(usuario)
