@@ -1,5 +1,5 @@
 const db = require("../models");
-const PertenceChat = db.pertence_chat;
+const PerteneceChat = db.pertenece_chat;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
