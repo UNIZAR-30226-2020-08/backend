@@ -123,10 +123,20 @@ exports.delete = (req, res) => {
 // Elimina todos amigos de un usuario
 exports.deleteAll = (req, res) => {
     const usuario = req.body.usuario;
-    Amigo.findByPk(usuario)
-    .then(friends => {
-      console.log(friends);
-      res.send(friends);
+    const user = {
+      usuario: req.body.usuario
+    };
+    Amigo.findAll(user)
+    .then(data => {
+      var friends = [];
+        i = 0;
+        for (a of data)
+        {
+          //console.log(a.dataValues);
+          friends[i] = a.dataValues.amigo;
+          i++;
+        }
+        res.send(friends);
     })
     /*Amigo.destroy({
       where: {usuario: usuario},

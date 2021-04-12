@@ -7,7 +7,16 @@ exports.create = (req, res) => {
       carta: req.body.carta,
       puntuacion: req.body.puntuacion,
     };
-    res.send({message : "Usario creado", carta});
+    Carta.create(carta)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error creando carta"
+        });
+      });
   };
  
 exports.findAll = (req, res) => {
