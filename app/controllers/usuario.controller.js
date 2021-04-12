@@ -9,7 +9,7 @@ exports.create = (req, res) => {
       username: req.body.username,
       password: req.body.password,
       email: req.body.email,
-      copas: 0,
+      copas: req.body.copas ? req.body.copas: 0,
       f_perfil: req.body.f_perfil ? req.body.f_perfil: 'p_default',
       f_tapete: req.body.f_tapete ? req.body.f_tapete: 't_default',
       f_carta: req.body.f_carta ? req.body.f_carta: 'c_default',
@@ -91,10 +91,10 @@ exports.update = (req, res) => {
 
 // Elimina un usuario
 exports.delete = (req, res) => {
-    const n_usuario = req.params.username;
+    const n_usuario = req.body.username;
 
     Usuario.destroy({
-      where: { n_usuario: n_usuario }
+      where: { username: n_usuario }
     })
     .then(num => {
         if (num == 1) {
