@@ -3,35 +3,125 @@ const Jugada = db.jugada;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-    const juega = {
+    const jugada = {
       jugador: req.body.jugador,
       nronda: req.body.nronda,
       partida: req.body.partida,
       carta: req.body.carta,
     };
-    res.send({message : "Juega creado", juega});
+    Jugada.create(jugada)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error guardando juagda"
+        });
+      });
   };
 
 exports.findAll = (req, res) => {
-    const juega = req.body.juega;
-    res.send({message : "Se ha encontrado juega", juega});
+    const partida = req.body.partida;
+    var condition = partida ? { partida: { [Op.iLike]: `%${partida}%` } } : null;
+  
+    Jugada.findAll({ where: condition })
+      .then(data => {
+        if (data === null){
+          res.send({message: 'No hay jugadas en esta partida'});
+        }else{
+          res.send(data);
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || `Error recuperando jugadas de la partida %${partida}%.`
+        });
+      });
   };
-
+//No va PERO DEVUELVE LA BAZA DE LA RONDA QUE SE LE PASA POR PARAMETRO
 exports.find = (req, res) => {
-    const juega = req.body.juega;
-    res.send({message : "Se ha encontrado juega ", juega});
+    const partida = req.body.partida;
+    const nronda = req.body.nronda;
+    var condition = partida ? { nronda: { [Op.eq]: `%${nronda}%`}, partida: { [Op.eq]: `%${partida}%`} } : null;
+    Jugada.findAll({ where: condition })
+    .then(data => {
+        res.send({data});
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: 
+                err.message || "Error recuperando usuario con id: " + username
+        });
+    });
   };
 
 exports.update = (req, res) => {
-    const juega = req.body.foto_perfil;
-    res.send({message : "Se ha actualizado juega ", juega});
+    const jugador = req.body.jugador;
+    const partida = req.body.partida;
+    const nronda = req.body.nronda;
+    Jugada.update(req.body, {
+      where: { jugador: jugador, partida: partida, nronda: nronda }
+  })
+  .then(num => {
+      if (num == 1) {
+          res.send({
+              message: "jugada actualizada."
+          });
+      } else {
+          res.send({
+              message: `No se puede actualizar la juagda.`
+          });
+      }
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error actualizando la jugada"
+      });
+  });
 };
 
 exports.delete = (req, res) => {
-    const juega = req.body.juega;
-    res.send({message : "Se ha eliminado juega ", juega});
+  const jugador = req.body.jugador;
+  const partida = req.body.partida;
+  const nronda = req.body.nronda;
+    Jugada.destroy({
+      where: { jugador: jugador, partida: partida, nronda: nronda }
+    })
+    .then(num => {
+        if (num == 1) {
+            res.send({
+                status: "Eliminada"
+            });
+        } else {
+            res.send({
+                status:  `No se puede eliminar la juagda.`
+            });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: 
+                err.message || "Error eliminando la juagda"
+        });
+    });
 };
 
 exports.deleteAll = (req, res) => {
-  res.send({message : "Se han eliminado todas las juega"});
+  const partida = req.body.partida;
+  Jugada.destroy({
+    where: {partida: partida},
+    truncate: false
+  })
+    .then(nums => {
+      res.send({ message: `${nums} jugadas eliminadas.` });
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || `Error eliminando jugadas de la partida %${partida}%.`
+      });
+    });
   };
