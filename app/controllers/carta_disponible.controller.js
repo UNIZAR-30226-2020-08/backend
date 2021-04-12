@@ -7,12 +7,33 @@ exports.create = (req, res) => {
       partida: req.body.partida,
       carta: req.body.carta
     };
-    res.send({message : "pertenece creada", pertenece});
+    CartaDisponible.create(pertenece)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error creando carta_disponible"
+        });
+      });
   };
 
 exports.findAll = (req, res) => {
-    const pertenece = req.body.partida;
-    res.send({message : "Se ha encontrado una pertenece", pertenece});
+    const partida = req.body.partida;
+    const carta = req.body.carta;
+    var condition = carta ? { partida: { [Op.iLike]: `%${partida}%` } } : null;
+  
+    Usuario.findAll({ where: condition })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error recuperando usuarios."
+        });
+      });
   };
 
 exports.find = (req, res) => {

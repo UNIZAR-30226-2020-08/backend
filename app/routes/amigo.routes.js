@@ -10,13 +10,13 @@ module.exports = app => {
     //router.get("/findAll", amigo.findAll);
       
     // Buscar un usario
-    router.get("/findFriend", amigo.find);
+    router.get("/findFriend", amigo.findAll);
 
     // Eliminar un amigo
     router.delete("/dropFriend", amigo.delete);
   
     // Eliminar todos amigo
-    //router.delete("/dropAll", amigo.deleteAll);
+    router.delete("/dropAll", amigo.deleteAll);
 
     // Update a amigo with id el que sea 
     router.put("/updateFriend", amigo.update);

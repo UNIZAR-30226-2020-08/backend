@@ -10,9 +10,9 @@ exports.create = (req, res) => {
       password: req.body.password,
       email: req.body.email,
       copas: req.body.copas ? req.body.copas: 0,
-      f_perfil: req.body.f_perfil ? req.body.f_perfil: 'p_default',
-      f_tapete: req.body.f_tapete ? req.body.f_tapete: 't_default',
-      f_carta: req.body.f_carta ? req.body.f_carta: 'c_default',
+      f_perfil: req.body.f_perfil ? req.body.f_perfil: 'userlogo1',
+      f_tapete: req.body.f_tapete ? req.body.f_tapete: 'tapete1',
+      f_carta: req.body.f_carta ? req.body.f_carta: 'baraja1',
     };
     // Guarda al usuario en la base de datos
     Usuario.create(usuario)
@@ -47,27 +47,25 @@ exports.findAll = (req, res) => {
 
 // Busca a un usuario
 exports.find = (req, res) => {
-    const n_usuario = req.body.username;
+    const username = req.body.username;
 
-    Usuario.findByPk(n_usuario)
+    Usuario.findByPk(username)
     .then(data => {
-        res.send({message:'parece que va bien',data});
+        res.send({data});
     })
     .catch(err => {
         res.status(500).send({
             message: 
-                err.message || "Error recuperando usuario con id: " + nombre_usuario
+                err.message || "Error recuperando usuario con id: " + username
         });
     });
   };
 
 // Actualiza un usuario
 exports.update = (req, res) => {
-    const nombre_usuario = req.params.usuario;
-    res.send({message : "Se ha actualizado al usuario ", nombre_usuario});
-    /*
+    const n_usuario = req.body.username;
     Usuario.update(req.body, {
-        where: { nombre_usuario: nombre_usuario }
+        where: { username: n_usuario }
     })
     .then(num => {
         if (num == 1) {
@@ -76,17 +74,16 @@ exports.update = (req, res) => {
             });
         } else {
             res.send({
-                message: `No se puede actualizar el usuario con id: ${nombre_usuario}.`
+                message: `No se puede actualizar el usuario con id: ${n_usuario}.`
             });
         }
     })
     .catch(err => {
         res.status(500).send({
             message: 
-                err.message || "Error actualizando usuario con id: " + nombre_usuario
+                err.message || "Error actualizando usuario con id: " + n_usuario
         });
     });
-    */
 };
 
 // Elimina un usuario
@@ -117,7 +114,6 @@ exports.delete = (req, res) => {
 
 // Elimina todos usuario
 exports.deleteAll = (req, res) => {
-  res.send({message : "Se han eliminado todos los usuarios"});
   Usuario.destroy({
       where: {},
       truncate: false

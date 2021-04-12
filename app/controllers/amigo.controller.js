@@ -4,46 +4,56 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Usuario
 exports.create = (req, res) => {
-    // Crea un usario
-    const amigo = {
-      usuario: req.body.usuario,
-      amigo: req.body.amigo,
-    };
-    // Guarda al usuario en la base de datos
-    res.send("Amigo creado, ", amigo)
-    Amigo.create(usuario)
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error creando usuario"
-        });
-      });
-      
+  // Crea un usario
+  const amigo = {
+    usuario: req.body.usuario,
+    amigo: req.body.amigo,
   };
+  // Guarda al usuario en la base de datos
+  if (amigo.usuario === amigo.amigo){
+    res.send({message: 'Un usuario no puede ser amigo de si mismo'});
+  }else{
+    Amigo.create(amigo)
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error creando amigo"
+      });
+    });
+  }  
+};
 
 // Devuelve todos los usuarios de la base de datos 
 exports.findAll = (req, res) => {
-    const nombre_usuario = req.query.usuario;
-    var condition = nombre_usuario ? { nombre_usuario: { [Op.iLike]: `%${nombre_usuario}%` } } : null;
+    const usuario = req.query.usuario;
+    var condition = usuario ? { usuario: { [Op.iLike]: `%${usuario}%` } } : null;
   
     Amigo.findAll({ where: condition })
       .then(data => {
-        res.send(data);
+        var friends = [];
+        i = 0;
+        for (a of data)
+        {
+          //console.log(a.dataValues);
+          friends[i] = a.dataValues.amigo;
+          i++;
+        }
+        res.send(friends);
       })
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Error recuperando usuarios."
+            err.message || "Error recuperando amigos."
         });
       });
   };
 
 // Busca a un usuario
 exports.find = (req, res) => {
-    const nombre_usuario = req.params.usuario;
+    const nombre_usuario = req.body.usuario;
 
     Amigo.findByPk(nombre_usuario)
     .then(data => {
@@ -85,10 +95,11 @@ exports.update = (req, res) => {
 
 // Elimina un usuario
 exports.delete = (req, res) => {
-    const nombre_usuario = req.params.usuario;
+  const amigo = req.body.amigo;  
+  const usuario = req.body.usuario;
 
     Amigo.destroy({
-      where: { nombre_usuario: nombre_usuario }
+      where: { amigo: amigo, usuario: usuario }
     })
     .then(num => {
         if (num == 1) {
@@ -109,10 +120,16 @@ exports.delete = (req, res) => {
     });
 };
 
-// Elimina todos usuario
+// Elimina todos amigos de un usuario
 exports.deleteAll = (req, res) => {
-    Amigo.destroy({
-      where: {},
+    const usuario = req.body.usuario;
+    Amigo.findByPk(usuario)
+    .then(friends => {
+      console.log(friends);
+      res.send(friends);
+    })
+    /*Amigo.destroy({
+      where: {usuario: usuario},
       truncate: false
     })
       .then(nums => {
@@ -124,4 +141,5 @@ exports.deleteAll = (req, res) => {
             err.message || "Error eliminando usuarios."
         });
       });
+      */
   };
