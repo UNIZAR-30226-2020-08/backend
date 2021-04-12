@@ -5,9 +5,13 @@ module.exports = app => {
   
     router.post("/", pertenece.create);
 
-    router.get("/findBelong", pertenece.find);
+    //router.get("/findBelong", pertenece.find);
+
+    router.get("/findAllBelong", pertenece.findAll);
 
     router.delete("/dropBelong", pertenece.delete);
+
+    router.delete("/dropGameBelong", pertenece.deleteAll);
   
     router.put("/updateBelong", pertenece.update);
   

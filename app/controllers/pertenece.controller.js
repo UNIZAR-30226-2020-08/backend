@@ -15,29 +15,98 @@ exports.create = (req, res) => {
       c6: req.body.c6,
 
     };
-    res.send({message : "pertenece creada", pertenece});
+    Pertenece.create(pertenece)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({ message: err.message || "Error creando usuario" });
+      });
   };
-
+// Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {
-    const pertenece = req.body.pertenece;
-    res.send({message : "Se ha encontrado una pertenece", pertenece});
+    const partida = req.body.partida;
+    var condition = partida ? { partida: { [Op.iLike]: `%${partida}%` } } : null;
+  
+    Pertenece.findAll({ where: condition })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error recuperando usuarios."
+        });
+      });
   };
-
+//USELESS
 exports.find = (req, res) => {
     const pertenece = req.body.pertenece;
     res.send({message : "Se ha encontrado pertenece ", pertenece});
   };
 
 exports.update = (req, res) => {
-    const pertenece = req.body.pertenece;
-    res.send({message : "Se ha actualizado la pertenece ", pertenece});
+  const partida = req.body.partida;
+  const jugador = req.body.jugador;
+  Pertenece.update(req.body, {
+    where: { partida: partida, jugador: jugador }
+  })
+  .then(num => {
+      if (num == 1) {
+          res.send({
+              message: "Se ha modificado pertenece"
+          });
+      } else {
+          res.send({
+              message: `No se puede actualizar pertenece.`
+          });
+      }
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error actualizando pertenece."
+      });
+  });
 };
 
 exports.delete = (req, res) => {
-    const pertenece = req.body.pertenece;
-    res.send({message : "Se ha eliminado la pertenece ", pertenece});
+  const partida = req.body.partida;
+  const jugador = req.body.jugador;
+  Pertenece.destroy({
+    where: { partida: partida, jugador: jugador }
+  })
+  .then(num => {
+      if (num == 1) {
+          res.send({
+              status: "Eliminado pertenece"
+          });
+      } else {
+          res.send({
+              status:  `No se puede eliminar pertenece.`
+          });
+      }
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error eliminando pertenece"
+      });
+  });
 };
-
+//Elimina todas las entradas de una partida 
 exports.deleteAll = (req, res) => {
-  res.send({message : "Se han eliminado todas las pertenece"});
+  const partida = req.body.partida;
+  Pertenece.destroy({
+    where: { partida: partida }
+  })
+  .then(num => {
+    res.send({ status: `Eliminado ${partida}`});
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || `Error eliminando ${partida}`
+      });
+  });
   };
