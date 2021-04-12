@@ -28,7 +28,8 @@ exports.create = (req, res) => {
 
 // Devuelve todos los usuarios de la base de datos 
 exports.findAll = (req, res) => {
-    const usuario = req.query.usuario;
+    const usuario = req.body.usuario;
+
     var condition = usuario ? { usuario: { [Op.iLike]: `%${usuario}%` } } : null;
   
     Amigo.findAll({ where: condition })
@@ -126,30 +127,33 @@ exports.deleteAll = (req, res) => {
     const user = {
       usuario: req.body.usuario
     };
-    Amigo.findAll(user)
-    .then(data => {
-      var friends = [];
+    Amigo.findAll(user).then(data => 
+    {
+      Amigo.destroy({
+        where: {usuario: usuario},
+        truncate: false
+      }).then(nums => {
         i = 0;
         for (a of data)
         {
-          //console.log(a.dataValues);
-          friends[i] = a.dataValues.amigo;
-          i++;
+          Amigo.destroy({
+            where: {amigo: a.dataValues.usuario, usuario: a.dataValues.amigo}
+          })
+          .then(num => { console.log('Elimiando correctamente');
+          }).catch(err => {
+              res.status(500).send({
+                  message: 
+                      err.message || "Error eliminando el usuario con id: " + nombre_usuario
+              });
+          });
         }
-        res.send(friends);
-    })
-    /*Amigo.destroy({
-      where: {usuario: usuario},
-      truncate: false
-    })
-      .then(nums => {
-        res.send({ message: `${nums} usuarios eliminados.` });
+        res.send({ message: 'Se han eliminado todos los amigos de ', usuario });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error eliminando usuarios."
-        });
+        res.status(500).send({ message: err.message || "Error eliminando usuarios."});
       });
-      */
+      
+    }).catch(err => {
+      res.status(500).send({ message: err.message || "Error eliminando usuarios."});
+    });
   };
