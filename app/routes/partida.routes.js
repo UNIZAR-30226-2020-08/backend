@@ -7,6 +7,8 @@ module.exports = app => {
 
     router.get("/findGame", partida.find);
 
+    //router.get("/findAllGames", partida.findAll);
+
     router.delete("/dropGame", partida.delete);
   
     router.put("/updateGame", partida.update);
