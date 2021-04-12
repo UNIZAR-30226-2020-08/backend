@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Prueba del server de backend de las10ultimas" });
 });
 require("./app/routes/amigo.routes")(app);
+require('./app/routes/auth.routes')(app);
 require("./app/routes/carta_disponible.routes")(app);
 require("./app/routes/carta.routes")(app);
 require("./app/routes/chat.routes")(app);
