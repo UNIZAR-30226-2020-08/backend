@@ -11,7 +11,7 @@ exports.create = (req, res) => {
     };
     // Guarda al usuario en la base de datos
     res.send("Amigo creado, ", amigo)
-    /*Usuario.create(usuario)
+    Amigo.create(usuario)
       .then(data => {
         res.send(data);
       })
@@ -21,7 +21,7 @@ exports.create = (req, res) => {
             err.message || "Error creando usuario"
         });
       });
-      */
+      
   };
 
 // Devuelve todos los usuarios de la base de datos 
@@ -111,7 +111,7 @@ exports.delete = (req, res) => {
 
 // Elimina todos usuario
 exports.deleteAll = (req, res) => {
-    Tutorial.destroy({
+    Amigo.destroy({
       where: {},
       truncate: false
     })
