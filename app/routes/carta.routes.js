@@ -5,9 +5,13 @@ module.exports = app => {
   
     router.post("/", carta.create);
 
+    router.get("/findAllCards", carta.findAll);
+
     router.get("/findCard", carta.find);
 
     router.delete("/dropCard", carta.delete);
+
+    router.delete("/dropAllCards", carta.deleteAll);
   
     router.put("/updateCard", carta.update);
   
