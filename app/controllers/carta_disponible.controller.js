@@ -3,11 +3,11 @@ const CartaDisponible = db.carta_disponible;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-    const pertenece = {
+    const carta_disponible = {
       partida: req.body.partida,
       carta: req.body.carta
     };
-    CartaDisponible.create(pertenece)
+    CartaDisponible.create(carta_disponible)
       .then(data => {
         res.send(data);
       })
