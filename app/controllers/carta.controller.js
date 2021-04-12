@@ -21,25 +21,98 @@ exports.create = (req, res) => {
  
 exports.findAll = (req, res) => {
     const carta = req.body.carta;
-    res.send({message : "Se ha encontrado la carta", carta});
+
+    var condition = carta ? { carta: { [Op.iLike]: `%${carta}%` } } : null;
+    Carta.findAll({ where: condition })
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error recuperando cartas."
+        });
+      });
   };
 
 exports.find = (req, res) => {
     const carta = req.body.carta;
-    res.send({message : "Se ha encontrado la carta ", carta});
+    Carta.findByPk(carta)
+    .then(data => {
+        res.send({data});
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: 
+                err.message || "Error recuperando carta: " + carta
+        });
+    });
   };
 
 exports.update = (req, res) => {
     const carta = req.body.carta;
-    res.send({message : "Se ha actualizado la carta ", carta});
+    
+    Carta.update(req.body, {
+      where: { carta: carta }
+  })
+  .then(num => {
+      if (num == 1) {
+          res.send({
+              message: "carta actualizada."
+          });
+      } else {
+          res.send({
+              message: `No se puede actualizar la carta: ${carta}.`
+          });
+      }
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error actualizando la carta: " + carta
+      });
+  });
 };
+
 
 exports.delete = (req, res) => {
     const carta = req.body.carta;
-    res.send({message : "Se ha eliminado la carta ", carta});
+    
+    Carta.destroy({
+      where: { carta: carta }
+    })
+    .then(num => {
+        if (num == 1) {
+            res.send({
+                status: "Eliminada"
+            });
+        } else {
+            res.send({
+                status:  `No se puede eliminar la carta: ${carta}.`
+            });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: 
+                err.message || "Error eliminando la carta: " + carta
+        });
+    });
 };
 
-exports.deleteAll = (req, res) => {
-  res.send({message : "Se han eliminado todos los cartas"});
 
-  };
+exports.deleteAll = (req, res) => {
+  Carta.destroy({
+    where: {},
+    truncate: false
+  })
+    .then(nums => {
+      res.send({ message: `${nums} cartas eliminadas.` });
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error eliminando cartas."
+      });
+    });
+};
