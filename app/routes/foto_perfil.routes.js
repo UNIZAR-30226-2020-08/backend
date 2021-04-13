@@ -7,7 +7,11 @@ module.exports = app => {
 
     router.get("/findProfilePicture", foto_perfil.find);
 
+    router.get("/findAllProfilePictures", foto_perfil.findAll);
+
     router.delete("/dropProfilePicture", foto_perfil.delete);
+
+    router.delete("/dropAllProfilePictures", foto_perfil.deleteAll);
   
     router.put("/updateProfilePicture", foto_perfil.update);
   
