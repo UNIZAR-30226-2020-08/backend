@@ -7,7 +7,11 @@ module.exports = app => {
 
     router.get("/findTournamentParticipants", participantes_torneo.find);
 
+    router.get("/findAllTournamentParticipants", participantes_torneo.findAll);
+
     router.delete("/dropTournamentParticipants", participantes_torneo.delete);
+
+    router.delete("/dropAllTournamentParticipants", participantes_torneo.deleteAll);
   
     router.put("/updateTournamentParticipants", participantes_torneo.update);
   
