@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
     const participantes_torneo = {
       torneo: req.body.torneo,
-      partida: req.body.partida,
+      jugador: req.body.jugador,
     };
     Participantes.create(participantes_torneo)
       .then(data => {
@@ -20,8 +20,8 @@ exports.create = (req, res) => {
   };
 
 exports.findAll = (req, res) => {
-    const participantes_torneo = req.body.participantes_torneo;
-    var condition = participantes_torneo ? { participantes_torneo: { [Op.iLike]: `%${participantes_torneo}%` } } : null;
+    const torneo = req.body.torneo;
+    var condition = torneo ? { torneo: { [Op.iLike]: `%${torneo}%` } } : null;
     Participantes.findAll({ where: condition })
       .then(data => {
         res.send(data);
@@ -35,69 +35,55 @@ exports.findAll = (req, res) => {
   };
 
 exports.find = (req, res) => {
-    const participantes_torneo = req.body.participantes_torneo;
-    Participantes.findByPk(participantes_torneo)
-    .then(data => {
-        res.send({data});
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error recuperando participantes_torneo: " + participantes_torneo
-        });
-    });
-  };
-
-    
-
-exports.update = (req, res) => {
-    const participantes_torneo = req.body.participantes_torneo;
-    Participantes.update(req.body, {
-      where: { participantes_torneo: participantes_torneo }
+  const torneo = req.body.torneo;
+  const jugador = req.body.jugador;
+  Participantes.findAll({
+    where: { torneo:torneo, jugador:jugador }
   })
-  .then(num => {
-      if (num == 1) {
-          res.send({
-              message: "participante_torneo actualizado."
-          });
-      } else {
-          res.send({
-              message: `No se puede actualizar el participante_torneo: ${participantes_torneo}.`
-          });
-      }
+  .then(data => {
+      res.send(data);
   })
   .catch(err => {
       res.status(500).send({
           message: 
-              err.message || "Error actualizando el participante_torneo: " + participantes_torneo
+              err.message || "Error recuperando participantes_torneo: " + participantes_torneo
+      });
+  });
+};
+//No se va a usar
+exports.update = (req, res) => {
+  const torneo = req.body.torneo;
+  const jugador = req.body.jugador;
+  Participantes.update(req.body, {
+    where: { torneo:torneo, jugador:jugador }
+  })
+  .then(num => {
+          res.send({ message: "participante_torneo actualizado." });
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || `Error actualizando el participante_torneo: ${participantes_torneo}.`
       });
   });
 };
 
 exports.delete = (req, res) => {
-    const participantes_torneo = req.body.participantes_torneo;
-    Participantes.destroy({
-      where: { participantes_torneo: participantes_torneo }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.send({
-                status: "Eliminado"
-            });
-        } else {
-            res.send({
-                status:  `No se puede eliminar el participante_torneo: ${participantes_torneo}.`
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error eliminando el participante_torneo: " + participantes_torneo
-        });
-    });
+  const torneo = req.body.torneo;
+  const jugador = req.body.jugador;
+  Participantes.destroy({
+    where: { torneo:torneo, jugador:jugador }
+  })
+  .then(num => {
+    res.send({status: "Eliminado"});
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error eliminando el participante_torneo: " + participantes_torneo });
+  });
 };
-    
+//No se va a usar
 exports.deleteAll = (req, res) => {
   Participantes.destroy({
     where: {},
