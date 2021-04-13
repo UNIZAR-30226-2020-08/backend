@@ -6,6 +6,7 @@ exports.create = (req, res) => {
     const foro = {
       partida: req.body.partida,
       mensaje: req.body.mensaje,
+      jugador: req.body.jugador,
     };
     Foro.create(foro)
       .then(data => {
@@ -16,23 +17,6 @@ exports.create = (req, res) => {
       });
   };
  
-exports.findAll = (req, res) => {
-    const n_partida = req.body.partida;
-    var condition = n_partida ? { n_partida: { [Op.iLike]: `%${n_partida}%` } } : null;
-    Foro.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando foros."
-        });
-      });
-
-  };
-    
-
 exports.find = (req, res) => {
     const partida = req.body.partida;
     Foro.findByPk(partida)
@@ -42,62 +26,44 @@ exports.find = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message: 
-                err.message || "Error recuperando foro: " + partida
+                err.message || `Error recuperando foro: ${partida}`
         });
     });
   };
 
     
 exports.update = (req, res) => {
-    const n_partida = req.body.partida;
-    Foro.update(req.body, {
-      where: { partida: n_partida }
+  const partida = req.body.partida;
+  Foro.update(req.body, {
+    where: { partida: partida }
   })
   .then(num => {
-      if (num == 1) {
-          res.send({
-              message: "Foro actualizado."
-          });
-      } else {
-          res.send({
-              message: `No se puede actualizar el foro : ${n_partida}.`
-          });
-      }
+          res.send({ message: "foro actualizado." });
   })
   .catch(err => {
       res.status(500).send({
           message: 
-              err.message || "Error actualizando foro : " + n_partida
+              err.message || `Error actualizando el foro ${partida}`
       });
   });
 };
-    
 
 exports.delete = (req, res) => {
-    const n_partida = req.body.partida;
-    Foro.destroy({
-      where: { partida: n_partida }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.send({
-                status: "Eliminado"
-            });
-        } else {
-            res.send({
-                status:  `No se puede eliminar el foro: ${n_partida}.`
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error eliminando el usuario con id: " + n_partida
-        });
-    });
+  const partida = req.body.partida;
+  Foro.destroy({
+    where: { partida: partida }
+  })
+  .then(num => {
+          res.send({ status: "Eliminado" });
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || `Error eliminando el foro ${partida}`
+      });
+  });
 };
-    
 
+//Sin probar por si acaso
 exports.deleteAll = (req, res) => {
   Foro.destroy({
     where: {},
@@ -112,4 +78,18 @@ exports.deleteAll = (req, res) => {
           err.message || "Error eliminando foros."
       });
     });
+};
+
+exports.findAll = (req, res) => {
+  Foro.findAll()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error recuperando foros."
+      });
+    });
+
 };
