@@ -21,41 +21,36 @@ exports.create = (req, res) => {
 
  
 exports.findAll = (req, res) => {
-    const customizable = req.body.imagen;
-    
-    //var condition = customizable ? { customizable: { [Op.iLike]: `%${customizable}%` } } : null;
-      Carta.findAll({ /*where: condition*/ })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando customizables."
-        });
-      });
-  };
+  Customizable.findAll()
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Error recuperando customizables."
+    });
+  });
+};
 
 exports.find = (req, res) => {
-    const customizable = req.body.imagen;
-    
-    Customizable.findByPk(customizable)
-    .then(data => {
-        res.send({data});
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error recuperando customizable: " + customizable
-        });
-    });
-  };
-
+  const customizable = req.body.imagen;
+  Customizable.findByPk(customizable)
+  .then(data => {
+      res.send({data});
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error recuperando customizable: " + customizable
+      });
+  });
+};
+//NO SE VA A USAR
 exports.update = (req, res) => {
-    const customizable = req.body.imagen;
-    
-    Customizable.update(req.body, {
-      where: { customizable: customizable }
+  const customizable = req.body.imagen;
+  Customizable.update(req.body, {
+    where: { customizable: customizable }
   })
   .then(num => {
       if (num == 1) {
@@ -77,30 +72,29 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-    const customizable = req.body.imagen;
-    
-    Customizable.destroy({
-      where: { customizable: customizable }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.send({
-                status: "Eliminado"
-            });
-        } else {
-            res.send({
-                status:  `No se puede eliminar el customizable: ${customizable}.`
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error eliminando el customizable: " + customizable
-        });
-    });
+  const imagen = req.body.imagen;
+  Customizable.destroy({
+    where: { imagen: imagen }
+  })
+  .then(num => {
+      if (num == 1) {
+          res.send({
+              status: "Eliminado"
+          });
+      } else {
+          res.send({
+              status:  `No se puede eliminar el customizable: ${imagen}.`
+          });
+      }
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || `Error eliminando el customizable:  ${imagen}.`
+      });
+  });
 };
-
+// FALTARIA ELIMIAR DE FONDO CARTA,TAPETE Y PERFIL
 exports.deleteAll = (req, res) => {
   Customizable.destroy({
     where: {},

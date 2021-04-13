@@ -1,19 +1,19 @@
 module.exports = app => {
-    const customizable = require("../controllers/customizable.controller.js");
-  
-    var router = require("express").Router();
-  
-    router.post("/", customizable.create);
+  const customizable = require("../controllers/customizable.controller.js");
 
-    router.get("/findCustomizable", customizable.find);
+  var router = require("express").Router();
 
-    router.get("/findAllCustomizables", customizable.findAll);
+  router.post("/", customizable.create);
 
-    router.delete("/dropCustomizable", customizable.delete);
+  router.get("/findCustomizable", customizable.find);
 
-    router.delete("/dropAllCustomizables", customizable.deleteAll);
-  
-    router.put("/updateCustomizable", customizable.update);
-  
-    app.use('/api/customizable', router);
-  };
+  router.get("/findAllCustomizables", customizable.findAll);
+
+  router.delete("/dropCustomizable", customizable.delete);
+
+  router.delete("/dropAllCustomizables", customizable.deleteAll);
+
+  router.put("/updateCustomizable", customizable.update);
+
+  app.use('/api/customizable', router);
+};
