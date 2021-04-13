@@ -7,7 +7,11 @@ module.exports = app => {
 
     router.get("/findForum", foro.find);
 
+    router.get("/findAllForums", foro.findAll);
+
     router.delete("/dropForum", foro.delete);
+
+    router.delete("/dropAllForums", foro.deleteAll);
   
     router.put("/updateForum", foro.update);
   
