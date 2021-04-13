@@ -1,14 +1,20 @@
 const db = require("../models");
 const FotoPerfil = db.foto_perfil;
+const Customizable = db.customizable;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
+  const customizable = {
+    imagen: req.body.f_perfil,
+  };
+  Customizable.create(customizable)
+  .then(dataCustom => {
     const foto_perfil = {
       f_perfil: req.body.f_perfil,
     };
     FotoPerfil.create(foto_perfil)
-      .then(data => {
-        res.send(data);
+      .then(dataPerfil => {
+        res.send({dataCustom,dataPerfil});
       })
       .catch(err => {
         res.status(500).send({
@@ -16,28 +22,30 @@ exports.create = (req, res) => {
             err.message || "Error creando foto_perfil"
         });
       });
-  };
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Error creando customizable"
+    });
+  });  
+};
     
-
 exports.findAll = (req, res) => {
-    const foto_perfil = req.body.foto_perfil;
-
-    var condition = foto_perfil ? { foto_perfil: { [Op.iLike]: `%${foto_perfil}%` } } : null;
-    FotoPerfil.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando fotos_perfil."
-        });
-      });
-  };
+  FotoPerfil.findAll()
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Error recuperando fotos_perfil."
+    });
+  });
+};
     
-
 exports.find = (req, res) => {
-    const foto_perfil = req.body.foto_perfil;
+    const foto_perfil = req.body.f_perfil;
     FotoPerfil.findByPk(foto_perfil)
     .then(data => {
         res.send({data});
@@ -49,8 +57,8 @@ exports.find = (req, res) => {
         });
     });
   };
-    
 
+//No se va a usar
 exports.update = (req, res) => {
     const foto_perfil = req.body.foto_perfil;
     FotoPerfil.update(req.body, {
@@ -76,26 +84,25 @@ exports.update = (req, res) => {
 };
     
 exports.delete = (req, res) => {
-    const foto_perfil = req.body.foto_perfil;
-    foto_perfil.destroy({
-      where: { foto_perfil: foto_perfil }
+    const f_perfil = req.body.f_perfil;
+    FotoPerfil.destroy({
+      where: { f_perfil: f_perfil }
     })
     .then(num => {
-        if (num == 1) {
-            res.send({
-                status: "Eliminada"
-            });
-        } else {
-            res.send({
-                status:  `No se puede eliminar la foto_perfil: ${foto_perfil}.`
-            });
-        }
+      Customizable.destroy({
+        where: { imagen: f_perfil }
+      })
+      .then(num => {
+        res.send({ status: "Eliminado customizable" });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: err.message || `Error eliminando el customizable:  ${f_perfil}.` });
+      });
     })
     .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error eliminando la foto_perfil: " + foto_perfil
-        });
+      res.status(500).send({
+          message: err.message || `Error eliminando la foto_perfil: ${f_perfil}.` });
     });
 };
 
