@@ -23,8 +23,8 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const customizable = req.body.imagen;
     
-    var condition = customizable ? { customizable: { [Op.iLike]: `%${customizable}%` } } : null;
-    Carta.findAll({ where: condition })
+    //var condition = customizable ? { customizable: { [Op.iLike]: `%${customizable}%` } } : null;
+      Carta.findAll({ /*where: condition*/ })
       .then(data => {
         res.send(data);
       })
