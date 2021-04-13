@@ -20,10 +20,9 @@ exports.create = (req, res) => {
       });
   };
     
-
 exports.findAll = (req, res) => {
-    const partidas_torneo = req.body.partidas_torneo;
-    var condition = partidas_torneo ? { partidas_torneo: { [Op.iLike]: `%${partidas_torneo}%` } } : null;
+    const torneo = req.body.torneo;
+    var condition = torneo ? { torneo: { [Op.iLike]: `%${torneo}%` } } : null;
     PartidaTorneo.findAll({ where: condition })
       .then(data => {
         res.send(data);
@@ -38,68 +37,56 @@ exports.findAll = (req, res) => {
     
 
 exports.find = (req, res) => {
-    const partidas_torneo = req.body.partidas_torneo;
-    PartidaTorneo.findByPk(partidas_torneo)
-    .then(data => {
-        res.send({data});
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error recuperando partida_torneo: " + partidas_torneo
-        });
-    });
-  };
-    
-
-exports.update = (req, res) => {
-    const partidas_torneo = req.body.partidas_torneo;
-    PartidaTorneo.update(req.body, {
-      where: { partidas_torneo: partidas_torneo }
+  const torneo = req.body.torneo;
+  const partida = req.body.partida;
+  PartidaTorneo.findAll({
+    where: { torneo:torneo, partida:partida }
   })
-  .then(num => {
-      if (num == 1) {
-          res.send({
-              message: "partida_torneo actualizada."
-          });
-      } else {
-          res.send({
-              message: `No se puede actualizar la partida_torneo: ${partidas_torneo}.`
-          });
-      }
+  .then(data => {
+      res.send(data);
   })
   .catch(err => {
       res.status(500).send({
           message: 
-              err.message || "Error actualizando la partidas_torneo: " + partidas_torneo
+              err.message || `Error recuperando partida_torneo: ${torneo},${partida}`
       });
+  });
+};
+    
+//No se va a usar
+exports.update = (req, res) => {
+  const torneo = req.body.torneo;
+  const partida = req.body.partida;
+  PartidaTorneo.update(req.body, {
+    where: { torneo:torneo, partida:partida }
+  })
+  .then(num => {
+    res.send({ message: "partida_torneo actualizada." });
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error actualizando la partidas_torneo: " + partidas_torneo });
   });
 };
 
 exports.delete = (req, res) => {
-    const partidas_torneo = req.body.partidas_torneo;
-    PartidaTorneo.destroy({
-      where: { partidas_torneo: partidas_torneo }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.send({
-                status: "Eliminada"
-            });
-        } else {
-            res.send({
-                status:  `No se puede eliminar la partida_torneo: ${partidas_torneo}.`
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error eliminando la partida_torneo: " + partidas_torneo
-        });
-    });
+  const torneo = req.body.torneo;
+  const partida = req.body.partida;
+  PartidaTorneo.destroy({
+    where: { torneo:torneo, partida:partida }
+  })
+  .then(num => {
+    res.send({ status: "Eliminada" });
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: 
+              err.message || "Error eliminando la partida_torneo: " + partidas_torneo });
+  });
 };
 
+//No se va a usar
 exports.deleteAll = (req, res) => {
   PartidaTorneo.destroy({
     where: {},
