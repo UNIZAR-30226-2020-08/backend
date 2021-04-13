@@ -1,23 +1,32 @@
 const db = require("../models");
 const Fondo_carta = db.fondo_carta;
+const Customizable = db.customizable;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-    const fondo_carta = {
-      f_carta: req.body.f_carta,
-    };
-    Fondo_carta.create(fondo_carta)
-      .then(data => {
-        res.send(data);
+  const customizable = {
+    imagen: req.body.f_carta,
+  };
+  Customizable.create(customizable)
+      .then(dataCustom => {
+        const fondo_carta = {
+          f_carta: req.body.f_carta,
+        };
+        Fondo_carta.create(fondo_carta)
+          .then(dataFCarta => {
+            res.send({dataCustom,dataFCarta});
+          })
+          .catch(err => {
+            res.status(500).send({message:err.message || "Error creando fondo_carta"});
+          });
       })
       .catch(err => {
-        res.status(500).send({message:err.message || "Error creando fondo_carta"});
+        res.status(500).send({
+          message:
+            err.message || "Error creando customizable"
+        });
       });
 };
-
- 
-
-
 
 exports.find = (req, res) => {
     const f_carta = req.body.f_carta;
@@ -32,7 +41,7 @@ exports.find = (req, res) => {
         });
     });
   };
-
+// No se va a usar
 exports.update = (req, res) => {
     const f_carta = req.body.f_carta;
     Fondo_carta.update(req.body, {
@@ -52,10 +61,19 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const f_carta = req.body.f_carta;
     Fondo_carta.destroy({
-      where: { fondo_carta: f_carta }
+      where: { f_carta: f_carta }
     })
     .then(num => {
-            res.send({status: "Eliminado"});
+      Customizable.destroy({
+        where: { imagen: f_carta }
+      })
+      .then(num => {
+              res.send({ status: "Eliminado customizable" });
+      })
+      .catch(err => {
+          res.status(500).send({
+              message: err.message || `Error eliminando el customizable:  ${f_carta}.` });
+      });
     })
     .catch(err => {
         res.status(500).send({
@@ -81,10 +99,7 @@ exports.deleteAll = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  //const fondo_carta = req.body.f_carta;
-  
-  //var condition = fondo_carta ? { fondo_carta: { [Op.iLike]: `%${fondo_carta}%` } } : null;
-  Fondo_carta.findAll({ /*where: condition*/ })
+  Fondo_carta.findAll()
     .then(data => {
       res.send(data);
     })

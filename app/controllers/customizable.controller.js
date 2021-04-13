@@ -77,21 +77,11 @@ exports.delete = (req, res) => {
     where: { imagen: imagen }
   })
   .then(num => {
-      if (num == 1) {
-          res.send({
-              status: "Eliminado"
-          });
-      } else {
-          res.send({
-              status:  `No se puede eliminar el customizable: ${imagen}.`
-          });
-      }
+          res.send({ status: "Eliminado" });
   })
   .catch(err => {
       res.status(500).send({
-          message: 
-              err.message || `Error eliminando el customizable:  ${imagen}.`
-      });
+          message: err.message || `Error eliminando el customizable:  ${imagen}.` });
   });
 };
 // FALTARIA ELIMIAR DE FONDO CARTA,TAPETE Y PERFIL
