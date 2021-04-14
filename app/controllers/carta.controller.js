@@ -20,20 +20,17 @@ exports.create = (req, res) => {
   };
  
 exports.findAll = (req, res) => {
-    const carta = req.body.carta;
-
-    var condition = carta ? { carta: { [Op.iLike]: `%${carta}%` } } : null;
-    Carta.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando cartas."
-        });
+  Carta.findAll()
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error recuperando cartas."
       });
-  };
+    });
+};
 
 exports.find = (req, res) => {
     const carta = req.body.carta;

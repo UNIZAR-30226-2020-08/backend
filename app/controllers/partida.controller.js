@@ -1,6 +1,7 @@
 const { PASSWORD } = require("../config/db.config");
 const db = require("../models");
 const Partida = db.partida;
+const Pertenece = db.pertenece;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -25,44 +26,61 @@ exports.create = (req, res) => {
       });
   };
 
+/** 
+ * Devuelve todas las salas del tipo que se ha seleccionado y 
+ * el numero de usuarios que hay en ella
+ **/
+// NO VA
 exports.findAll = (req, res) => {
-    const partida = req.body.nombre;
-    var condition = partida ? { nombre: { [Op.iLike]: `%${partida}%` } } : null;
-  
-    Partida.findAll({ where: condition })
-      .then(data => {
-        if (data === null){
-          res.send({message: 'No existe la partdia'});
-        }else{
-          res.send({data});
+  const tipo = req.body.tipo;
+  var sol = [];
+  Partida.findAll({ where: { tipo: tipo} })
+    .then(dataPartidas => {
+        var i = dataPartidas.length - 1;
+        console.log(`i es: ${i}`);
+        for (a of dataPartidas){
+          console.log(`La partida es ${a.nombre}`);
+          //console.log(a.dataValues);
+          Pertenece.findAll({ where: { partida: a.nombre } })
+          .then(data => {
+            //console.log(data.length);
+            if (data.length > 0){
+              var partida = {
+                nombre: data[0].partida,
+                jugadores_online: (data.length > 0) ? data.length : 0,
+                tipo : (tipo == 0) ? 'Individual' : 'Parejas',
+              };
+              sol.push(partida);
+            }
+          })
+          .catch(err => {
+            res.status(500).send({
+              message: err.message || "Error recuperando jugadores pertenecientes a partida." });
+          });
+          i--;
         }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando partidas."
-        });
-      });
-  };
-
-exports.find = (req, res) => {
-    const partida = req.body.nombre;
-    Partida.findByPk(partida)
-    .then(data => {
-      if (data === null){
-        res.send({message: 'No existe la partdia'});
-      }else{
-        res.send({data});
-      }
-        
+      res.send(sol);
     })
     .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error recuperando partida " + partida
-        });
+      res.status(500).send({ message: err.message || "Error recuperando partidas." });
     });
-  };
+};
+
+exports.find = (req, res) => {
+  const partida = req.body.nombre;
+  Partida.findByPk(partida)
+  .then(data => {
+    if (data === null){
+      res.send({message: 'No existe la partdia'});
+    }else{
+      res.send({data});
+    } 
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando partida " + partida });
+  });
+};
 
 exports.update = (req, res) => {
     const partida = req.body.nombre;
