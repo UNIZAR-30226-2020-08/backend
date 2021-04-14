@@ -7,12 +7,12 @@ exports.create = (req, res) => {
       jugador: req.body.jugador,
       partida: req.body.partida,
       equipo: req.body.equipo,
-      c1: req.body.c1,
-      c2: req.body.c2,
-      c3: req.body.c3,
-      c4: req.body.c4,
-      c5: req.body.c5,
-      c6: req.body.c6,
+      c1: req.body.c1 ? req.body.c1 : 'No',
+      c2: req.body.c2 ? req.body.c2 : 'No',
+      c3: req.body.c3 ? req.body.c3 : 'No',
+      c4: req.body.c4 ? req.body.c4 : 'No',
+      c5: req.body.c5 ? req.body.c5 : 'No',
+      c6: req.body.c6 ? req.body.c6 : 'No',
 
     };
     Pertenece.create(pertenece)
