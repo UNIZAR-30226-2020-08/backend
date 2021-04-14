@@ -6,6 +6,8 @@ module.exports = app => {
     router.post("/", cartaDisponible.create);
 
     router.get("/findACard", cartaDisponible.find);
+    
+    router.get("/findAllACard", cartaDisponible.findAll);
 
     router.delete("/dropACard", cartaDisponible.delete);
   

@@ -1,6 +1,7 @@
 const db = require("../models");
 const Pertenece = db.pertenece;
 const Partida = db.partida;
+const CartaDisponible = db.carta_disponible;
 const Op = db.Sequelize.Op;
 
 /**
@@ -52,6 +53,80 @@ exports.create = (req, res) => {
           message: err.message || "Error recuperando partida " + partida });
   });
 };
+/** *
+* Dados un jugador y una partida se le reparten las 6 cartas  
+*/
+exports.repartir = (req,res) =>{
+  const partida = req.body.partida;
+  const jugador = req.body.jugador;
+  Partida.findByPk(partida)
+  .then(dataPartida => {
+    const pertenece = {
+      jugador: req.body.jugador,
+      partida: req.body.partida,
+      equipo: req.body.equipo,
+      c1: 'NO',
+      c2: 'NO',
+      c3: 'NO',
+      c4: 'NO',
+      c5: 'NO',
+      c6: 'NO',
+    };
+    CartaDisponible.findAll({ where: {partida : partida} })
+    .then(dataCD => {
+      console.log(dataCD.length);
+      console.log(dataPartida.triunfo);
+      var card;
+      var mano = ['','','','','',''];
+      i = 0;
+      while(i <= 5){
+        place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
+        card = dataCD[place].carta;
+        if (card !== 'NO' && card !== mano[0] && card !== mano[1] && card !== mano[2] 
+            && card !== mano[3] && card !== mano[4] && card !== mano[5] 
+            && card !== dataPartida.triunfo){
+          mano[i] = card;
+          i++;
+        }
+      }
+      console.log(mano);
+      pertenece.c1 = mano[0];pertenece.c2 = mano[1];pertenece.c3 = mano[2];
+      pertenece.c4 = mano[3];pertenece.c5 = mano[4];pertenece.c6 = mano[5];
+      Pertenece.update(pertenece, {
+        where: { partida: partida, jugador: jugador }
+      })
+      .then(num => {
+        for (a of mano) {
+          CartaDisponible.destroy({
+            where: { carta: a, partida: partida }
+          })
+          .then(num => {
+                  console.log(`La carta ${a} ya no esta disponible`);
+          })
+          .catch(err => {
+              res.status(500).send({
+                  message: err.message || `Error eliminando la carta ${a}`
+              });
+          });
+        }
+       res.status(200).send(pertenece);
+      })
+      .catch(err => {
+          res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+      });
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error recuperando usuarios."
+      });
+    });
+  
+  })
+  .catch(err => {
+    res.status(500).send(`Error recuperando partida ${partida}`);
+  });
+};
 
 // Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {
@@ -97,10 +172,7 @@ exports.update = (req, res) => {
       }
   })
   .catch(err => {
-      res.status(500).send({
-          message: 
-              err.message || "Error actualizando pertenece."
-      });
+      res.status(500).send({ message: err.message || "Error actualizando pertenece." });
   });
 };
 

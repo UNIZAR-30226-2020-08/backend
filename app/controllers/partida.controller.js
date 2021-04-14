@@ -24,7 +24,13 @@ exports.create = (req, res) => {
             err.message || "Error creando partida"
         });
       });
-  };
+};
+/**
+ * Inicializa las cartas disponibles y reparte
+**/
+exports.iniciar_partida = (req, res) => {
+
+};
 
 /** 
  * Devuelve todas las salas del tipo que se ha seleccionado y 

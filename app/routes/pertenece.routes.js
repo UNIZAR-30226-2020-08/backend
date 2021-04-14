@@ -14,6 +14,8 @@ module.exports = app => {
     router.delete("/dropGameBelong", pertenece.deleteAll);
   
     router.put("/updateBelong", pertenece.update);
+
+    router.put("/repartir", pertenece.repartir);
   
     app.use('/api/pertenece', router);
   };
