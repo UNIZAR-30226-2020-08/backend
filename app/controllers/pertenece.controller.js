@@ -128,6 +128,41 @@ exports.repartir = (req,res) =>{
   });
 };
 
+exports.robar = (req,res) => {
+  const partida = req.body.partida;
+  const jugador = req.body.jugador;
+  const carta = req.body.carta; // Pasar como parametro la posicion que ha tirado c1,c2,c3... contando de izquierda a derecha
+  Partida.findByPk(partida)
+  .then(dataPartida => {
+    CartaDisponible.findAll({ where: {partida : partida} })
+    .then(dataCD => {
+      const pertenece = {
+        jugador: jugador,
+        partida: partida,
+        `${carta}`: 'NO', 
+      };
+      if (dataCD.length > 0){
+        place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
+        var card = dataCD[place].carta;
+        while(card === 'NO' && card === dataPartida.triunfo){
+          place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
+          card = dataCD[place].carta;
+        }
+      }else{
+        //Se reparte la carta que esta boca arriba
+      }
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message || "Error recuperando usuarios." });
+    });
+    
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando partida " + partida });
+  });
+};
+
 // Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {
   const partida = req.body.partida;
