@@ -26,7 +26,7 @@ exports.create = (req, res) => {
   }  
 };
 
-// Devuelve todos los usuarios de la base de datos 
+// Devuelve todos los amigos de un usuario
 exports.findAll = (req, res) => {
     const usuario = req.body.usuario;
 
