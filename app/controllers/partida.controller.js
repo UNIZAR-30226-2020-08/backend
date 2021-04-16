@@ -13,6 +13,10 @@ exports.create = (req, res) => {
     estado: req.body.estado,
     tipo: req.body.tipo,
     fecha: fechaParsed,
+    o_20: 'NO',
+    c_20: 'NO',
+    e_20: 'NO',
+    b_20: 'NO',
   };
   Partida.create(partida)
       .then(data => {
@@ -41,9 +45,9 @@ exports.findAll = (req, res) => {
   const tipo = req.body.tipo;
   Partida.findAll({ where: { tipo: tipo} })
     .then(dataPartidas => {
-      var sol;
-      sol = devolverPartidas(dataPartidas,tipo);
-      res.send(sol);
+      //var partidasDisponibles;
+      //partidasDisponibles = devolverPartidas(dataPartidas,tipo);
+      res.send(dataPartidas);
     })
     .catch(err => {
       res.status(500).send({ message: err.message || "Error recuperando partidas." });
@@ -67,9 +71,9 @@ exports.find = (req, res) => {
 };
 
 exports.update = (req, res) => {
-    const partida = req.body.nombre;
-    Partida.update(req.body, {
-      where: { nombre: partida }
+  const partida = req.body.nombre;
+  Partida.update(req.body, {
+    where: { nombre: partida }
   })
   .then(num => {
       if (num == 1) {
@@ -114,13 +118,98 @@ exports.delete = (req, res) => {
     });
 };
 
+/**
+* Dado un jugador y una partida, comprobar si puede cantar 
+**/
+exports.cantar = (req,res) => {
+  const partida = req.body.nombre;
+  const triunfo = req.body.triunfo;
+  const juagdor = req.body.jugador;
+  Pertenece.findOne({where:{partida: partida, jugador:juagdor}})
+  .then(data1 => {
+    console.log(triunfo[1]);
+    var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
+    console.log(mano);
+    for (c of mano){
+      if (c[0] === '7'){
+        var cante = '9' + c[1];
+        console.log(cante);
+
+      }else if(data1[0] === '9' && rey === false){
+
+      }
+    }
+    res.send(data1);
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando relcion pertenece" });
+  });
+
+};
+
+exports.cambiar7 = (req,res) => {
+  const partida = req.body.nombre;
+  const triunfo = req.body.triunfo;
+  const jugador = req.body.jugador;
+  Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+  .then(data1 => {
+    console.log(triunfo);
+    var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
+    var carta = ['c1','c2','c3','c4','c5','c6'];
+    var sieteTriunfo = '6' + triunfo[1];
+    console.log(mano);
+    var cambio = false;
+    var posicion;
+    for (i = 0; i < 6; i++){
+      if (mano[i] === sieteTriunfo){
+        cambio = true;
+        posicion = carta[i];
+      }
+    }
+    var pertenece = selectCard(posicion,jugador,partida,triunfo);
+    console.log(pertenece);
+    if (cambio === true){
+      Pertenece.update(pertenece, {
+        where: { partida: partida, jugador: jugador }
+      })
+      .then(num => {
+        console.log({ message: "Se ha cambiado el 7 el la mano"});
+        var partidaCante = {
+          nombre: partida,
+          triunfo: sieteTriunfo,
+        }
+        Partida.update(partidaCante, {
+          where: { nombre: partida }
+        })
+        .then(num => {
+          res.send(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
+        })
+        .catch(err => {
+          res.status(500).send({
+              message: err.message || `Error actualizando la partida: ${partida}` });
+        });
+      })
+      .catch(err => {
+          res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+      });
+    }else{
+      res.send('No puedes cambiar el 7');
+    }
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando relcion pertenece" });
+  });
+};
+
 exports.deleteAll = (req, res) => {
   res.send({message : "Se han eliminado todas las partidas"});
   };
 
 function devolverPartidas(dataPartidas,tipo)
 {
-  var sol = [];
+  var partidasDisponibles = [];
   var i = dataPartidas.length - 1;
   console.log(`i es: ${i}`);
   for (a of dataPartidas){
@@ -128,16 +217,12 @@ function devolverPartidas(dataPartidas,tipo)
     .then(data => {
       if (data.length > 0){
         console.log(`La partida ${data[0].partida} tiene ${data.length}`);
-        var partida = {
+        var partidaDisponible = {
           nombre: data[0].partida,
           jugadores_online: (data.length > 0) ? data.length : 0,
           tipo : (tipo == 0) ? 'Individual' : 'Parejas',
         };
-        sol.push(partida);
-        if (i === 0){
-          console.log(sol);
-          return sol;
-        }
+        partidasDisponibles.push(partidaDisponible);
       }
       i--;
     })
@@ -146,5 +231,60 @@ function devolverPartidas(dataPartidas,tipo)
         message: err.message || "Error recuperando jugadores pertenecientes a partida." });
     });
   }
+  if (i === 0){
+    console.log(i);
+    console.log(partidasDisponibles);
+    return partidasDisponibles;
+  }
   
+}
+
+function selectCard(carta,jugador_,partida_,card_) {
+  var pertenece;
+    switch (carta){
+      case 'c1':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c1: card_
+        };
+        break;
+      case 'c2':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c2: card_
+        };
+        break;
+      case 'c3':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c3: card_
+        };
+        break;
+      case 'c4':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c4: card_
+        };
+        break;
+      case 'c5':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c5: card_
+        };
+        break;
+      case 'c6':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c6: card_
+        };
+        break;
+    }
+    return pertenece;
+    
 }

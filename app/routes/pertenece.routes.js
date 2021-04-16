@@ -5,7 +5,7 @@ module.exports = app => {
 
   router.post("/", pertenece.create);
 
-  //router.get("/findBelong", pertenece.find);
+  router.get("/findBelong", pertenece.find);
 
   router.get("/findAllBelong", pertenece.findAll);
 

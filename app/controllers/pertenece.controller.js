@@ -216,9 +216,8 @@ exports.robar = (req,res) => {
 // Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {
   const partida = req.body.partida;
-  var condition = partida ? { partida: { [Op.iLike]: `%${partida}%` } } : null;
 
-  Pertenece.findAll({ where: condition })
+  Pertenece.findAll({where:{partida: partida}})
   .then(data => {
     res.send(data);
   })
@@ -229,11 +228,19 @@ exports.findAll = (req, res) => {
     });
   });
 };
-//USELESS
+
 exports.find = (req, res) => {
-    const pertenece = req.body.pertenece;
-    res.send({message : "Se ha encontrado pertenece ", pertenece});
-  };
+  const juagdor = req.body.jugador;
+  const partida = req.body.partida;
+  Pertenece.findAll({where:{partida: partida, jugador:juagdor}})
+  .then(data => {
+      res.send(data);
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando relcion pertenece" });
+  });
+};
 
 /**
  * Actualiza una sentyencia pertenece, se va a usar cada 
