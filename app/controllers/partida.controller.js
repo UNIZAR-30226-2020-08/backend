@@ -150,52 +150,63 @@ exports.cantar = (req,res) => {
 
 exports.cambiar7 = (req,res) => {
   const partida = req.body.nombre;
-  const triunfo = req.body.triunfo;
   const jugador = req.body.jugador;
   Pertenece.findOne({where:{partida: partida, jugador:jugador}})
   .then(data1 => {
-    console.log(triunfo);
-    var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
-    var carta = ['c1','c2','c3','c4','c5','c6'];
-    var sieteTriunfo = '6' + triunfo[1];
-    console.log(mano);
-    var cambio = false;
-    var posicion;
-    for (i = 0; i < 6; i++){
-      if (mano[i] === sieteTriunfo){
-        cambio = true;
-        posicion = carta[i];
-      }
-    }
-    var pertenece = selectCard(posicion,jugador,partida,triunfo);
-    console.log(pertenece);
-    if (cambio === true){
-      Pertenece.update(pertenece, {
-        where: { partida: partida, jugador: jugador }
-      })
-      .then(num => {
-        console.log({ message: "Se ha cambiado el 7 el la mano"});
-        var partidaCante = {
-          nombre: partida,
-          triunfo: sieteTriunfo,
+    Partida.findByPk(partida)
+    .then(data => {
+      const triunfo = data.triunfo;
+      console.log(triunfo);
+      var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
+      var carta = ['c1','c2','c3','c4','c5','c6'];
+      var sieteTriunfo = '6' + triunfo[1];
+      console.log(mano);
+      var cambio = false;
+      var posicion;
+      for (i = 0; i < 6; i++){
+        if (mano[i] === sieteTriunfo){
+          cambio = true;
+          posicion = carta[i];
         }
-        Partida.update(partidaCante, {
-          where: { nombre: partida }
+      }
+      var pertenece = selectCard(posicion,jugador,partida,triunfo);
+      console.log(pertenece);
+      if (cambio === true){
+        Pertenece.update(pertenece, {
+          where: { partida: partida, jugador: jugador }
         })
         .then(num => {
-          res.send(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
+          console.log({ message: "Se ha cambiado el 7 el la mano"});
+          var partidaCante = {
+            nombre: partida,
+            triunfo: sieteTriunfo,
+          }
+          Partida.update(partidaCante, {
+            where: { nombre: partida }
+          })
+          .then(num => {
+            res.send(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
+          })
+          .catch(err => {
+            res.status(500).send({
+                message: err.message || `Error actualizando la partida: ${partida}` });
+          });
         })
         .catch(err => {
-          res.status(500).send({
-              message: err.message || `Error actualizando la partida: ${partida}` });
+            res.status(500).send({ message: err.message || "Error actualizando pertenece." });
         });
-      })
-      .catch(err => {
-          res.status(500).send({ message: err.message || "Error actualizando pertenece." });
-      });
-    }else{
-      res.send('No puedes cambiar el 7');
-    }
+      }else{
+        res.send('No puedes cambiar el 7');
+      }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: err.message || "Error recuperando partida " + partida });
+    });
+
+
+
+    
   })
   .catch(err => {
       res.status(500).send({
