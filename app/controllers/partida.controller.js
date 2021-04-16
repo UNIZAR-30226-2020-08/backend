@@ -39,32 +39,10 @@ exports.iniciar_partida = (req, res) => {
 // NO VA
 exports.findAll = (req, res) => {
   const tipo = req.body.tipo;
-  var sol = [];
   Partida.findAll({ where: { tipo: tipo} })
     .then(dataPartidas => {
-        var i = dataPartidas.length - 1;
-        console.log(`i es: ${i}`);
-        for (a of dataPartidas){
-          console.log(`La partida es ${a.nombre}`);
-          //console.log(a.dataValues);
-          Pertenece.findAll({ where: { partida: a.nombre } })
-          .then(data => {
-            //console.log(data.length);
-            if (data.length > 0){
-              var partida = {
-                nombre: data[0].partida,
-                jugadores_online: (data.length > 0) ? data.length : 0,
-                tipo : (tipo == 0) ? 'Individual' : 'Parejas',
-              };
-              sol.push(partida);
-            }
-          })
-          .catch(err => {
-            res.status(500).send({
-              message: err.message || "Error recuperando jugadores pertenecientes a partida." });
-          });
-          i--;
-        }
+      var sol;
+      sol = devolverPartidas(dataPartidas,tipo);
       res.send(sol);
     })
     .catch(err => {
@@ -139,3 +117,34 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   res.send({message : "Se han eliminado todas las partidas"});
   };
+
+function devolverPartidas(dataPartidas,tipo)
+{
+  var sol = [];
+  var i = dataPartidas.length - 1;
+  console.log(`i es: ${i}`);
+  for (a of dataPartidas){
+    Pertenece.findAll({ where: { partida: a.nombre } })
+    .then(data => {
+      if (data.length > 0){
+        console.log(`La partida ${data[0].partida} tiene ${data.length}`);
+        var partida = {
+          nombre: data[0].partida,
+          jugadores_online: (data.length > 0) ? data.length : 0,
+          tipo : (tipo == 0) ? 'Individual' : 'Parejas',
+        };
+        sol.push(partida);
+        if (i === 0){
+          console.log(sol);
+          return sol;
+        }
+      }
+      i--;
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Error recuperando jugadores pertenecientes a partida." });
+    });
+  }
+  
+}
