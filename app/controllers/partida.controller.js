@@ -123,23 +123,48 @@ exports.delete = (req, res) => {
 **/
 exports.cantar = (req,res) => {
   const partida = req.body.nombre;
-  const triunfo = req.body.triunfo;
   const juagdor = req.body.jugador;
   Pertenece.findOne({where:{partida: partida, jugador:juagdor}})
   .then(data1 => {
-    console.log(triunfo[1]);
-    var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
-    console.log(mano);
-    for (c of mano){
-      if (c[0] === '7'){
-        var cante = '9' + c[1];
-        console.log(cante);
-
-      }else if(data1[0] === '9' && rey === false){
-
+    Partida.findByPk(partida)
+    .then(data => {
+      const triunfo = data.triunfo;
+      console.log(triunfo[1]);
+      var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
+      console.log(mano);
+      for (i = 0; i < 6; i++){
+        if ((mano[i])[0] === '7'){
+          var cante = '9' + (mano[i])[1];
+          console.log(cante);
+          for(j = i; j < 6; j++){
+            if(mano[i] === cante){
+              if (cante[1] === triunfo[1]){
+                res.send(`Has cantado las 40 en ${triunfo[1]}`);
+              }else{
+                res.send(`Has cantado las veinte en ${cante[1]}`);
+              }
+            }
+          }
+        }else if((mano[i])[0] === '9'){
+          var cante = '7' + (mano[i])[1];
+          console.log(cante);
+          for(j = i; j < 6; j++){
+            if(mano[i] === cante){
+              if (cante[1] === triunfo[1]){
+                res.send(`Has cantado las 40 en ${triunfo[1]}`);
+              }else{
+                res.send(`Has cantado las veinte en ${cante[1]}`);
+              }
+            }
+          }
+        }
       }
-    }
-    res.send(data1);
+      res.send('No se puede cantar');
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: err.message || "Error recuperando partida " + partida });
+    });
   })
   .catch(err => {
       res.status(500).send({
@@ -168,10 +193,10 @@ exports.cambiar7 = (req,res) => {
           cambio = true;
           posicion = carta[i];
         }
-      }
-      var pertenece = selectCard(posicion,jugador,partida,triunfo);
-      console.log(pertenece);
+      } 
       if (cambio === true){
+        var pertenece = selectCard(posicion,jugador,partida,triunfo);
+        console.log(pertenece);
         Pertenece.update(pertenece, {
           where: { partida: partida, jugador: jugador }
         })
