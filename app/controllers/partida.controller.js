@@ -9,7 +9,7 @@ exports.create = (req, res) => {
   const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
   const partida = {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
-    triunfo: req.body.triunfo,
+    triunfo: req.body.triunfo ? req.body.triunfo : 'NO',
     estado: req.body.estado,
     tipo: req.body.tipo,
     fecha: fechaParsed,

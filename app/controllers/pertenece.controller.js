@@ -127,7 +127,7 @@ exports.repartir = (req,res) =>{
     res.status(500).send(`Error recuperando partida ${partida}`);
   });
 };
-
+/*
 exports.robar = (req,res) => {
   const partida = req.body.partida;
   const jugador = req.body.jugador;
@@ -162,6 +162,7 @@ exports.robar = (req,res) => {
           message: err.message || "Error recuperando partida " + partida });
   });
 };
+*/
 
 // Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {

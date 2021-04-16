@@ -28,11 +28,8 @@ exports.create = (req, res) => {
 
 // Devuelve todos los amigos de un usuario
 exports.findAll = (req, res) => {
-    const usuario = req.body.usuario;
-
-    var condition = usuario ? { usuario: { [Op.iLike]: `%${usuario}%` } } : null;
-  
-    Amigo.findAll({ where: condition })
+    const usuario = req.body.usuario;  
+    Amigo.findAll({ where: {usuario: usuario} })
       .then(data => {
         var friends = [];
         i = 0;

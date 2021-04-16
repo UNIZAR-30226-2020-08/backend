@@ -3,11 +3,13 @@ module.exports = app => {
   
     var router = require("express").Router();
   
-    // Create a new amigo
+    /** 
+    * Dado dos usuarios crea la relacion amigo 
+    **/
     router.post("/", amigo.create);
   
-    // Retrieve all published amigo
-    //router.get("/findAll", amigo.findAll);
+    // Dado un usario devuelve todos sus amigos.
+    router.get("/findAll", amigo.findAll);
       
     // Buscar un usario
     router.get("/findFriend", amigo.findAll);
