@@ -1,21 +1,23 @@
 module.exports = app => {
-    const pertenece = require("../controllers/pertenece.controller.js");
-  
-    var router = require("express").Router();
-  
-    router.post("/", pertenece.create);
+  const pertenece = require("../controllers/pertenece.controller.js");
 
-    //router.get("/findBelong", pertenece.find);
+  var router = require("express").Router();
 
-    router.get("/findAllBelong", pertenece.findAll);
+  router.post("/", pertenece.create);
 
-    router.delete("/dropBelong", pertenece.delete);
+  //router.get("/findBelong", pertenece.find);
 
-    router.delete("/dropGameBelong", pertenece.deleteAll);
-  
-    router.put("/updateBelong", pertenece.update);
+  router.get("/findAllBelong", pertenece.findAll);
 
-    router.put("/repartir", pertenece.repartir);
-  
-    app.use('/api/pertenece', router);
-  };
+  router.delete("/dropBelong", pertenece.delete);
+
+  router.delete("/dropGameBelong", pertenece.deleteAll);
+
+  router.put("/updateBelong", pertenece.update);
+
+  router.put("/repartir", pertenece.repartir);
+
+  router.put("/robar", pertenece.robar);
+
+  app.use('/api/pertenece', router);
+};

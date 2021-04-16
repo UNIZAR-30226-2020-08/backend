@@ -1,4 +1,5 @@
 const db = require("../models");
+const pertenece = require("../models/pertenece");
 const Pertenece = db.pertenece;
 const Partida = db.partida;
 const CartaDisponible = db.carta_disponible;
@@ -127,29 +128,77 @@ exports.repartir = (req,res) =>{
     res.status(500).send(`Error recuperando partida ${partida}`);
   });
 };
-/*
+
 exports.robar = (req,res) => {
   const partida = req.body.partida;
   const jugador = req.body.jugador;
-  const carta = req.body.carta; // Pasar como parametro la posicion que ha tirado c1,c2,c3... contando de izquierda a derecha
+  // Pasar como parametro la posicion que ha tirado c1,c2,c3... contando de izquierda a derecha
+  const carta = req.body.carta;
+  
   Partida.findByPk(partida)
   .then(dataPartida => {
     CartaDisponible.findAll({ where: {partida : partida} })
     .then(dataCD => {
-      const pertenece = {
-        jugador: jugador,
-        partida: partida,
-        `${carta}`: 'NO', 
-      };
-      if (dataCD.length > 0){
-        place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
-        var card = dataCD[place].carta;
-        while(card === 'NO' && card === dataPartida.triunfo){
+      var card;
+      if (dataCD.length > 2){
+        do {
           place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
           card = dataCD[place].carta;
-        }
+        }while(card === 'NO' | card === dataPartida.triunfo);
+        var pertenece = selectCard(carta,jugador,partida,card);
+        console.log(pertenece);
+        //res.send(pertenece);
+        CartaDisponible.destroy({
+          where: { carta: card, partida: partida }
+        })
+        .then(num => {
+          console.log(`La carta ${card} ya no esta disponible`);
+          Pertenece.update(pertenece, {
+            where: { partida: partida, jugador: jugador }
+          })
+          .then(num => {
+                  res.send({ message: `Se ha robado la carta ${card}` });
+          })
+          .catch(err => {
+              res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+          });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || `Error eliminando la carta ${card}`});
+        });
       }else{
         //Se reparte la carta que esta boca arriba
+        var pertenece = selectCard(carta,jugador,partida,dataPartida.triunfo);
+        console.log(pertenece);
+        CartaDisponible.destroy({
+          where: { carta: (dataPartida.triunfo), partida: partida }
+        })
+        .then(num => {
+          console.log(`La carta ${dataPartida.triunfo} ya no esta disponible`);
+          CartaDisponible.destroy({
+            where: { carta: 'NO', partida: partida }
+          })
+          .then(num => {
+            console.log(`La carta NO ya no esta disponible`);
+            Pertenece.update(pertenece, {
+              where: { partida: partida, jugador: jugador }
+            })
+            .then(num => {
+                    res.send({ message: `Se ha robado la carta ${dataPartida.triunfo}` });
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+            });
+          })
+          .catch(err => {
+            res.status(500).send({ message: err.message || `Error eliminando la carta NO` });
+          });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || `Error eliminando la carta ${dataPartida.triunfo}`});
+        });
       }
     })
     .catch(err => {
@@ -162,7 +211,7 @@ exports.robar = (req,res) => {
           message: err.message || "Error recuperando partida " + partida });
   });
 };
-*/
+
 
 // Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {
@@ -252,3 +301,53 @@ exports.deleteAll = (req, res) => {
       });
   });
   };
+
+function selectCard(carta,jugador_,partida_,card_) {
+  var pertenece;
+    switch (carta){
+      case 'c1':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c1: card_
+        };
+        break;
+      case 'c2':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c2: card_
+        };
+        break;
+      case 'c3':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c3: card_
+        };
+        break;
+      case 'c4':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c4: card_
+        };
+        break;
+      case 'c5':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c5: card_
+        };
+        break;
+      case 'c6':
+        pertenece = {
+          jugador: jugador_,
+          partida: partida_,
+          c6: card_
+        };
+        break;
+    }
+    return pertenece;
+    
+}
