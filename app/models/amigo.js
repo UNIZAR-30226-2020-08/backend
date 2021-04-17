@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     'aceptado': {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: "null"
+      //comment: "null"
     }
   }, {
     tableName: 'amigo'
