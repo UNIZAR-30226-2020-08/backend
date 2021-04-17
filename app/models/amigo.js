@@ -15,7 +15,6 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     }
   }, {
-    tableName: 'amigo',
-    timestamps: false
+    tableName: 'amigo'
   });
 };

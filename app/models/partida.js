@@ -27,6 +27,30 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATEONLY,
       allowNull: true,
       comment: "null"
+    },
+    'o_20': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: 'NO',
+      comment: "null"
+    },
+    'c_20': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: 'NO',
+      comment: "null"
+    },
+    'b_20': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: 'NO',
+      comment: "null"
+    },
+    'e_20': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: 'NO',
+      comment: "null"
     }
   }, {
     tableName: 'partida'

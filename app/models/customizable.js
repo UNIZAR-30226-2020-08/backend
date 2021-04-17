@@ -9,7 +9,6 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     }
   }, {
-    tableName: 'customizable',
-    timestamps: false
+    tableName: 'customizable'
   });
 };

@@ -14,7 +14,6 @@ module.exports = function(sequelize, DataTypes) {
       comment: "null"
     }
   }, {
-    tableName: 'carta',
-    timestamps: false
+    tableName: 'carta'
   });
 };

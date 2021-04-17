@@ -15,7 +15,6 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     }
   }, {
-    tableName: 'carta_disponible',
-    timestamps: false
+    tableName: 'carta_disponible'
   });
 };
