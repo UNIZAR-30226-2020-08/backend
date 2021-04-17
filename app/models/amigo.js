@@ -13,6 +13,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       comment: "null",
       primaryKey: true
+    },
+    'aceptado': {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'amigo'
