@@ -7,7 +7,7 @@ module.exports = app => {
 
   router.get("/findGame", partida.find);
 
-  router.get("/findAllGames", partida.findAll);
+  router.get("/findAllGames/:tipo", partida.findAll);
 
   router.delete("/dropGame", partida.delete);
 
