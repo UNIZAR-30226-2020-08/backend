@@ -42,13 +42,17 @@ exports.iniciar_partida = (req, res) => {
  **/
 // NO VA
 exports.findAll = (req, res) => {
-  tipo = req.params.tipo;
+  const tipo = req.params.tipo;
   console.log(req.params);
   Partida.findAll({ where: { tipo: tipo} })
     .then(dataPartidas => {
-      //var partidasDisponibles = [];
-      //partidasDisponibles = devolverPartidas(dataPartidas,tipo);
-      res.send(dataPartidas);
+      devolverPartidas(dataPartidas,tipo)
+      .then(partidasDisponibles => {
+        res.send(partidasDisponibles);
+      })
+      .catch(err => {
+        res.status(500).send({ message: err.message || "Error recuperando partidas." });
+      });
     })
     .catch(err => {
       res.status(500).send({ message: err.message || "Error recuperando partidas." });
@@ -226,15 +230,15 @@ async function devolverPartidas(dataPartidas,tipo)
 {
   var partidasDisponibles = [];
   let data;
-  var nPartidas = dataPartidas.count;
+  var nPartidas = dataPartidas.length;
   var maxPermitidoPartida;
-  if (tipo === 0){
+  if (tipo === '0'){
     maxPermitidoPartida = 2;
-  }else if(tipo === 1){
+  }else if(tipo === '1'){
     maxPermitidoPartida = 4;
   }
   console.log(`El numero de partidas es: ${nPartidas}`);
-  for (a of dataPartidas.rows){
+  for (a of dataPartidas){
     await Pertenece.findAndCountAll({ where: { partida: a.nombre } })
     .then(dataPertenece => {
       //console.log(dataPertenece);
@@ -245,14 +249,14 @@ async function devolverPartidas(dataPartidas,tipo)
       res.status(500).send({
         message: err.message || "Error recuperando jugadores pertenecientes a partida." });
     });
-    //console.log(data);
+    console.log(data);
     if (data.count > 0 && data.count < maxPermitidoPartida){
       console.log(`La partida ${data.rows[0].partida} tiene ${data.count}`);
       partidasDisponibles.push( { nombre: data.rows[0].partida, 
                                   jugadores_online: data.count });
     }
   }
-  console.log(nPartidas);
+  //console.log(nPartidas);
   console.log(partidasDisponibles);
   return partidasDisponibles;
 }
