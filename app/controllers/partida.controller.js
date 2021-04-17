@@ -125,41 +125,21 @@ exports.cantar = (req,res) => {
   const partida = req.body.nombre;
   const juagdor = req.body.jugador;
   Pertenece.findOne({where:{partida: partida, jugador:juagdor}})
-  .then(data1 => {
+  .then(dataPertenece => {
     Partida.findByPk(partida)
-    .then(data => {
-      const triunfo = data.triunfo;
-      console.log(triunfo[1]);
-      var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
-      console.log(mano);
-      for (i = 0; i < 6; i++){
-        if ((mano[i])[0] === '7'){
-          var cante = '9' + (mano[i])[1];
-          console.log(cante);
-          for(j = i; j < 6; j++){
-            if(mano[i] === cante){
-              if (cante[1] === triunfo[1]){
-                res.send(`Has cantado las 40 en ${triunfo[1]}`);
-              }else{
-                res.send(`Has cantado las veinte en ${cante[1]}`);
-              }
-            }
-          }
-        }else if((mano[i])[0] === '9'){
-          var cante = '7' + (mano[i])[1];
-          console.log(cante);
-          for(j = i; j < 6; j++){
-            if(mano[i] === cante){
-              if (cante[1] === triunfo[1]){
-                res.send(`Has cantado las 40 en ${triunfo[1]}`);
-              }else{
-                res.send(`Has cantado las veinte en ${cante[1]}`);
-              }
-            }
-          }
-        }
-      }
-      res.send('No se puede cantar');
+    .then(dataPartida => {
+      var cantes = devolverCantes(dataPartida,dataPertenece);
+      console.log(cantes);
+      Partida.update(cantes, {
+        where: { nombre: dataPartida.nombre }
+      })
+      .then(num => {
+        res.send(cantes);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: err.message || `Error actualizando la partida: ${partida}` });
+      });
     })
     .catch(err => {
         res.status(500).send({
@@ -321,6 +301,56 @@ function selectCard(carta,jugador_,partida_,card_) {
         };
         break;
     }
-    return pertenece;
-    
+    return pertenece;   
+}
+
+function devolverCantes(data,data1){
+  var cantes = [];
+  const triunfo = data.triunfo;
+  console.log(triunfo[1]);
+  var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
+  console.log(mano);
+  for (i = 0; i < 6; i++){
+    if ((mano[i])[0] === '7'){
+      var cante = '9' + (mano[i])[1];
+      console.log(cante);
+      for(j = i - 1; j < 6; j++){
+        if(mano[j] === cante.toString()){
+          console.log(mano[j]);
+          if (cante[1] === triunfo[1]){
+            console.log(`Has cantado las 40 en ${triunfo[1]}`);
+            cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
+          }else{
+            console.log(`Has cantado las veinte en ${cante[1]}`);
+            cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
+          }
+        }
+      }
+    }else if((mano[i])[0] === '9'){
+      var cante = '7' + (mano[i])[1];
+      console.log(cante);
+      for(j = i; j < 6; j++){
+        if(mano[j].toString() === cante.toString()){
+          console.log(mano[j]);
+          if (cante[1] === triunfo[1]){
+            console.log(`Has cantado las 40 en ${triunfo[1]}`);
+            cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
+          }else{
+            console.log(`Has cantado las veinte en ${cante[1]}`);
+            cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
+          }
+        }
+      }
+    }
+  }
+  if (cantes !== null){
+    var partida = {};
+    partida['nombre'] = cantes[0].partida;
+    for (a of cantes){
+      partida[a.palo] = a.usuario; 
+    }
+    return partida;
+  }else{
+    return 'No hay cantes';
+  }
 }
