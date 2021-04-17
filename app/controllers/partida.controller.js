@@ -161,27 +161,28 @@ exports.cambiar7 = (req,res) => {
     Partida.findByPk(partida)
     .then(data => {
       const triunfo = data.triunfo;
-      console.log(triunfo);
-      var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
+      //console.log(triunfo);
       var carta = ['c1','c2','c3','c4','c5','c6'];
       var sieteTriunfo = '6' + triunfo[1];
-      console.log(mano);
       var cambio = false;
       var posicion;
       for (i = 0; i < 6; i++){
-        if (mano[i] === sieteTriunfo){
+        if (data1[carta[i]] === sieteTriunfo){
           cambio = true;
           posicion = carta[i];
         }
       } 
       if (cambio === true){
-        var pertenece = selectCard(posicion,jugador,partida,triunfo);
-        console.log(pertenece);
+        var pertenece = {};
+        pertenece['jugador'] = jugador;
+        pertenece['partida'] = partida;
+        pertenece[posicion] = triunfo;
+        //console.log(pertenece);
         Pertenece.update(pertenece, {
           where: { partida: partida, jugador: jugador }
         })
         .then(num => {
-          console.log({ message: "Se ha cambiado el 7 el la mano"});
+          //console.log({ message: "Se ha cambiado el 7 el la mano"});
           var partidaCante = {
             nombre: partida,
             triunfo: sieteTriunfo,
@@ -190,7 +191,8 @@ exports.cambiar7 = (req,res) => {
             where: { nombre: partida }
           })
           .then(num => {
-            res.send(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
+            console.log(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
+            res.status(200).send({pertenece,partidaCante});
           })
           .catch(err => {
             res.status(500).send({
@@ -207,11 +209,7 @@ exports.cambiar7 = (req,res) => {
     .catch(err => {
         res.status(500).send({
             message: err.message || "Error recuperando partida " + partida });
-    });
-
-
-
-    
+    });    
   })
   .catch(err => {
       res.status(500).send({
@@ -252,56 +250,6 @@ function devolverPartidas(dataPartidas,tipo)
     console.log(partidasDisponibles);
     return partidasDisponibles;
   }
-  
-}
-
-function selectCard(carta,jugador_,partida_,card_) {
-  var pertenece;
-    switch (carta){
-      case 'c1':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c1: card_
-        };
-        break;
-      case 'c2':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c2: card_
-        };
-        break;
-      case 'c3':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c3: card_
-        };
-        break;
-      case 'c4':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c4: card_
-        };
-        break;
-      case 'c5':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c5: card_
-        };
-        break;
-      case 'c6':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c6: card_
-        };
-        break;
-    }
-    return pertenece;   
 }
 
 function devolverCantes(data,data1){
