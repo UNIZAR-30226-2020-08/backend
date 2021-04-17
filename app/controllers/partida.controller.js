@@ -43,7 +43,7 @@ exports.iniciar_partida = (req, res) => {
 // NO VA
 exports.findAll = (req, res) => {
   tipo = req.params.tipo;
-  Partida.findAndCountAll({ where: { tipo: tipo} })
+  Partida.findAll({ where: { tipo: tipo} })
     .then(dataPartidas => {
       //var partidasDisponibles = [];
       //partidasDisponibles = devolverPartidas(dataPartidas,tipo);
