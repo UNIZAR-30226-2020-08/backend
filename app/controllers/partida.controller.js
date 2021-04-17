@@ -43,9 +43,9 @@ exports.iniciar_partida = (req, res) => {
 // NO VA
 exports.findAll = (req, res) => {
   const tipo = req.body.tipo;
-  Partida.findAll({ where: { tipo: tipo} })
+  Partida.findAndCountAll({ where: { tipo: tipo} })
     .then(dataPartidas => {
-      //var partidasDisponibles;
+      //var partidasDisponibles = [];
       //partidasDisponibles = devolverPartidas(dataPartidas,tipo);
       res.send(dataPartidas);
     })
@@ -221,35 +221,39 @@ exports.deleteAll = (req, res) => {
   res.send({message : "Se han eliminado todas las partidas"});
   };
 
-function devolverPartidas(dataPartidas,tipo)
+async function devolverPartidas(dataPartidas,tipo)
 {
   var partidasDisponibles = [];
-  var i = dataPartidas.length - 1;
-  console.log(`i es: ${i}`);
-  for (a of dataPartidas){
-    Pertenece.findAll({ where: { partida: a.nombre } })
-    .then(data => {
-      if (data.length > 0){
-        console.log(`La partida ${data[0].partida} tiene ${data.length}`);
-        var partidaDisponible = {
-          nombre: data[0].partida,
-          jugadores_online: (data.length > 0) ? data.length : 0,
-          tipo : (tipo == 0) ? 'Individual' : 'Parejas',
-        };
-        partidasDisponibles.push(partidaDisponible);
-      }
-      i--;
+  let data;
+  var nPartidas = dataPartidas.count;
+  var maxPermitidoPartida;
+  if (tipo === 0){
+    maxPermitidoPartida = 2;
+  }else if(tipo === 1){
+    maxPermitidoPartida = 4;
+  }
+  console.log(`El numero de partidas es: ${nPartidas}`);
+  for (a of dataPartidas.rows){
+    await Pertenece.findAndCountAll({ where: { partida: a.nombre } })
+    .then(dataPertenece => {
+      //console.log(dataPertenece);
+      data = dataPertenece;
+      //console.log(data);
     })
     .catch(err => {
       res.status(500).send({
         message: err.message || "Error recuperando jugadores pertenecientes a partida." });
     });
+    //console.log(data);
+    if (data.count > 0 && data.count < maxPermitidoPartida){
+      console.log(`La partida ${data.rows[0].partida} tiene ${data.count}`);
+      partidasDisponibles.push( { nombre: data.rows[0].partida, 
+                                  jugadores_online: data.count });
+    }
   }
-  if (i === 0){
-    console.log(i);
-    console.log(partidasDisponibles);
-    return partidasDisponibles;
-  }
+  console.log(nPartidas);
+  console.log(partidasDisponibles);
+  return partidasDisponibles;
 }
 
 function devolverCantes(data,data1){
