@@ -98,7 +98,7 @@ exports.repartir = (req,res) =>{
       })
       .then(num => {
         for (a of mano) {
-          await CartaDisponible.destroy({
+          CartaDisponible.destroy({
             where: { carta: a, partida: partida }
           })
           .then(num => {
