@@ -56,7 +56,7 @@ exports.signin = (req, res) => {
 
       var token = jwt.sign({ usuario: data.usuario, copas: data.copas, f_carta: data.f_carta,
       f_tapete: data.f_tapete}, config.secret, {
-        expiresIn: '12h' // 1 hours
+        //expiresIn: '12h' // 1 hours
       });
 
       res.status(200).send({
