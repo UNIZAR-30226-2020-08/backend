@@ -64,8 +64,8 @@ exports.repartir = (req,res) =>{
   Partida.findByPk(partida)
   .then(dataPartida => {
     const pertenece = {
-      jugador: req.body.jugador,
-      partida: req.body.partida,
+      jugador: jugador,
+      partida: partida,
       c1: 'NO',
       c2: 'NO',
       c3: 'NO',
