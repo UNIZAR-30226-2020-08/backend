@@ -61,7 +61,7 @@ exports.find = (req, res) => {
 
 // Actualiza un usuario
 exports.update = (req, res) => {
-    const n_usuario = req.body.username;
+    const n_usuario = req.params.username;
     Usuario.update(req.body, {
         where: { username: n_usuario }
     })

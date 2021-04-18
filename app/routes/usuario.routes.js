@@ -19,7 +19,7 @@ module.exports = app => {
     //router.delete("/dropAll", usuario.deleteAll);
 
     // Update a usuario with id
-    router.put("/updateUser", usuario.update);
+    router.put("/updateUser/:username", usuario.update);
   
     app.use('/api/usuario', router);
   };
