@@ -15,9 +15,9 @@ module.exports = app => {
 
   router.put("/updateBelong", pertenece.update);
 
-  router.put("/repartir", pertenece.repartir);
+  router.put("/repartir/:partida/:jugador", pertenece.repartir);
 
-  router.put("/robar", pertenece.robar);
+  router.put("/robar/:partida/:jugador/:carta", pertenece.robar);
 
   app.use('/api/pertenece', router);
 };

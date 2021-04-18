@@ -58,8 +58,8 @@ exports.create = (req, res) => {
 * Dados un jugador y una partida se le reparten las 6 cartas  
 */
 exports.repartir = (req,res) =>{
-  const partida = req.body.partida;
-  const jugador = req.body.jugador;
+  const partida = req.params.partida;
+  const jugador = req.params.jugador;
   Partida.findByPk(partida)
   .then(dataPartida => {
     const pertenece = {
@@ -130,10 +130,10 @@ exports.repartir = (req,res) =>{
 };
 
 exports.robar = (req,res) => {
-  const partida = req.body.partida;
-  const jugador = req.body.jugador;
+  const partida = req.params.partida;
+  const jugador = req.params.jugador;
   // Pasar como parametro la posicion que ha tirado c1,c2,c3... contando de izquierda a derecha
-  const carta = req.body.carta;
+  const carta = req.params.carta;
   
   Partida.findByPk(partida)
   .then(dataPartida => {
