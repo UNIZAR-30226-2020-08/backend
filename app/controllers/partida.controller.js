@@ -2,15 +2,20 @@ const { PASSWORD } = require("../config/db.config");
 const db = require("../models");
 const Partida = db.partida;
 const Pertenece = db.pertenece;
+const CartaDisponible = db.carta_disponible;
+const Carta = db.carta;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const fecha = new Date();
   const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const palos = ['O','C','E','B'];
+  const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
+  console.log(n)
   const partida = {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
-    triunfo: req.body.triunfo ? req.body.triunfo : 'NO',
-    estado: req.body.estado,
+    triunfo: req.body.triunfo ? req.body.triunfo : n.toString(),
+    estado: req.body.estado ? req.body.estado  : 0,
     tipo: req.body.tipo,
     fecha: fechaParsed,
     o_20: 'NO',
@@ -19,8 +24,34 @@ exports.create = (req, res) => {
     b_20: 'NO',
   };
   Partida.create(partida)
-      .then(data => {
-        res.send(data);
+      .then(dataPartida => {
+        Carta.findAll()
+        .then(data => {
+          for (card of data)
+          {
+            const carta_disponible = {
+              partida: dataPartida.nombre,
+              carta: card.carta
+            };
+            CartaDisponible.create(carta_disponible)
+            .then(data => {
+              console.log(`Se ha insertado el ${data.carta}`);
+            })
+            .catch(err => {
+              res.status(500).send({
+                message:
+                  err.message || "Error creando carta_disponible"
+              });
+            });
+          }
+          res.send(dataPartida);
+        })
+        .catch(err => {
+          res.status(500).send({
+            message:
+              err.message || "Error recuperando cartas."
+          });
+        });
       })
       .catch(err => {
         res.status(500).send({

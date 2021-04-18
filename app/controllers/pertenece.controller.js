@@ -176,23 +176,14 @@ exports.robar = (req,res) => {
         })
         .then(num => {
           console.log(`La carta ${dataPartida.triunfo} ya no esta disponible`);
-          CartaDisponible.destroy({
-            where: { carta: 'NO', partida: partida }
+          Pertenece.update(pertenece, {
+            where: { partida: partida, jugador: jugador }
           })
           .then(num => {
-            console.log(`La carta NO ya no esta disponible`);
-            Pertenece.update(pertenece, {
-              where: { partida: partida, jugador: jugador }
-            })
-            .then(num => {
-                    res.send({ message: `Se ha robado la carta ${dataPartida.triunfo}` });
-            })
-            .catch(err => {
-                res.status(500).send({ message: err.message || "Error actualizando pertenece." });
-            });
+                  res.send({ message: `Se ha robado la carta ${dataPartida.triunfo}` });
           })
           .catch(err => {
-            res.status(500).send({ message: err.message || `Error eliminando la carta NO` });
+              res.status(500).send({ message: err.message || "Error actualizando pertenece." });
           });
         })
         .catch(err => {
