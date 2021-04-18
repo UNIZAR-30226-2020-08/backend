@@ -250,7 +250,7 @@ async function devolverPartidas(dataPartidas,tipo)
         message: err.message || "Error recuperando jugadores pertenecientes a partida." });
     });
     console.log(data);
-    if (data.count < maxPermitidoPartida){
+    if (data.count > 0 && data.count < maxPermitidoPartida){
       console.log(`La partida ${data.rows[0].partida} tiene ${data.count}`);
       partidasDisponibles.push( { nombre: data.rows[0].partida, 
                                   jugadores_online: data.count });
