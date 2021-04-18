@@ -10,7 +10,7 @@ module.exports = app => {
     //router.get("/findAll", usuario.findAll);
       
     // Buscar un usario
-    router.get("/findUser", usuario.find);
+    router.get("/findUser/:username", usuario.find);
 
     // Eliminar un usuario
     router.delete("/dropUser", usuario.delete);

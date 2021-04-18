@@ -44,11 +44,12 @@ exports.findAll = (req, res) => {
 
 // Busca a un usuario
 exports.find = (req, res) => {
-    const username = req.body.username;
+    const username = req.params.username;
 
     Usuario.findByPk(username)
     .then(data => {
-        res.send({data});
+      data.password = undefined;
+        res.send(data);
     })
     .catch(err => {
         res.status(500).send({

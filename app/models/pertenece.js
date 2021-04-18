@@ -19,6 +19,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       comment: "null"
     },
+    'orden': {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "null"
+    },
     'c1': {
       type: DataTypes.STRING,
       allowNull: true,
