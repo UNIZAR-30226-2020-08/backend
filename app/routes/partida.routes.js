@@ -11,11 +11,11 @@ module.exports = app => {
 
   router.delete("/dropGame", partida.delete);
 
-  router.put("/updateGame", partida.update);
+  router.put("/updateGame/:nombre", partida.update);
 
-  router.put("/cantar", partida.cantar);
+  router.put("/cantar/:nombre/:jugador", partida.cantar);
 
-  router.put("/cambiar7", partida.cambiar7);
+  router.put("/cambiar7/:nombre/:jugador", partida.cambiar7);
 
   app.use('/api/partida', router);
 };
