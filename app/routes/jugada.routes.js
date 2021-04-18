@@ -5,7 +5,7 @@ module.exports = app => {
 
   router.post("/", jugada.create);
 
-  router.get("/findPlay", jugada.find);
+  router.get("/findPlay/:nronda/:partida", jugada.find);
 
   router.get("/findAllPlays", jugada.findAll);
 

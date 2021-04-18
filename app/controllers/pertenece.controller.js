@@ -206,7 +206,7 @@ exports.robar = (req,res) => {
 
 // Devuelve todos los jugadores de la partida
 exports.findAll = (req, res) => {
-  const partida = req.body.partida;
+  const partida = req.params.partida;
 
   Pertenece.findAll({where:{partida: partida}})
   .then(data => {

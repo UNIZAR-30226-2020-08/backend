@@ -71,7 +71,6 @@ exports.iniciar_partida = (req, res) => {
  * Devuelve todas las salas del tipo que se ha seleccionado y 
  * el numero de usuarios que hay en ella
  **/
-// NO VA
 exports.findAll = (req, res) => {
   const tipo = req.params.tipo;
   console.log(req.params);
@@ -284,7 +283,7 @@ async function devolverPartidas(dataPartidas,tipo)
     if (data.count < maxPermitidoPartida){
       console.log(`La partida ${a.nombre} tiene ${data.count}`);
       partidasDisponibles.push( { nombre: a.nombre, 
-                                  jugadores_online: data.count });
+                                  jugadores_online: (data.count).toString() });
     }
   }
   //console.log(nPartidas);

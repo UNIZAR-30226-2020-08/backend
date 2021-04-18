@@ -40,20 +40,17 @@ exports.findAll = (req, res) => {
         });
       });
   };
-//No va PERO DEVUELVE LA BAZA DE LA RONDA QUE SE LE PASA POR PARAMETRO
+//DEVUELVE LA BAZA DE LA RONDA QUE SE LE PASA POR PARAMETRO
 exports.find = (req, res) => {
-    const partida = req.body.partida;
-    const nronda = req.body.nronda;
-    var condition = partida ? { nronda: { [Op.eq]: `%${nronda}%`}, partida: { [Op.eq]: `%${partida}%`} } : null;
-    Jugada.findAll({ where: condition })
+    const partida = req.params.partida;
+    const nronda = req.params.nronda;
+    Jugada.findAll({ where: {partida: partida, nronda: nronda } })
     .then(data => {
-        res.send({data});
+        res.send(data);
     })
     .catch(err => {
         res.status(500).send({
-            message: 
-                err.message || "Error recuperando usuario con id: " + username
-        });
+            message: err.message || "Error recuperando usuario con id: " + username });
     });
   };
 

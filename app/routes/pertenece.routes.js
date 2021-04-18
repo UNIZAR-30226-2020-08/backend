@@ -7,7 +7,7 @@ module.exports = app => {
 
   router.get("/findBelong", pertenece.find);
 
-  router.get("/findAllBelong", pertenece.findAll);
+  router.get("/findAllBelong/:partida", pertenece.findAll);
 
   router.delete("/dropBelong", pertenece.delete);
 
