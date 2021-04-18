@@ -283,7 +283,7 @@ async function devolverPartidas(dataPartidas,tipo)
     if (data.count < maxPermitidoPartida){
       console.log(`La partida ${a.nombre} tiene ${data.count}`);
       partidasDisponibles.push( { nombre: a.nombre, 
-                                  jugadores_online: (data.count).toString() });
+                                  jugadores_online: data.count });
     }
   }
   //console.log(nPartidas);
