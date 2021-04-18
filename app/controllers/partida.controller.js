@@ -275,14 +275,14 @@ function devolverCantes(data,data1){
         if(mano[j] === cante.toString()){
           console.log(mano[j]);
           if (cante[1] === triunfo[1]){
-            if (triunfo[1].toLowerCase() + '_20' === 'NO'){
+            if (data[triunfo[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las 40 en ${triunfo[1]}`);
               cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
             }else{
               console.log(`Ya se han cantado las 40 en ${triunfo[1]}`);
             }
           }else{
-            if (cante[1].toLowerCase() + '_20' === 'NO'){
+            if (data[cante[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las veinte en ${cante[1]}`);
               cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
             }else{
@@ -299,14 +299,14 @@ function devolverCantes(data,data1){
         if(mano[j].toString() === cante.toString()){
           console.log(mano[j]);
           if (cante[1] === triunfo[1]){
-            if (triunfo[1].toLowerCase() + '_20' === 'NO'){
+            if (data[triunfo[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las 40 en ${triunfo[1]}`);
               cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
             }else{
               console.log(`Ya se han cantado las 40 en ${triunfo[1]}`);
             }
           }else{
-            if (cante[1].toLowerCase() + '_20' === 'NO'){
+            if (data[cante[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las veinte en ${cante[1]}`);
               cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
             }else{
