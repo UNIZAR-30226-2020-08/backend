@@ -110,8 +110,6 @@ exports.repartir = (req,res) =>{
               });
           });
         }
-        pertenece.jugador = undefined;
-        pertenece.partida = undefined;
        res.status(200).send(pertenece);
       })
       .catch(err => {
