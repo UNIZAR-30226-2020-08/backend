@@ -96,7 +96,7 @@ exports.find = (req, res) => {
     if (data === null){
       res.send({message: 'No existe la partdia'});
     }else{
-      res.send({data});
+      res.send(data);
     } 
   })
   .catch(err => {
