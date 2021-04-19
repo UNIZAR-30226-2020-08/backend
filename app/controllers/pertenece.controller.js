@@ -61,72 +61,72 @@ exports.create = (req, res) => {
 exports.repartir = (req,res) =>{
   const partida = req.params.partida;
   const jugador = req.params.jugador;
-  Partida.findByPk(partida)
-  .then(dataPartida => {
-    const pertenece = {
-      jugador: jugador,
-      partida: partida,
-      c1: 'NO',
-      c2: 'NO',
-      c3: 'NO',
-      c4: 'NO',
-      c5: 'NO',
-      c6: 'NO',
-    };
-    CartaDisponible.findAll({ where: {partida : partida} })
-    .then(dataCD => {
-      console.log(dataCD.length);
-      console.log(dataPartida.triunfo);
-      var card;
-      var mano = ['','','','','',''];
-      i = 0;
-      while(i <= 5){
-        place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
-        card = dataCD[place].carta;
-        if (card !== 'NO' && card !== mano[0] && card !== mano[1] && card !== mano[2] 
-            && card !== mano[3] && card !== mano[4] && card !== mano[5] 
-            && card !== dataPartida.triunfo){
-          mano[i] = card;
-          i++;
+  Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+  .then(pertenece => {
+    Partida.findByPk(partida)
+    .then(dataPartida => {
+      CartaDisponible.findAll({ where: {partida : partida} })
+      .then(dataCD => {
+        console.log(dataCD.length);
+        console.log(dataPartida.triunfo);
+        var card;
+        var mano = ['','','','','',''];
+        i = 0;
+        while(i <= 5){
+          place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
+          card = dataCD[place].carta;
+          if (card !== 'NO' && card !== mano[0] && card !== mano[1] && card !== mano[2] 
+              && card !== mano[3] && card !== mano[4] && card !== mano[5] 
+              && card !== dataPartida.triunfo){
+            mano[i] = card;
+            i++;
+          }
         }
-      }
-      console.log(mano);
-      pertenece.c1 = mano[0];pertenece.c2 = mano[1];pertenece.c3 = mano[2];
-      pertenece.c4 = mano[3];pertenece.c5 = mano[4];pertenece.c6 = mano[5];
-      Pertenece.update(pertenece, {
-        where: { partida: partida, jugador: jugador }
-      })
-      .then(num => {
-        for (a of mano) {
-          CartaDisponible.destroy({
-            where: { carta: a, partida: partida }
-          })
-          .then(num => {
-                  console.log(`La carta ${a} ya no esta disponible`);
-          })
-          .catch(err => {
-              res.status(500).send({
-                  message: err.message || `Error eliminando la carta ${a}`
-              });
-          });
-        }
-       res.status(200).send(pertenece);
+        console.log(mano);
+        pertenece.c1 = mano[0];pertenece.c2 = mano[1];pertenece.c3 = mano[2];
+        pertenece.c4 = mano[3];pertenece.c5 = mano[4];pertenece.c6 = mano[5];
+
+        Pertenece.update(pertenece.dataValues, {
+          where: { partida: partida, jugador: jugador }
+        })
+        .then(num => {
+          for (a of mano) {
+            CartaDisponible.destroy({
+              where: { carta: a, partida: partida }
+            })
+            .then(num => {
+                    console.log(`La carta ${a} ya no esta disponible`);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: err.message || `Error eliminando la carta ${a}`
+                });
+            });
+          }
+        res.status(200).send(pertenece);
+        })
+        .catch(err => {
+            res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+        });
       })
       .catch(err => {
-          res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+        res.status(500).send({
+          message:
+            err.message || "Error recuperando usuarios."
+        });
       });
+    
     })
     .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Error recuperando usuarios."
-      });
+      res.status(500).send(`Error recuperando partida ${partida}`);
     });
-  
   })
   .catch(err => {
-    res.status(500).send(`Error recuperando partida ${partida}`);
+      res.status(500).send({
+          message: err.message || "Error recuperando relcion pertenece" });
   });
+  
+  
 };
 
 exports.robar = (req,res) => {
@@ -221,9 +221,9 @@ exports.findAll = (req, res) => {
 };
 
 exports.find = (req, res) => {
-  const juagdor = req.body.jugador;
+  const jugador = req.body.jugador;
   const partida = req.body.partida;
-  Pertenece.findAll({where:{partida: partida, jugador:juagdor}})
+  Pertenece.findOne({where:{partida: partida, jugador:jugador}})
   .then(data => {
       res.send(data);
   })
