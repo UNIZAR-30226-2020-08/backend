@@ -5,7 +5,7 @@ module.exports = app => {
 
   router.post("/", partida.create);
 
-  router.get("/findGame", partida.find);
+  router.get("/findGame/:nombre", partida.find);
 
   router.get("/findAllGames/:tipo", partida.findAll);
 

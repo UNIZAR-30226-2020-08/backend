@@ -90,7 +90,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.find = (req, res) => {
-  const partida = req.body.nombre;
+  const partida = req.params.nombre;
   Partida.findByPk(partida)
   .then(data => {
     if (data === null){
