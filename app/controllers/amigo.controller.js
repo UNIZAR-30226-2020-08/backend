@@ -157,6 +157,22 @@ exports.aceptar = (req, res) => {
   });
 };
 
+exports.listar = (req, res) => {
+  const usuario = req.params.usuario;
+  const aceptado = req.params.aceptado;
+  Amigo.findAll({ where: {usuario: usuario, 0: aceptado} })
+  .then(data => {
+    if (data === null){
+      res.send({ message: `No se ha encontrado ninguna solicitud de amistad a este usuario: ${usuario}` });
+    }else{
+      res.send(data);
+    }
+  }).catch(err => {
+    res.status(500).send({ message: err.message || "Error recuperando amigos." });
+  });
+};
+
+
 // Elimina un usuario
 exports.delete = (req, res) => {
   const amigo = req.body.amigo;  
