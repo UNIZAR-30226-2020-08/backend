@@ -24,6 +24,9 @@ module.exports = app => {
     router.put("/updateFriend/:usuario/:amigo", amigo.update);
 
     router.put("/acceptFriend/:usuario/:amigo", amigo.aceptar);
+
+    //Listar solicitudes
+    router.get("/listRequest/:usuario/:aceptado", amigo.listar);
   
     app.use('/api/amigo', router);
   };
