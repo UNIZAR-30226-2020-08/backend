@@ -32,21 +32,33 @@ exports.findAll = (req, res) => {
     const usuario = req.params.usuario;  
     Amigo.findAll({ where: {usuario: usuario} })
       .then(dataUsuario => {
+        var friends = [];
+        i = 0;
+        for (a of dataUsuario)
+        {
+          if (a.dataValues.aceptado === 1){
+            //console.log(a.dataValues);
+            friends[i] = a.dataValues.amigo;
+            i++;
+          }
+        }
         Amigo.findAll({ where: {amigo: usuario} })
         .then(dataAmigo => {
+          i = 0;
+          for (a of dataAmigo)
+          {
+            if (a.dataValues.aceptado === 1){
+              //console.log(a.dataValues);
+              friends[i + dataUsuario.length] = a.dataValues.usuario;
+              i++;
+            }
 
+          }
+          res.send(friends);
         }).catch(err => {
           res.status(500).send({ message: err.message || "Error recuperando amigos." });
         });
-        var friends = [];
-        i = 0;
-        for (a of data)
-        {
-          //console.log(a.dataValues);
-          friends[i] = a.dataValues.amigo;
-          i++;
-        }
-        res.send(friends);
+        
       })
       .catch(err => {
         res.status(500).send({
@@ -74,10 +86,11 @@ exports.find = (req, res) => {
 
 // Actualiza un amigo
 exports.update = (req, res) => {
-    const nombre_usuario = req.params.usuario;
+    const usuario = req.params.usuario;
+    const amigo = req.params.amigo;
 
     Amigo.update(req.body, {
-        where: { nombre_usuario: nombre_usuario }
+        where: { usuario: usuario,amigo:amigo }
     })
     .then(num => {
         if (num == 1) {
@@ -86,14 +99,14 @@ exports.update = (req, res) => {
             });
         } else {
             res.send({
-                message: `No se puede actualizar el usuario con id: ${nombre_usuario}.`
+                message: `No se puede actualizar el usuario con id: ${usuario}.`
             });
         }
     })
     .catch(err => {
         res.status(500).send({
             message: 
-                err.message || "Error actualizando usuario con id: " + nombre_usuario
+                err.message || "Error actualizando usuario con id: " + usuario
         });
     });
 };

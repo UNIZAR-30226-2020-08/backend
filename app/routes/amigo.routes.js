@@ -21,7 +21,7 @@ module.exports = app => {
     router.delete("/dropAll", amigo.deleteAll);
 
     // Update a amigo with id el que sea 
-    router.put("/updateFriend", amigo.update);
+    router.put("/updateFriend/:usuario/:amigo", amigo.update);
 
     router.put("/acceptFriend/:usuario/:amigo", amigo.aceptar);
   
