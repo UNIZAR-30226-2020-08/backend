@@ -67,16 +67,13 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const carta = req.body.carta;
   const partida = req.body.partida;
-  CartaDisponible.destroy({
-    where: { carta: carta, partida: partida }
+  CartaDisponible.destroy({ where: { carta: carta, partida: partida }
   })
   .then(num => {
-          res.send({ status: `La carta ${carta} ya no esta disponible` });
+          res.send(`Se ha elimiando ${carta} de las disponibles en ${partida}` );
   })
   .catch(err => {
-      res.status(500).send({
-          message: err.message || `Error eliminando la carta ${carta}`
-      });
+      res.status(500).send({ message: err.message || `Error eliminando la carta ${carta}` });
   });
 };
 
