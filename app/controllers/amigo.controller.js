@@ -101,12 +101,55 @@ exports.update = (req, res) => {
 exports.aceptar = (req, res) => {
   const usuario = req.params.usuario;
   const amigo = req.params.amigo;
+  
+  const amigoActualizado = {
+    usuario: usuario,
+    amigo: amigo,
+    aceptado: 1
+  };
+
   Amigo.findOne({ where: {usario: usuario, amigo:amigo} })
         .then(data => {
           if (data.length === 0){
-
+          //Si obtenemos null en esta primera búsqueda, cambiamos el usuario por el amigo, ya que 
+          //pueden encontrarse primero uno o el otro
+            Amigo.findOne({ where: {amigo: usuario, usuario:amigo} })
+                  .then(data => {
+                    if (data.length === 0){
+                      //No se ha aceptado la solicitud de amigo
+                      res.send({
+                        message: "No se ha aceptado la solicitud (aceptado=0)."
+                      });
+                    }else{
+                        Amigo.update({aceptado: 1}, {
+                          where: {amigo: usuario, usuario:amigo}
+                        })
+                        .then(num => {
+                                res.send({message: "usuario actualizado."});
+                        })
+                        .catch(err => {
+                            res.status(500).send({
+                                message: 
+                                    err.message || `Error actualizando usuario con id: ${usuario}`//usuario o amigo?
+                            });
+                        });
+                    }
+                  }).catch(err => {
+                    res.status(500).send({ message: err.message || "Error recuperando amigos." });
+                  });
           }else{
-
+              Amigo.update({aceptado: 1}, {
+                where: {usario: usuario, amigo:amigo}
+              })
+              .then(num => {
+                    res.send({message: "usuario actualizado."});
+              })
+              .catch(err => {
+                  res.status(500).send({
+                      message: 
+                          err.message || `Error actualizando usuario con id:  ${usuario}` //usuario o amigo??
+                  });
+              });
           }
         }).catch(err => {
           res.status(500).send({ message: err.message || "Error recuperando amigos." });
