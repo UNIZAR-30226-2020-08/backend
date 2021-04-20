@@ -1,5 +1,6 @@
 const db = require("../models");
 const Amigo = db.amigo;
+const Usuario = db.usuario;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Usuario
@@ -46,29 +47,53 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const usuario = req.params.usuario;  
     Amigo.findAll({ where: {usuario: usuario} })
-      .then(dataUsuario => {
+      .then(async dataUsuario => {
         var friends = [];
-        i = 0;
+        var i = 0;
         for (a of dataUsuario)
         {
           if (a.dataValues.aceptado === 1){
             //console.log(a.dataValues);
-            friends[i] = a.dataValues.amigo;
+            await Usuario.findByPk(a.dataValues.amigo)
+            .then(data => {
+              data.password = undefined;
+              friends[i] = data;
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message || "Error recuperando usuario" });
+            });
             i++;
           }
         }
         Amigo.findAll({ where: {amigo: usuario} })
-        .then(dataAmigo => {
-          i = 0;
+        .then(async dataAmigo => {
+          var j = 0;
           for (a of dataAmigo)
           {
             if (a.dataValues.aceptado === 1){
               //console.log(a.dataValues);
-              friends[i + dataUsuario.length] = a.dataValues.usuario;
-              i++;
+              await Usuario.findByPk(a.dataValues.usuario)
+              .then(data => {
+                data.password = undefined;
+                friends[j + i] = data;
+              })
+              .catch(err => {
+                  res.status(500).send({ message: err.message || "Error recuperando usuario" });
+              });
+              j++;
             }
-
           }
+          //Ordena por orden descendente de copas
+          friends.sort(function (a,b) {
+            if (a.copas < b.copas){
+              return 1;
+            }
+            if (a.copas > b.copas) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          })
           res.send(friends);
         }).catch(err => {
           res.status(500).send({ message: err.message || "Error recuperando amigos." });
