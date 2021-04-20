@@ -15,7 +15,7 @@ module.exports = app => {
     router.get("/findFriend", amigo.findAll);
 
     // Eliminar un amigo
-    router.delete("/dropFriend", amigo.delete);
+    router.delete("/dropFriend/:usuario/:amigo", amigo.delete);
   
     // Eliminar todos amigo
     router.delete("/dropAll", amigo.deleteAll);

@@ -4,13 +4,13 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Usuario
 exports.create = (req, res) => {
-  // Crea un usario
+  // Crea un amigo
   const amigo = {
     usuario: req.body.usuario,
     amigo: req.body.amigo,
     aceptado: req.body.aceptado ? req.body.aceptado : 0
   };
-  // Guarda al usuario en la base de datos
+  // Guarda al amigo en la base de datos
   if (amigo.usuario === amigo.amigo){
     res.send({message: 'Un usuario no puede ser amigo de si mismo'});
   }else{
@@ -159,28 +159,36 @@ exports.aceptar = (req, res) => {
 
 // Elimina un usuario
 exports.delete = (req, res) => {
-  const amigo = req.body.amigo;  
-  const usuario = req.body.usuario;
+  const amigo = req.params.amigo;  
+  const usuario = req.params.usuario;
 
     Amigo.destroy({
       where: { amigo: amigo, usuario: usuario }
     })
     .then(num => {
-        if (num == 1) {
-            res.send({
-                status: "Eliminado"
-            });
-        } else {
-            res.send({
-                status:  `No se puede eliminar el usuario con id: ${nombre_usuario}.`
-            });
-        }
+      if (num === 1) {
+        res.send({ status: "Eliminado" });
+      } else {
+          console.log(`No se encuentra la amistad: ${usuario}, ${amigo}.`);
+          Amigo.destroy({
+            where: { usuario: amigo, amigo: usuario }
+          })
+          .then(num => {
+            if (num === 1) {
+                res.send({ status: "Amigo eliminado" });
+            } else {
+                console.log(`No se encuentra la amistad: ${amigo}, ${usuario}.`);
+            }
+          })
+          .catch(err => {
+            res.status(500).send({
+              message: err.message || `Error eliminando el usuario con id:  ${usuario}`});
+          });
+      }
     })
     .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error eliminando el usuario con id: " + nombre_usuario
-        });
+      res.status(500).send({
+        message: err.message || `Error eliminando el usuario con id:  ${usuario}`});
     });
 };
 
