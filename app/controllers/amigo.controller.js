@@ -12,18 +12,33 @@ exports.create = (req, res) => {
   };
   // Guarda al amigo en la base de datos
   if (amigo.usuario === amigo.amigo){
-    res.send({message: 'Un usuario no puede ser amigo de si mismo'});
+    res.send('Un usuario no puede ser amigo de si mismo');
   }else{
-    Amigo.create(amigo)
+    Amigo.findOne({ where: {usuario: amigo.usuario, amigo:amigo.amigo} })
     .then(data => {
-      res.send(data);
+      if (data === null){
+        Amigo.findOne({ where: {usuario: amigo.amigo, amigo:amigo.usuario} })
+        .then(data => {
+          if (data === null){
+            Amigo.create(amigo)
+            .then(data => {
+              res.send(data);
+            })
+            .catch(err => {
+              res.status(500).send({ message: err.message || "Error creando amigo" });
+            });
+          }else{
+            res.send('Ya existe esta amistad');
+          }
+        }).catch(err => {
+          res.status(500).send({ message: err.message || "Error buscando par de amigo" });
+        })
+      }else {
+        res.send('Ya existe esta amistad');
+      }
+    }).catch(err => {
+      res.status(500).send({ message: err.message || "Error buscando par de amigo" });
     })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Error creando amigo"
-      });
-    });
   }  
 };
 
