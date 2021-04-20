@@ -9,7 +9,7 @@ module.exports = app => {
     router.post("/", amigo.create);
   
     // Dado un usario devuelve todos sus amigos.
-    router.get("/findAll", amigo.findAll);
+    router.get("/findAll/:usuario", amigo.findAll);
       
     // Buscar un usario
     router.get("/findFriend", amigo.findAll);
@@ -22,6 +22,8 @@ module.exports = app => {
 
     // Update a amigo with id el que sea 
     router.put("/updateFriend", amigo.update);
+
+    router.put("/acceptFriend/:usuario/:amigo", amigo.aceptar);
   
     app.use('/api/amigo', router);
   };

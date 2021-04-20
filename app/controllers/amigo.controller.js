@@ -8,6 +8,7 @@ exports.create = (req, res) => {
   const amigo = {
     usuario: req.body.usuario,
     amigo: req.body.amigo,
+    aceptado: req.body.aceptado ? req.body.aceptado : 0
   };
   // Guarda al usuario en la base de datos
   if (amigo.usuario === amigo.amigo){
@@ -28,9 +29,15 @@ exports.create = (req, res) => {
 
 // Devuelve todos los amigos de un usuario
 exports.findAll = (req, res) => {
-    const usuario = req.body.usuario;  
+    const usuario = req.params.usuario;  
     Amigo.findAll({ where: {usuario: usuario} })
-      .then(data => {
+      .then(dataUsuario => {
+        Amigo.findAll({ where: {amigo: usuario} })
+        .then(dataAmigo => {
+
+        }).catch(err => {
+          res.status(500).send({ message: err.message || "Error recuperando amigos." });
+        });
         var friends = [];
         i = 0;
         for (a of data)
@@ -65,7 +72,7 @@ exports.find = (req, res) => {
     });
   };
 
-// Actualiza un usuario
+// Actualiza un amigo
 exports.update = (req, res) => {
     const nombre_usuario = req.params.usuario;
 
@@ -89,6 +96,21 @@ exports.update = (req, res) => {
                 err.message || "Error actualizando usuario con id: " + nombre_usuario
         });
     });
+};
+
+exports.aceptar = (req, res) => {
+  const usuario = req.params.usuario;
+  const amigo = req.params.amigo;
+  Amigo.findOne({ where: {usario: usuario, amigo:amigo} })
+        .then(data => {
+          if (data.length === 0){
+
+          }else{
+
+          }
+        }).catch(err => {
+          res.status(500).send({ message: err.message || "Error recuperando amigos." });
+        });
 };
 
 // Elimina un usuario
