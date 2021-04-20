@@ -26,7 +26,7 @@ module.exports = app => {
     router.put("/acceptFriend/:usuario/:amigo", amigo.aceptar);
 
     //Listar solicitudes
-    router.get("/listRequest/:usuario/:aceptado", amigo.listar);
+    router.get("/listRequest/:usuario", amigo.listarSolicitudes);
   
     app.use('/api/amigo', router);
   };

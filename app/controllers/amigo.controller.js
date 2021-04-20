@@ -157,12 +157,11 @@ exports.aceptar = (req, res) => {
   });
 };
 
-exports.listar = (req, res) => {
-  const usuario = req.params.usuario;
-  const aceptado = req.params.aceptado;
-  Amigo.findAll({ where: {usuario: usuario, 0: aceptado} })
+exports.listarSolicitudes = (req, res) => {
+  const usuario = req.params.usuario
+  Amigo.findAll({ where: {amigo: usuario, aceptado: 0} })
   .then(data => {
-    if (data === null){
+    if (data.length === 0){
       res.send({ message: `No se ha encontrado ninguna solicitud de amistad a este usuario: ${usuario}` });
     }else{
       res.send(data);
