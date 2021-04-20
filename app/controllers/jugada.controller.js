@@ -14,10 +14,7 @@ exports.create = (req, res) => {
         res.send(data);
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error guardando juagda"
-        });
+        res.status(500).send({ message: err.message || "Error guardando juagda" });
       });
   };
 
