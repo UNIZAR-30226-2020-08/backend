@@ -89,6 +89,7 @@ exports.deleteAll = (req, res) => {
 };
 
 //Devuelve los usuarios pertenecientes al chat que se pasa
+//REVISARRRR
 exports.findAll = (req, res) => {
   const idchat = req.body.idchat;
   var condition = idchat ? { idchat: { [Op.iLike]: `${idchat}` } } : null;
