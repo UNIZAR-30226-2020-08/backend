@@ -1,4 +1,5 @@
 const db = require("../models");
+var bcrypt = require("bcryptjs");
 const Usuario = db.usuario;
 const Op = db.Sequelize.Op;
 
@@ -61,27 +62,24 @@ exports.find = (req, res) => {
 
 // Actualiza un usuario
 exports.update = (req, res) => {
-    const n_usuario = req.params.username;
-    Usuario.update(req.body, {
-        where: { username: n_usuario }
-    })
-    .then(num => {
-        if (num == 1) {
-            res.send({
-                message: "usuario actualizado."
-            });
-        } else {
-            res.send({
-                message: `No se puede actualizar el usuario con id: ${n_usuario}.`
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: 
-                err.message || "Error actualizando usuario con id: " + n_usuario
-        });
-    });
+  const n_usuario = req.params.username;
+  if (req.body.password !== undefined){
+    req.body.password = bcrypt.hashSync(req.body.password, 8);
+  }
+  Usuario.update(req.body, {
+      where: { username: n_usuario }
+  })
+  .then(num => {
+      if (num == 1) {
+        res.send("usuario actualizado.");
+      } else {
+        res.send(`No se puede actualizar el usuario con id: ${n_usuario}.`);
+      }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: err.message || `Error actualizando usuario con id: + ${n_usuario}`});
+  });
 };
 
 // Elimina un usuario

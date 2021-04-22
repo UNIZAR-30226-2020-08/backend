@@ -1,5 +1,6 @@
 const { PASSWORD } = require("../config/db.config");
 const db = require("../models");
+var bcrypt = require("bcryptjs");
 const Partida = db.partida;
 const Pertenece = db.pertenece;
 const CartaDisponible = db.carta_disponible;
@@ -9,6 +10,8 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
   const fecha = new Date();
   const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
+  console.log(fechaLim);
   const palos = ['O','C','E','B'];
   const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
   console.log(n)
@@ -17,11 +20,12 @@ exports.create = (req, res) => {
     triunfo: req.body.triunfo ? req.body.triunfo : n.toString(),
     estado: req.body.estado ? req.body.estado  : 0,
     tipo: req.body.tipo,
-    fecha: fechaParsed,
+    fecha: fechaLim,
     o_20: 'NO',
     c_20: 'NO',
     e_20: 'NO',
     b_20: 'NO',
+    password: req.body.password ? bcrypt.hashSync(req.body.password, 8) : 'NO',
   };
   Partida.create(partida)
       .then(dataPartida => {
@@ -60,21 +64,15 @@ exports.create = (req, res) => {
         });
       });
 };
-/**
- * Inicializa las cartas disponibles y reparte
-**/
-exports.iniciar_partida = (req, res) => {
-
-};
 
 /** 
- * Devuelve todas las salas del tipo que se ha seleccionado y 
+ * Devuelve todas las salas publicas del tipo que se ha seleccionado y 
  * el numero de usuarios que hay en ella
  **/
 exports.findAll = (req, res) => {
   const tipo = req.params.tipo;
   console.log(req.params);
-  Partida.findAll({ where: { tipo: tipo} })
+  Partida.findAll({ where: { tipo: tipo, password : 'NO'} })
     .then(dataPartidas => {
       devolverPartidas(dataPartidas,tipo)
       .then(partidasDisponibles => {
