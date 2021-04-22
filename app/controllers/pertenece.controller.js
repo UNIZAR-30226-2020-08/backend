@@ -59,8 +59,8 @@ exports.create = (req, res) => {
 
 
 /**
- * Comprueba el tipo de partida y si la sala esta llena
- * si no esta llena inserta al jugador, si esta llena
+ * Comprueba si la sala esta llena y si la contrasenya es correcta
+ * si no esta llena y las passwd es correcta inserta al jugador, si esta llena
  * devuelve un mensaje de aviso 
  **/
  exports.joinPrivate = (req, res) => {
