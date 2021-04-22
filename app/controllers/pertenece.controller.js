@@ -1,5 +1,6 @@
 const db = require("../models");
 const pertenece = require("../models/pertenece");
+var bcrypt = require("bcryptjs");
 const Pertenece = db.pertenece;
 const Partida = db.partida;
 const CartaDisponible = db.carta_disponible;
@@ -55,6 +56,64 @@ exports.create = (req, res) => {
           message: err.message || "Error recuperando partida " + partida });
   });
 };
+
+
+/**
+ * Comprueba el tipo de partida y si la sala esta llena
+ * si no esta llena inserta al jugador, si esta llena
+ * devuelve un mensaje de aviso 
+ **/
+ exports.joinPrivate = (req, res) => {
+  const partida = req.body.partida;
+  const passwd = req.body.password;
+  Partida.findByPk(partida)
+  .then(dataPartida => {
+    var passwordIsValid = bcrypt.compareSync(passwd,dataPartida.password);
+    if (passwordIsValid === false) {
+      return res.status(401).send("Contrasenya incorrecta");
+    }
+    Pertenece.findAll({where: { partida: partida}})
+    .then(dataCount => {
+      if (dataPartida.tipo === 0 && dataCount.length >= 2){
+        res.send("Partida individual llena");
+      }
+      else if (dataPartida.tipo === 1 && dataCount.length >= 4){
+        res.send("Partida dobles llena");
+      }else{
+        const pertenece = {
+          jugador: req.body.jugador,
+          partida: req.body.partida,
+          equipo: (dataCount.length)%2,
+          orden: dataCount.length + 1,
+          c1: req.body.c1 ? req.body.c1 : 'NO',
+          c2: req.body.c2 ? req.body.c2 : 'NO',
+          c3: req.body.c3 ? req.body.c3 : 'NO',
+          c4: req.body.c4 ? req.body.c4 : 'NO',
+          c5: req.body.c5 ? req.body.c5 : 'NO',
+          c6: req.body.c6 ? req.body.c6 : 'NO',
+        };
+        Pertenece.create(pertenece)
+        .then(data => {
+          res.send(data);
+        })
+        .catch(err => {
+          res.status(500).send({ message: err.message || "Error creando usuario" });
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error recuperando usuarios."
+      });
+    });
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando partida " + partida });
+  });
+};
+
 /** *
 * Dados un jugador y una partida se le reparten las 6 cartas  
 */
