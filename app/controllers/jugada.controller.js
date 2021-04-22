@@ -1,5 +1,7 @@
+const e = require("express");
 const db = require("../models");
 const Jugada = db.jugada;
+const Pertenece = db.pertenece;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -10,8 +12,27 @@ exports.create = (req, res) => {
       carta: req.body.carta,
     };
     Jugada.create(jugada)
-      .then(data => {
-        res.send(data);
+      .then(dataCreate => {
+        Pertenece.findOne({where:{partida: jugada.partida, jugador:jugada.jugador}})
+        .then(data => {
+          const cards = ['c1','c2','c3','c4','c5','c6']
+          for (card of cards){
+            if (data[card] === jugada.carta){
+              data[card] = 'NO'
+            }
+          }
+          Pertenece.update(data.dataValues,{where: {partida: jugada.partida, jugador:jugada.jugador}})
+          .then(num => {
+            res.send({message: "Jugada almacenada", data});
+          })
+          .catch(err => {
+            res.status(500).send({ message: err.message || "Error actualizando la mano." });
+          });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error recuperando relcion pertenece" });
+        });
       })
       .catch(err => {
         res.status(500).send({ message: err.message || "Error guardando juagda" });

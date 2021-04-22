@@ -126,8 +126,6 @@ exports.repartir = (req,res) =>{
     .then(dataPartida => {
       CartaDisponible.findAll({ where: {partida : partida} })
       .then(dataCD => {
-        console.log(dataCD.length);
-        console.log(dataPartida.triunfo);
         var card;
         var mano = ['','','','','',''];
         i = 0;
@@ -169,10 +167,7 @@ exports.repartir = (req,res) =>{
         });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando usuarios."
-        });
+        res.status(500).send({ message: err.message || "Error recuperando usuarios." });
       });
     
     })
@@ -181,18 +176,13 @@ exports.repartir = (req,res) =>{
     });
   })
   .catch(err => {
-      res.status(500).send({
-          message: err.message || "Error recuperando relcion pertenece" });
+      res.status(500).send({ message: err.message || "Error recuperando relcion pertenece" });
   });
-  
-  
 };
 
 exports.robar = (req,res) => {
   const partida = req.params.partida;
   const jugador = req.params.jugador;
-  // Pasar como parametro la posicion que ha tirado c1,c2,c3... contando de izquierda a derecha
-  const carta = req.params.carta;
   
   Partida.findByPk(partida)
   .then(dataPartida => {
@@ -203,58 +193,79 @@ exports.robar = (req,res) => {
         do {
           place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
           card = dataCD[place].carta;
+          console.log(`la carta robada es: ${card}`)
         }while(card === 'NO' | card === dataPartida.triunfo);
-        var pertenece = selectCard(carta,jugador,partida,card);
-        console.log(pertenece);
-        //res.send(pertenece);
-        CartaDisponible.destroy({
-          where: { carta: card, partida: partida }
-        })
-        .then(num => {
-          console.log(`La carta ${card} ya no esta disponible`);
-          Pertenece.update(pertenece, {
-            where: { partida: partida, jugador: jugador }
+        Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+        .then(dataPer => {
+          const cards = ['c1','c2','c3','c4','c5','c6']
+          for (a of cards){
+            if (dataPer[a] === 'NO'){
+              dataPer[a] = card
+            }
+          }
+          CartaDisponible.destroy({
+            where: { carta: card, partida: partida }
           })
           .then(num => {
-                  res.send({ message: `Se ha robado la carta ${card}` });
+            console.log(`La carta ${card} ya no esta disponible`);
+            Pertenece.update(dataPer.dataValues, {
+              where: { partida: partida, jugador: jugador }
+            })
+            .then(num => {
+                    res.send(dataPer.dataValues);
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+            });
           })
           .catch(err => {
-              res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+              res.status(500).send({
+                  message: err.message || `Error eliminando la carta ${card}`});
           });
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || `Error eliminando la carta ${card}`});
+                message: err.message || "Error recuperando relcion pertenece" });
         });
       }else{
         //Se reparte la carta que esta boca arriba
-        var pertenece = selectCard(carta,jugador,partida,dataPartida.triunfo);
-        console.log(pertenece);
-        CartaDisponible.destroy({
-          where: { carta: (dataPartida.triunfo), partida: partida }
-        })
-        .then(num => {
-          console.log(`La carta ${dataPartida.triunfo} ya no esta disponible`);
-          Pertenece.update(pertenece, {
-            where: { partida: partida, jugador: jugador }
+        Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+        .then(dataPer => {
+          const cards = ['c1','c2','c3','c4','c5','c6']
+          for (a of cards){
+            if (dataPer[a] === 'NO'){
+              dataPer[a] = dataPartida.triunfo
+            }
+          }
+          CartaDisponible.destroy({
+            where: { carta: (dataPartida.triunfo), partida: partida }
           })
           .then(num => {
-                  res.send({ message: `Se ha robado la carta ${dataPartida.triunfo}` });
+            console.log(`La carta ${dataPartida.triunfo} ya no esta disponible`);
+            Pertenece.update(dataPer.dataValues, {
+              where: { partida: partida, jugador: jugador }
+            })
+            .then(num => {
+                    res.send(dataPer.dataValues);
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+            });
           })
           .catch(err => {
-              res.status(500).send({ message: err.message || "Error actualizando pertenece." });
+              res.status(500).send({
+                  message: err.message || `Error eliminando la carta ${dataPartida.triunfo}`});
           });
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || `Error eliminando la carta ${dataPartida.triunfo}`});
+                message: err.message || "Error recuperando relcion pertenece" });
         });
       }
     })
     .catch(err => {
       res.status(500).send({ message: err.message || "Error recuperando usuarios." });
     });
-    
   })
   .catch(err => {
       res.status(500).send({
@@ -357,54 +368,4 @@ exports.deleteAll = (req, res) => {
               err.message || `Error eliminando ${partida}`
       });
   });
-  };
-
-function selectCard(carta,jugador_,partida_,card_) {
-  var pertenece;
-    switch (carta){
-      case 'c1':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c1: card_
-        };
-        break;
-      case 'c2':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c2: card_
-        };
-        break;
-      case 'c3':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c3: card_
-        };
-        break;
-      case 'c4':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c4: card_
-        };
-        break;
-      case 'c5':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c5: card_
-        };
-        break;
-      case 'c6':
-        pertenece = {
-          jugador: jugador_,
-          partida: partida_,
-          c6: card_
-        };
-        break;
-    }
-    return pertenece;
-    
-}
+};

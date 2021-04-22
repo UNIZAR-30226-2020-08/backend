@@ -19,7 +19,7 @@ module.exports = app => {
 
   router.put("/repartir/:partida/:jugador", pertenece.repartir);
 
-  router.put("/robar/:partida/:jugador/:carta", pertenece.robar);
+  router.put("/robar/:partida/:jugador", pertenece.robar);
 
   app.use('/api/pertenece', router);
 };
