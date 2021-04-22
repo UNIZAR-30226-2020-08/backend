@@ -51,6 +51,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: 'NO',
       comment: "null"
+    },
+    'password': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'partida'
