@@ -7,8 +7,8 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
     const jugada = {
       jugador: req.body.jugador,
-      nronda: req.body.nronda,
       partida: req.body.partida,
+      nronda: req.body.nronda,
       carta: req.body.carta,
     };
     Jugada.create(jugada)
