@@ -249,37 +249,37 @@ exports.delete = (req, res) => {
 
 // Elimina todos amigos de un usuario
 exports.deleteAll = (req, res) => {
-    const usuario = req.body.usuario;
-    const user = {
-      usuario: req.body.usuario
-    };
-    Amigo.findAll(user).then(data => 
-    {
-      Amigo.destroy({
-        where: {usuario: usuario},
-        truncate: false
-      }).then(nums => {
-        i = 0;
-        for (a of data)
-        {
-          Amigo.destroy({
-            where: {amigo: a.dataValues.usuario, usuario: a.dataValues.amigo}
-          })
-          .then(num => { console.log('Elimiando correctamente');
-          }).catch(err => {
-              res.status(500).send({
-                  message: 
-                      err.message || "Error eliminando el usuario con id: " + nombre_usuario
-              });
-          });
-        }
-        res.send({ message: 'Se han eliminado todos los amigos de ', usuario });
-      })
-      .catch(err => {
-        res.status(500).send({ message: err.message || "Error eliminando usuarios."});
-      });
-      
-    }).catch(err => {
+  const usuario = req.body.usuario;
+  const user = {
+    usuario: req.body.usuario
+  };
+  Amigo.findAll(user).then(data => 
+  {
+    Amigo.destroy({
+      where: {usuario: usuario},
+      truncate: false
+    }).then(nums => {
+      i = 0;
+      for (a of data)
+      {
+        Amigo.destroy({
+          where: {amigo: a.dataValues.usuario, usuario: a.dataValues.amigo}
+        })
+        .then(num => { console.log('Elimiando correctamente');
+        }).catch(err => {
+            res.status(500).send({
+                message: 
+                    err.message || "Error eliminando el usuario con id: " + nombre_usuario
+            });
+        });
+      }
+      res.send({ message: 'Se han eliminado todos los amigos de ', usuario });
+    })
+    .catch(err => {
       res.status(500).send({ message: err.message || "Error eliminando usuarios."});
     });
-  };
+    
+  }).catch(err => {
+    res.status(500).send({ message: err.message || "Error eliminando usuarios."});
+  });
+};
