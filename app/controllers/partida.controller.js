@@ -14,7 +14,7 @@ exports.create = (req, res) => {
   console.log(fechaLim);
   const palos = ['O','C','E','B'];
   const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
-  console.log(n)
+  //console.log(n)
   const partida = {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
     triunfo: req.body.triunfo ? req.body.triunfo : n.toString(),

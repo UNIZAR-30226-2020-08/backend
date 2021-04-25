@@ -24,6 +24,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       comment: "null",
       primaryKey: true
+    },
+    'orden_tirada': {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'jugada'

@@ -5,13 +5,16 @@ const Pertenece = db.pertenece;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-    const jugada = {
-      jugador: req.body.jugador,
-      partida: req.body.partida,
-      nronda: req.body.nronda,
-      carta: req.body.carta,
-    };
-    Jugada.create(jugada)
+  Jugada.findAll({where: { partida: req.body.partida, nronda: req.body.nronda}})
+    .then(dataCount => {
+      const jugada = {
+        jugador: req.body.jugador,
+        partida: req.body.partida,
+        nronda: req.body.nronda,
+        carta: req.body.carta,
+        orden_tirada: dataCount.length + 1,
+      };
+      Jugada.create(jugada)
       .then(dataCreate => {
         Pertenece.findOne({where:{partida: jugada.partida, jugador:jugada.jugador}})
         .then(data => {
@@ -37,6 +40,10 @@ exports.create = (req, res) => {
       .catch(err => {
         res.status(500).send({ message: err.message || "Error guardando juagda" });
       });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message || "Error recuperando usuarios." });
+    })
   };
 
 exports.findAll = (req, res) => {

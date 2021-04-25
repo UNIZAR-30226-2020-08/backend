@@ -26,7 +26,7 @@ exports.create = (req, res) => {
         const pertenece = {
           jugador: req.body.jugador,
           partida: req.body.partida,
-          equipo: (dataCount.length)%2,
+          equipo: (dataCount.length) % 2,
           orden: dataCount.length + 1,
           c1: req.body.c1 ? req.body.c1 : 'NO',
           c2: req.body.c2 ? req.body.c2 : 'NO',
@@ -45,10 +45,7 @@ exports.create = (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Error recuperando usuarios."
-      });
+      res.status(500).send({ message: err.message || "Error recuperando usuarios." });
     });
   })
   .catch(err => {
