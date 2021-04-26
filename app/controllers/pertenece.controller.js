@@ -114,24 +114,25 @@ exports.create = (req, res) => {
 /** *
 * Dados un jugador y una partida se le reparten las 6 cartas  
 */
-exports.repartir = (req,res) =>{
+exports.repartir = async (req,res) =>{
   const partida = req.params.partida;
   const jugador = req.params.jugador;
-  Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+  await Pertenece.findOne({where:{partida: partida, jugador:jugador}})
   .then(pertenece => {
     Partida.findByPk(partida)
     .then(dataPartida => {
       CartaDisponible.findAll({ where: {partida : partida} })
       .then(dataCD => {
+        console.log(dataCD)
         var card;
         var mano = ['','','','','',''];
         i = 0;
         while(i <= 5){
           place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
           card = dataCD[place].carta;
-          if (card !== 'NO' && card !== mano[0] && card !== mano[1] && card !== mano[2] 
-              && card !== mano[3] && card !== mano[4] && card !== mano[5] 
-              && card !== dataPartida.triunfo){
+          if (card !== 'NO' && (card !== mano[0]) && (card !== mano[1]) && (card !== mano[2]) 
+              && (card !== mano[3]) && (card !== mano[4]) && (card !== mano[5]) 
+              && (card !== dataPartida.triunfo)){
             mano[i] = card;
             i++;
           }
@@ -143,9 +144,9 @@ exports.repartir = (req,res) =>{
         Pertenece.update(pertenece.dataValues, {
           where: { partida: partida, jugador: jugador }
         })
-        .then(num => {
+        .then(async num => {
           for (a of mano) {
-            CartaDisponible.destroy({
+            await CartaDisponible.destroy({
               where: { carta: a, partida: partida }
             })
             .then(num => {
