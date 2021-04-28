@@ -215,3 +215,33 @@ exports.getRoundWinner = async (req, res) => {
           message: err.message || "Error recuperando usuario con id: " + username });
   });
 };
+
+
+exports.gerRoundOrder = async (req, res) => {
+  const partida = req.params.partida;
+  const nronda = req.params.nronda;
+  await Jugada.findAll({ where: {partida: partida, nronda: nronda } })
+  .then(async dataOrder => {
+    if(dataOrder.length !== 0){
+      var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
+      for(o of dataOrder){
+        const cartaJugada = await Carta.findByPk(o.carta);
+        //Si coinciden los palos
+        if(o.carta[1] === winnerCard.carta[1]){
+          //Busco rankings
+          const cartaWinner = await Carta.findByPk(winnerCard.carta);
+          //Comparo rankings
+          if(cartaJugada.ranking < cartaWinner.ranking){
+            winnerCard = { jugador: o.jugador, carta: o.carta }
+          }
+        // Si la que tiras es triunfo y la otra no
+        }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard[1] !== dataPartida.triunfo[1])){
+          winnerCard = { jugador: o.jugador, carta: o.carta }
+        }
+      }
+    }
+  }).catch(err =>{
+    res.status(500).send({ message: err.message || "Error recuperando relcion pertenece" });
+  })
+    
+};
