@@ -215,8 +215,7 @@ exports.getRoundWinner = async (req, res) => {
           message: err.message || "Error recuperando usuario con id: " + username });
   });
 };
-
-
+//SIN ACABAR
 exports.gerRoundOrder = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;

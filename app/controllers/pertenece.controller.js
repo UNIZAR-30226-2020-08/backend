@@ -210,7 +210,7 @@ exports.robar = (req,res) => {
               where: { partida: partida, jugador: jugador }
             })
             .then(num => {
-                    res.send(dataPer.dataValues);
+              res.send({carta: card, jugador: jugador});
             })
             .catch(err => {
                 res.status(500).send({ message: err.message || "Error actualizando pertenece." });
@@ -244,7 +244,7 @@ exports.robar = (req,res) => {
               where: { partida: partida, jugador: jugador }
             })
             .then(num => {
-                    res.send(dataPer.dataValues);
+                    res.send({carta: dataPartida.triunfo, jugador: jugador});
             })
             .catch(err => {
                 res.status(500).send({ message: err.message || "Error actualizando pertenece." });
