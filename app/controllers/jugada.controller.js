@@ -26,7 +26,8 @@ exports.create = (req, res) => {
           }
           Pertenece.update(data.dataValues,{where: {partida: jugada.partida, jugador:jugada.jugador}})
           .then(num => {
-            res.send({message: "Jugada almacenada", data});
+            
+            res.send({cartaJugada: dataCreate, mano: data});
           })
           .catch(err => {
             res.status(500).send({ message: err.message || "Error actualizando la mano." });

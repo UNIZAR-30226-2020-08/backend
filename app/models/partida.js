@@ -56,6 +56,16 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
       comment: "null"
+    },
+    'puntos_e0': {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "null"
+    },
+    'puntos_e1': {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'partida'

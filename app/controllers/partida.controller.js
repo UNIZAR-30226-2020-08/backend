@@ -26,6 +26,8 @@ exports.create = (req, res) => {
     e_20: 'NO',
     b_20: 'NO',
     password: req.body.password ? bcrypt.hashSync(req.body.password, 8) : 'NO',
+    puntos_e0: 0,
+    puntos_e1: 0,
   };
   Partida.create(partida)
       .then(dataPartida => {
@@ -225,7 +227,7 @@ exports.cambiar7 = (req,res) => {
           })
           .then(num => {
             console.log(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
-            res.status(200).send({pertenece,partidaCante});
+            res.status(200).send(pertenece,partidaCante);
           })
           .catch(err => {
             res.status(500).send({
