@@ -14,6 +14,8 @@ module.exports = app => {
   router.delete("/dropAllPlays", jugada.deleteAll);
 
   router.put("/updatePlay", jugada.update);
+  
+  router.put("/getRoundWinner/:nronda/:partida", jugada.getRoundWinner);
 
   app.use('/api/jugada', router);
 };
