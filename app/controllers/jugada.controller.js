@@ -215,14 +215,21 @@ exports.getRoundWinner = async (req, res) => {
           message: err.message || "Error recuperando usuario con id: " + username });
   });
 };
-//SIN ACABAR
-exports.gerRoundOrder = async (req, res) => {
+// Devuelve el orden en el que se ha quedado en la ronda.
+exports.getRoundOrder = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;
-  await Jugada.findAll({ where: {partida: partida, nronda: nronda } })
-  .then(async dataOrder => {
+  var maxPlays = 0;
+  var sol = [];
+  try {
+    const dataOrder = await Jugada.findAll({ where: {partida: partida, nronda: nronda }})
+    //return res.send(dataOrder);
     if(dataOrder.length !== 0){
+      const dataPartida = await Partida.findByPk(partida);
+      (dataPartida.tipo === 0) ? maxPlays = 2 : maxPlays = 4;
       var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
+      var i = 0;
+      var indexWinner = 0;
       for(o of dataOrder){
         const cartaJugada = await Carta.findByPk(o.carta);
         //Si coinciden los palos
@@ -231,16 +238,26 @@ exports.gerRoundOrder = async (req, res) => {
           const cartaWinner = await Carta.findByPk(winnerCard.carta);
           //Comparo rankings
           if(cartaJugada.ranking < cartaWinner.ranking){
-            winnerCard = { jugador: o.jugador, carta: o.carta }
+            //winnerCard = { jugador: o.jugador, carta: o.carta }
+            indexWinner = i;
           }
         // Si la que tiras es triunfo y la otra no
-        }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard[1] !== dataPartida.triunfo[1])){
-          winnerCard = { jugador: o.jugador, carta: o.carta }
+        }else if ((o.carta[1] === dataPartida.triunfo[1]) && 
+                  (winnerCard[1] !== dataPartida.triunfo[1])){
+          //winnerCard = { jugador: o.jugador, carta: o.carta };
+          indexWinner = i;
         }
+        i++;
       }
+      for (j = indexWinner; j < (indexWinner + maxPlays); j++){
+        sol.push(dataOrder[j%maxPlays].jugador);
+      }
+      return res.status(200).send(sol);
+    }else{
+      res.sendStatus(404).send('No se ha encontrado la ronda o la partida')
     }
-  }).catch(err =>{
-    res.status(500).send({ message: err.message || "Error recuperando relcion pertenece" });
-  })
+  }catch(err){
+    return res.status(500).send({ message: err | 'se ha producido un error'});
+  }
     
 };

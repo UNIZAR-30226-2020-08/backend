@@ -17,5 +17,7 @@ module.exports = app => {
   
   router.put("/getRoundWinner/:nronda/:partida", jugada.getRoundWinner);
 
+  router.get("/getRoundOrder/:nronda/:partida", jugada.getRoundOrder);
+
   app.use('/api/jugada', router);
 };
