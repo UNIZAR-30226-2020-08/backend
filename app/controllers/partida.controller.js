@@ -10,8 +10,8 @@ const Op = db.Sequelize.Op;
 exports.create = (req, res) => {
   const fecha = new Date();
   const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
-  const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
-  console.log(fechaLim);
+  //const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
+  //console.log(fechaLim);
   const palos = ['O','C','E','B'];
   const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
   //console.log(n)
@@ -20,7 +20,7 @@ exports.create = (req, res) => {
     triunfo: req.body.triunfo ? req.body.triunfo : n.toString(),
     estado: req.body.estado ? req.body.estado  : 0,
     tipo: req.body.tipo,
-    fecha: fechaLim,
+    fecha: fechaParsed,
     o_20: 'NO',
     c_20: 'NO',
     e_20: 'NO',
@@ -227,7 +227,7 @@ exports.cambiar7 = (req,res) => {
           })
           .then(num => {
             console.log(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
-            res.status(200).send(pertenece,partidaCante);
+            res.status(200).send({pertenece,partidaCante});
           })
           .catch(err => {
             res.status(500).send({
