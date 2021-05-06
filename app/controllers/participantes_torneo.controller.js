@@ -21,8 +21,8 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
     const torneo = req.body.torneo;
-    var condition = torneo ? { torneo: { [Op.iLike]: `%${torneo}%` } } : null;
-    Participantes.findAll({ where: condition })
+    //var condition = torneo ? { torneo: { [Op.iLike]: `%${torneo}%` } } : null;
+    Participantes.findAll({ where: {torneo : torneo} })
       .then(data => {
         res.send(data);
       })

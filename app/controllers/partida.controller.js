@@ -75,7 +75,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const tipo = req.params.tipo;
   console.log(req.params);
-  Partida.findAll({ where: { tipo: tipo, password : 'NO'} })
+  Partida.findAll({ where: { tipo: tipo, password : 'NO', id_torneo : 'NO'} })
     .then(dataPartidas => {
       devolverPartidas(dataPartidas,tipo)
       .then(partidasDisponibles => {

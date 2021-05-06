@@ -1,5 +1,6 @@
 const db = require("../models");
 const Torneo = db.torneo;
+const Participantes = db.participantes_torneo;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -80,9 +81,18 @@ exports.deleteAll = (req, res) => {
   };
 
 exports.findAll = (req, res) => {
-  Torneo.findAll({})
-  .then(data => {
-    res.send(data);
+  const tipo = req.params.tipo;
+  const nEquipos = req.params.nEquipos;
+  //console.log(`El tipo es ${tipo} y el numero de equipos ${nEquipos}`)
+  Torneo.findAll({ where : { contrasenya: 'NO', tipo: tipo, nparticipantes: nEquipos }})
+  .then(dataTorneos => {
+    devolverTorneos(dataTorneos,tipo,nEquipos)
+    .then(torneosDisponibles => {
+      res.send(torneosDisponibles);
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message || "Error recuperando torneos." });
+    });
   })
   .catch(err => {
     res.status(500).send({
@@ -91,3 +101,43 @@ exports.findAll = (req, res) => {
     });
   });
 };
+
+async function devolverTorneos(dataTorneos,tipo,nParticipantes)
+{
+  var torneosDisponibles = [];
+  let data;
+  var nTorneos = dataTorneos.length;
+  var maxPermitidoPartida;
+  if (tipo === '0' & nParticipantes === '8'){
+    maxPermitidoPartida = 8;
+  }else if(tipo === '0' & nParticipantes === '16'){
+    maxPermitidoPartida = 16;
+  }else if(tipo === '1' & nParticipantes === '8'){
+    maxPermitidoPartida = 16;
+  }else if(tipo === '1' & nParticipantes === '16'){
+    maxPermitidoPartida = 32;
+  }
+  //console.log(`El max de participantes es ${maxPermitidoPartida}`)
+  console.log(`El numero de torneos es: ${nTorneos}`);
+  for (a of dataTorneos){
+    await Participantes.findAndCountAll({ where: { torneo: a.nombre } })
+    .then(dataParticipante => {
+      //console.log(dataParticipante);
+      data = dataParticipante;
+      //console.log(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Error recuperando jugadores pertenecientes al torneo." });
+    });
+    //console.log(data);
+    if (data.count < maxPermitidoPartida){
+      console.log(`El torneo ${a.nombre} tiene ${data.count}`);
+      torneosDisponibles.push( { nombre: a.nombre, 
+                                  jugadores_online: data.count });
+    }
+  }
+  //console.log(nPartidas);
+  console.log(torneosDisponibles);
+  return torneosDisponibles;
+}
