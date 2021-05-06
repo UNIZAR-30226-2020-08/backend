@@ -7,6 +7,7 @@ exports.create = (req, res) => {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
     tipo: req.body.tipo,
     nparticipantes: req.body.nparticipantes,
+    contrasenya: req.body.contrasenya ? req.body.contrasenya : 'NO' 
   };
   Torneo.create(torneo)
   .then(data => {

@@ -28,6 +28,7 @@ exports.create = (req, res) => {
     password: req.body.password ? bcrypt.hashSync(req.body.password, 8) : 'NO',
     puntos_e0: 0,
     puntos_e1: 0,
+    id_torneo: req.body.id_torneo ? req.body.id_torneo  : 'NO',
   };
   Partida.create(partida)
       .then(dataPartida => {

@@ -17,6 +17,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true,
       comment: "null"
+    },
+    'contrasenya': {
+      type: DataTypes.STRING,
+      allowNull: true,
+      comment: "null"
     }
   }, {
     tableName: 'torneo'
