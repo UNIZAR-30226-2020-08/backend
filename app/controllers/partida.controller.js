@@ -17,7 +17,7 @@ exports.create = (req, res) => {
   //console.log(n)
   const partida = {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
-    triunfo: req.body.triunfo ? req.body.triunfo : n.toString(),
+    triunfo: n.toString(),
     estado: req.body.estado ? req.body.estado  : 0,
     tipo: req.body.tipo,
     fecha: fechaParsed,
@@ -28,44 +28,45 @@ exports.create = (req, res) => {
     password: req.body.password ? bcrypt.hashSync(req.body.password, 8) : 'NO',
     puntos_e0: 0,
     puntos_e1: 0,
-    id_torneo: req.body.id_torneo ? req.body.id_torneo  : 'NO',
+    id_torneo: 'NO',
   };
+  console.log(partida)
   Partida.create(partida)
-      .then(dataPartida => {
-        Carta.findAll()
+  .then(dataPartida => {
+    Carta.findAll()
+    .then(data => {
+      for (card of data)
+      {
+        const carta_disponible = {
+          partida: dataPartida.nombre,
+          carta: card.carta
+        };
+        CartaDisponible.create(carta_disponible)
         .then(data => {
-          for (card of data)
-          {
-            const carta_disponible = {
-              partida: dataPartida.nombre,
-              carta: card.carta
-            };
-            CartaDisponible.create(carta_disponible)
-            .then(data => {
-              console.log(`Se ha insertado el ${data.carta}`);
-            })
-            .catch(err => {
-              res.status(500).send({
-                message:
-                  err.message || "Error creando carta_disponible"
-              });
-            });
-          }
-          res.send(dataPartida);
+          console.log(`Se ha insertado el ${data.carta}`);
         })
         .catch(err => {
           res.status(500).send({
             message:
-              err.message || "Error recuperando cartas."
+              err.message || "Error creando carta_disponible"
           });
         });
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error creando partida"
-        });
+      }
+      res.send(dataPartida);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error recuperando cartas."
       });
+    });
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Error creando partida"
+    });
+  });
 };
 
 /** 

@@ -21,6 +21,7 @@ db.amigo = require("./amigo.js")(sequelize, Sequelize);
 db.carta_disponible = require("./carta_disponible.js")(sequelize, Sequelize);
 db.carta = require("./carta.js")(sequelize, Sequelize);
 db.chat = require("./chat.js")(sequelize, Sequelize);
+db.cuadro_torneo = require("./cuadro_torneo.js")(sequelize, Sequelize);
 db.customizable = require("./customizable.js")(sequelize, Sequelize);
 db.fondo_carta = require("./fondo_carta.js")(sequelize, Sequelize);
 db.fondo_tapete = require("./fondo_tapete.js")(sequelize, Sequelize);

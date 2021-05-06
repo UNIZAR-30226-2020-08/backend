@@ -7,7 +7,7 @@ exports.create = (req, res) => {
       id_torneo: req.body.id_torneo,
       id_partida: req.body.id_partida,
       fase: req.body.fase,
-      eq_winner: req.body.eq_winner
+      eq_winner: req.body.eq_winner ? req.body.eq_winner : 'NO'
     };
     Cuadro.create(cuadro_torneo)
       .then(data => {
@@ -22,9 +22,9 @@ exports.create = (req, res) => {
   };
 
 exports.findAll = (req, res) => {
-    const id_torneo = req.body.id_torneo;
-    var condition = id_torneo ? { id_torneo: { [Op.iLike]: `%${id_torneo}%` } } : null;
-    Cuadro.findAll({ where: condition })
+    const id_torneo = req.params.id_torneo;
+    //var condition = id_torneo ? { id_torneo: { [Op.iLike]: `%${id_torneo}%` } } : null;
+    Cuadro.findAll({ where: { id_torneo: id_torneo } })
       .then(data => {
         res.send(data);
       })
@@ -37,10 +37,10 @@ exports.findAll = (req, res) => {
   };
 
 exports.find = (req, res) => {
-  const id_torneo = req.body.id_torneo;
-  const id_partida = req.body.id_torneo;
+  const id_torneo = req.params.id_torneo;
+  const id_partida = req.params.id_partida;
   Cuadro.findAll({
-    where: { id_torneo:id_torneo, id_partida:id_partida }
+    where: { id_torneo: id_torneo, id_partida: id_partida }
   })
   .then(data => {
       res.send(data);
@@ -54,10 +54,10 @@ exports.find = (req, res) => {
 };
 //No se va a usar
 exports.update = (req, res) => {
-  const id_torneo = req.body.id_torneo;
-  const id_partida = req.body.id_torneo;
+  const id_torneo = req.params.id_torneo;
+  const id_partida = req.params.id_partida;
   Cuadro.update(req.body, {
-    where: { id_torneo:id_torneo, id_partida:id_partida }
+    where: { id_torneo: id_torneo, id_partida: id_partida }
   })
   .then(num => {
           res.send({ message: "cuadro torneo actualizado." });
@@ -71,10 +71,10 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const id_torneo = req.body.id_torneo;
-  const id_partida = req.body.id_torneo;
+  const id_torneo = req.params.id_torneo;
+  const id_partida = req.params.id_partida;
   Cuadro.destroy({
-    where: { id_torneo:id_torneo, id_partida:id_partida }
+    where: { id_torneo: id_torneo, id_partida: id_partida }
   })
   .then(num => {
     res.send({status: "Eliminado"});

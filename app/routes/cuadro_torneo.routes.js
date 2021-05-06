@@ -1,19 +1,19 @@
 module.exports = app => {
-    const participantes_torneo = require("../controllers/cuadro_torneo.controller.js");
+    const cuadro_torneo = require("../controllers/cuadro_torneo.controller.js");
   
     var router = require("express").Router();
   
     router.post("/", cuadro_torneo.create);
 
-    router.get("/findTournamentTable", cuadro_torneo.find);
+    router.get("/findTournamentTable/:id_torneo", cuadro_torneo.find);
 
-    router.get("/findAllTournamentTable", cuadro_torneo.findAll);
+    router.get("/findAllTournamentTable/:id_torneo/:id_partida", cuadro_torneo.findAll);
 
-    router.delete("/dropTournamentTable", cuadro_torneo.delete);
+    router.delete("/dropTournamentTable/:id_torneo/:id_partida", cuadro_torneo.delete);
 
     router.delete("/dropAllTournamentTable", cuadro_torneo.deleteAll);
   
-    router.put("/updateTournamentTable", cuadro_torneo.update);
+    router.put("/updateTournamentTable/:id_torneo/:id_partida", cuadro_torneo.update);
   
     app.use('/api/cuadro_torneo', router);
   };

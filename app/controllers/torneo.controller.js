@@ -1,18 +1,104 @@
 const db = require("../models");
 const Torneo = db.torneo;
 const Participantes = db.participantes_torneo;
+const Cuadro = db.cuadro_torneo;
+const Partida = db.partida;
+const Carta = db.carta;
+const CartaDisponible = db.carta_disponible;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.create = async(req, res) => {
   const torneo = {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
     tipo: req.body.tipo,
     nparticipantes: req.body.nparticipantes,
     contrasenya: req.body.contrasenya ? req.body.contrasenya : 'NO' 
   };
-  Torneo.create(torneo)
-  .then(data => {
-    res.send(data);
+  await Torneo.create(torneo)
+  .then(async dataTorneo => {
+    var nPartidas;
+    var partidas = []
+    if (dataTorneo.nparticipantes === 8){
+      nPartidas = 7;
+      partidas = ['octavos1','octavos2','octavos3','octavos4','semifinal1','semifinal2',
+                  'final']
+    }else if(dataTorneo.nparticipantes === 16){
+      nPartidas = 15;
+      partidas = ['dieciseisavos1','dieciseisavos2','dieciseisavos3','dieciseisavos4',
+                  'dieciseisavos5','dieciseisavos6','dieciseisavos7','dieciseisavos8',
+                  'octavos1','octavos2','octavos3','octavos4','semifinal1','semifinal2',
+                  'final']
+    }
+    //console.log(partidas)
+    var a;
+    const fecha = new Date();
+      const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      //const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
+      //console.log(fechaLim);
+      const palos = ['O','C','E','B'];
+    for (a of partidas){
+      console.log(a)
+      const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
+      const dataP = {
+        nombre: Math.random().toString(36).substring(2,7),
+        triunfo: n.toString(),
+        estado: 1, //Se incializan en pausa y cuando se haga nextRound se ponen en juego
+        tipo: dataTorneo.tipo,
+        fecha: fechaParsed,
+        o_20: 'NO',
+        c_20: 'NO',
+        e_20: 'NO',
+        b_20: 'NO',
+        password: 'NO',
+        puntos_e0: 0,
+        puntos_e1: 0,
+        id_torneo: dataTorneo.nombre,
+      };
+      await Partida.create(dataP)
+      .then(async dataPartida => {
+        await Carta.findAll()
+        .then(async data => {
+          for (card of data)
+          {
+            const carta_disponible = {
+              partida: dataPartida.nombre,
+              carta: card.carta
+            };
+            await CartaDisponible.create(carta_disponible)
+            .then(async data => {
+              console.log(`Se ha insertado el ${data.carta}`);
+            })
+            .catch(err => {
+              res.status(500).send({
+                message:
+                  err.message || "Error creando carta_disponible"
+              });
+            });
+          }
+          const dataCuad = {
+            id_torneo: dataTorneo.nombre,
+            id_partida: dataPartida.nombre,
+            fase: a,
+            eq_winner: 6
+          };
+          const dataCuadro = await Cuadro.create(dataCuad)
+          console.log(dataPartida,dataCuadro);
+        })
+        .catch(err => {
+          res.status(500).send({
+            message:
+              err.message || "Error recuperando cartas."
+          });
+        });
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Error creando partida"
+        });
+      });
+    }
+    res.send(dataTorneo);
   })
   .catch(err => {
     res.status(500).send({ message: err.message || "Error creando torneo" });

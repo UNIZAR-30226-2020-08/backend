@@ -32,6 +32,7 @@ require('./app/routes/auth.routes')(app);
 require("./app/routes/carta_disponible.routes")(app);
 require("./app/routes/carta.routes")(app);
 require("./app/routes/chat.routes")(app);
+require("./app/routes/cuadro_torneo.routes")(app);
 require("./app/routes/customizable.routes")(app);
 require("./app/routes/fondo_carta.routes")(app);
 require("./app/routes/fondo_tapete.routes")(app);

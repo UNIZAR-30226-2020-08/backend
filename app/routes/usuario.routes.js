@@ -13,7 +13,7 @@ module.exports = app => {
     router.get("/findUser/:username", usuario.find);
 
     // Eliminar un usuario
-    router.delete("/dropUser", usuario.delete);
+    router.delete("/dropUser/:username", usuario.delete);
   
     // Eliminar todos usuario
     //router.delete("/dropAll", usuario.deleteAll);

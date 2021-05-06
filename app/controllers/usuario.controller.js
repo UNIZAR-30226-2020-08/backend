@@ -84,7 +84,7 @@ exports.update = (req, res) => {
 
 // Elimina un usuario
 exports.delete = (req, res) => {
-    const n_usuario = req.body.username;
+    const n_usuario = req.params.username;
 
     Usuario.destroy({
       where: { username: n_usuario }
