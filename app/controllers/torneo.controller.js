@@ -57,23 +57,15 @@ exports.create = async(req, res) => {
       await Partida.create(dataP)
       .then(async dataPartida => {
         await Carta.findAll()
-        .then(async data => {
-          for (card of data)
+        .then(async dataCartas => {
+          for (card of dataCartas)
           {
             const carta_disponible = {
               partida: dataPartida.nombre,
               carta: card.carta
             };
-            await CartaDisponible.create(carta_disponible)
-            .then(async data => {
+            const data = await CartaDisponible.create(carta_disponible)
               console.log(`Se ha insertado el ${data.carta}`);
-            })
-            .catch(err => {
-              res.status(500).send({
-                message:
-                  err.message || "Error creando carta_disponible"
-              });
-            });
           }
           const dataCuad = {
             id_torneo: dataTorneo.nombre,
@@ -166,33 +158,25 @@ exports.deleteAll = (req, res) => {
     });
   };
 
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
   const tipo = req.params.tipo;
   const nEquipos = req.params.nEquipos;
-  //console.log(`El tipo es ${tipo} y el numero de equipos ${nEquipos}`)
-  Torneo.findAll({ where : { contrasenya: 'NO', tipo: tipo, nparticipantes: nEquipos }})
-  .then(dataTorneos => {
-    devolverTorneos(dataTorneos,tipo,nEquipos)
-    .then(torneosDisponibles => {
-      res.send(torneosDisponibles);
-    })
-    .catch(err => {
-      res.status(500).send({ message: err.message || "Error recuperando torneos." });
-    });
-  })
-  .catch(err => {
-    res.status(500).send({
-      message:
-        err.message || "Error recuperando torneos."
-    });
-  });
+  try {
+    const dataTorneos = await Torneo.findAll({ 
+      where : { contrasenya: 'NO',
+                tipo: tipo, 
+                nparticipantes: nEquipos 
+              }})
+    const torneosDisponibles = await devolverTorneos(dataTorneos,tipo,nEquipos)
+    res.send(torneosDisponibles);
+  }catch(err){
+    return res.status(500).send({ message: err | 
+                                  'se ha producido un error buscando los torneos'});
+  }
 };
 
-async function devolverTorneos(dataTorneos,tipo,nParticipantes)
-{
+async function devolverTorneos(dataTorneos,tipo,nParticipantes) {
   var torneosDisponibles = [];
-  let data;
-  var nTorneos = dataTorneos.length;
   var maxPermitidoPartida;
   if (tipo === '0' & nParticipantes === '8'){
     maxPermitidoPartida = 8;
@@ -203,27 +187,13 @@ async function devolverTorneos(dataTorneos,tipo,nParticipantes)
   }else if(tipo === '1' & nParticipantes === '16'){
     maxPermitidoPartida = 32;
   }
-  //console.log(`El max de participantes es ${maxPermitidoPartida}`)
-  console.log(`El numero de torneos es: ${nTorneos}`);
   for (a of dataTorneos){
-    await Participantes.findAndCountAll({ where: { torneo: a.nombre } })
-    .then(dataParticipante => {
-      //console.log(dataParticipante);
-      data = dataParticipante;
-      //console.log(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || "Error recuperando jugadores pertenecientes al torneo." });
-    });
-    //console.log(data);
+    const data = await Participantes.findAndCountAll({ where: { torneo: a.nombre } })
     if (data.count < maxPermitidoPartida){
-      console.log(`El torneo ${a.nombre} tiene ${data.count}`);
       torneosDisponibles.push( { nombre: a.nombre, 
-                                  jugadores_online: data.count });
+                                 jugadores_online: data.count })
     }
   }
-  //console.log(nPartidas);
   console.log(torneosDisponibles);
   return torneosDisponibles;
 }

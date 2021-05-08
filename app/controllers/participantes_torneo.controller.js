@@ -1,38 +1,57 @@
 const db = require("../models");
 const Participantes = db.participantes_torneo;
+const Torneo = db.torneo;
+const Usuario = db.usuario;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
-    const participantes_torneo = {
-      torneo: req.body.torneo,
-      jugador: req.body.jugador,
-    };
-    Participantes.create(participantes_torneo)
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error creando participantes_torneo"
-        });
-      });
-  };
+exports.create = async (req, res) => {
+  try {
+    const dataTorneo = await Torneo.findByPk(req.body.torneo)
+    const dataPlayer = await Usuario.findByPk(req.body.jugador)
+    if (dataTorneo === null | dataPlayer === null){
+      res.status(500).send('El torneo o usuario no existen')
+    }else{
+      var maxPermitidoPartida 
+      if (dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 8){
+        maxPermitidoPartida = 8;
+      }else if(dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 16){
+        maxPermitidoPartida = 16;
+      }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 8){
+        maxPermitidoPartida = 16;
+      }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 16){
+        maxPermitidoPartida = 32;
+      }
+      const dataP = await Participantes.findAndCountAll({where: { torneo: req.body.torneo }})
+      if (dataP.count >= maxPermitidoPartida){
+        res.status(500).send('El torneo esta completo')
+      }else{
+        const participantes_torneo = {
+          torneo: req.body.torneo,
+          jugador: req.body.jugador,
+        }
+        const dataParticipante = await Participantes.create(participantes_torneo)
+        res.send(dataParticipante);
+      }
+    }
+  }catch(err){
+    return res.status(500).send({ message: err | 
+      'se ha producido un error uniendose al torneo'});
+  }
+};
 
-exports.findAll = (req, res) => {
-    const torneo = req.body.torneo;
-    //var condition = torneo ? { torneo: { [Op.iLike]: `%${torneo}%` } } : null;
-    Participantes.findAll({ where: {torneo : torneo} })
-      .then(data => {
-        res.send(data);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando participantes_torneo."
-        });
-      });
-  };
+exports.findAll = async (req, res) => {
+  const torneo = req.body.torneo;
+  Participantes.findAll({ where: {torneo : torneo} })
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Error recuperando participantes_torneo."
+    });
+  });
+};
 
 exports.find = (req, res) => {
   const torneo = req.body.torneo;
