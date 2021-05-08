@@ -5,6 +5,7 @@ const Cuadro = db.cuadro_torneo;
 const Partida = db.partida;
 const Carta = db.carta;
 const CartaDisponible = db.carta_disponible;
+const Pertenece = db.pertenece;
 const Op = db.Sequelize.Op;
 
 exports.create = async(req, res) => {
@@ -20,14 +21,14 @@ exports.create = async(req, res) => {
     var partidas = []
     if (dataTorneo.nparticipantes === 8){
       nPartidas = 7;
-      partidas = ['octavos1','octavos2','octavos3','octavos4','semifinal1','semifinal2',
-                  'final']
+      partidas = ['1.1','1.2','1.3','1.4','2.1','2.2',
+                  '3']
     }else if(dataTorneo.nparticipantes === 16){
       nPartidas = 15;
-      partidas = ['dieciseisavos1','dieciseisavos2','dieciseisavos3','dieciseisavos4',
-                  'dieciseisavos5','dieciseisavos6','dieciseisavos7','dieciseisavos8',
-                  'octavos1','octavos2','octavos3','octavos4','semifinal1','semifinal2',
-                  'final']
+      partidas = ['0.1','0.2','0.3','0.4',
+                  '0.5','0.6','0.7','0.8',
+                  '1.1','1.2','1.3','1.4','2.1','2.2',
+                  '3']
     }
     //console.log(partidas)
     var a;
@@ -95,6 +96,80 @@ exports.create = async(req, res) => {
   .catch(err => {
     res.status(500).send({ message: err.message || "Error creando torneo" });
   });
+};
+
+exports.matchRound = async (req,res) => {
+  try {
+    const torneo = req.params.torneo
+    const ronda = req.params.ronda
+    const rondaAux = ronda - 1
+    const notFirstRound = await Cuadro.findAll({where: {id_torneo : torneo, fase: rondaAux}})
+    if (notFirstRound === undefined ){
+      //Implica que es la primera ronda
+    }else{
+      //Ha habido una ronda previa
+    }
+    const dataTorneo = await Torneo.findByPk(torneo)
+    var maxEnTorneo 
+    var maxEnPartida
+    if (dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 8){
+      maxEnTorneo = 8
+      maxEnPartida = 2
+    }else if(dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 16){
+      maxEnTorneo = 16
+      maxEnPartida = 2
+    }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 8){
+      maxEnTorneo = 16
+      maxEnPartida = 4
+    }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 16){
+      maxEnTorneo = 32
+      maxEnPartida = 4
+    }
+    const dataPart = await Participantes.findAndCountAll({ where: { torneo: torneo } }) 
+    console.log(dataPart.count)
+    if (dataPart.count < maxEnTorneo){
+      res.status(500).send('El torneo no esta completo, NO SE PUEDEN EMPEZAR LOS EMPAREJAMIENTOS' )
+    }else{
+      // Mezclamos el array de juagdores para hacer los emparejamientos
+      const array  = (dataPart.rows).sort(() => Math.random() - 0.5)
+      const dataRonda = await Cuadro.findAll({
+                                where: {
+                                  id_torneo:{ [Op.eq]: `${dataTorneo.nombre}` },
+                                  fase: { [Op.like]: `%${ronda}%` }}
+                                })
+      for (a of dataRonda){
+        for (var i = 0; i < maxEnPartida; i++){
+          const dataCount = await Pertenece.findAll({where: { partida: a.id_partida}})
+          if (dataTorneo.tipo === 0 && dataCount.length >= 2){
+            res.status(500).send("Partida individual llena");
+          }
+          else if (dataTorneo.tipo === 1 && dataCount.length >= 4){
+            res.status(500).send("Partida dobles llena");
+          }else{
+            var player = array.pop();
+            const data = 
+            {
+              jugador: player.jugador,
+              partida: a.id_partida,
+              equipo: (dataCount.length) % 2,
+              orden: dataCount.length + 1,
+              c1: req.body.c1 ? req.body.c1 : 'NO',
+              c2: req.body.c2 ? req.body.c2 : 'NO',
+              c3: req.body.c3 ? req.body.c3 : 'NO',
+              c4: req.body.c4 ? req.body.c4 : 'NO',
+              c5: req.body.c5 ? req.body.c5 : 'NO',
+              c6: req.body.c6 ? req.body.c6 : 'NO',  
+            }
+            const dataPer = await Pertenece.create(data)
+          }
+        }
+      }
+      res.status(200).send('se ha emparejado correctamente la ronda')
+    }
+  }catch(err){
+    return res.status(500).send({ message: err | 
+      'se ha producido un error haciendo los emparejamientos'});
+  }
 };
 
 exports.find = (req, res) => {

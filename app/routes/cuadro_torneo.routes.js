@@ -7,7 +7,7 @@ module.exports = app => {
 
     router.get("/findTournamentTable/:id_torneo", cuadro_torneo.find);
 
-    router.get("/findAllTournamentTable/:id_torneo/:id_partida", cuadro_torneo.findAll);
+    router.get("/findAllTournamentTable/:id_torneo/:ronda", cuadro_torneo.findAll);
 
     router.delete("/dropTournamentTable/:id_torneo/:id_partida", cuadro_torneo.delete);
 

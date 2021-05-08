@@ -5,6 +5,8 @@ module.exports = app => {
 
   router.post("/", torneo.create);
 
+  router.put("/matchRound/:torneo/:ronda", torneo.matchRound);
+
   router.get("/findTournament", torneo.find);
 
   router.get("/findAllTournament/:tipo/:nEquipos", torneo.findAll);

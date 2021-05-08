@@ -22,10 +22,14 @@ exports.create = (req, res) => {
   };
 
 exports.findAll = (req, res) => {
+    const ronda = req.params.ronda;
     const id_torneo = req.params.id_torneo;
-    //var condition = id_torneo ? { id_torneo: { [Op.iLike]: `%${id_torneo}%` } } : null;
-    Cuadro.findAll({ where: { id_torneo: id_torneo } })
-      .then(data => {
+    var condition = { id_torneo: { [Op.eq]: id_torneo },
+                      fase: { [Op.like]: ronda } };
+    console.log(condition)
+    Cuadro.findAll({where: {id_torneo:{ [Op.eq]: `${id_torneo}` },
+                            fase: { [Op.like]: `%${ronda}%` }}
+    }).then(data => {
         res.send(data);
       })
       .catch(err => {
