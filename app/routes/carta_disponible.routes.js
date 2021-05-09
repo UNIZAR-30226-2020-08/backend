@@ -9,7 +9,7 @@ module.exports = app => {
     
     router.get("/findAllACard", cartaDisponible.findAll);
 
-    router.delete("/dropACard", cartaDisponible.delete);
+    router.delete("/dropACard/:partida/:carta", cartaDisponible.delete);
   
     router.put("/updateACard", cartaDisponible.update);
   

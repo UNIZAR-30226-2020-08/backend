@@ -17,5 +17,7 @@ module.exports = app => {
 
   router.put("/cambiar7/:nombre/:jugador", partida.cambiar7);
 
+  router.put("/partidaVueltas/:partida", partida.partidaVueltas);
+
   app.use('/api/partida', router);
 };

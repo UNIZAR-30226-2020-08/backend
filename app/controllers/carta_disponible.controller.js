@@ -65,8 +65,8 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const carta = req.body.carta;
-  const partida = req.body.partida;
+  const carta = req.params.carta;
+  const partida = req.params.partida;
   CartaDisponible.destroy({ where: { carta: carta, partida: partida }
   })
   .then(num => {
