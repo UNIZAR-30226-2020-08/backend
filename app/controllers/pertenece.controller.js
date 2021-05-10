@@ -289,8 +289,8 @@ exports.findAll = (req, res) => {
 };
 
 exports.find = (req, res) => {
-  const jugador = req.body.jugador;
-  const partida = req.body.partida;
+  const jugador = req.params.jugador;
+  const partida = req.params.partida;
   Pertenece.findOne({where:{partida: partida, jugador:jugador}})
   .then(data => {
       res.send(data);

@@ -227,9 +227,11 @@ exports.cambiar7 = async (req,res) => {
         where: { nombre: partida }
       })
         console.log(`${jugador} ha cambiado su ${sieteTriunfo} por el ${triunfo}`);
-        res.status(200).send({pertenece,partidaCante});
+        pertenece[posicion] = undefined
+        pertenece['carta'] = triunfo
+        res.status(200).send(pertenece);
     }else{
-      res.send('No puedes cambiar el 7');
+      res.status(500).send('No puedes cambiar el 7');
   }
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error cambiando el 7'});

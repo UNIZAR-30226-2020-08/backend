@@ -7,7 +7,7 @@ module.exports = app => {
 
   router.post("/joinPrivate", pertenece.joinPrivate);
 
-  router.get("/findBelong", pertenece.find);
+  router.get("/findBelong/:partida/:jugador", pertenece.find);
 
   router.get("/findAllBelong/:partida", pertenece.findAll);
 
