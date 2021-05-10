@@ -361,6 +361,6 @@ function devolverCantes(data,data1){
     }
     return {partida,cantes};
   }else{
-    return 'No hay cantes';
+    return [];
   }
 }
