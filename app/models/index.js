@@ -9,7 +9,10 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   //operatorsAliases: false,
   define:{
     timestamps: false
-  }
+  },
+  dialectOptions: {
+    ssl: true
+}
 });
 
 const db = {};
