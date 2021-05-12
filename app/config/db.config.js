@@ -3,5 +3,6 @@ module.exports = {
     PORT: "5432",
     USER: "vefjxjtwckqexq",
     PASSWORD: "82637aa982638b9ef0079f26f7fe7c43af39b1c3bfb06ae5d25ba3b1083c8450",
-    DB: "dmo9h5pup9a6e"
+    DB: "dmo9h5pup9a6e",
+    SCHEMA: "public",
 };
