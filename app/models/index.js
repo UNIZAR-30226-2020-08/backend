@@ -7,6 +7,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   schema: dbConfig.SCHEMA,
   dialect: dbConfig.dialect,
   //operatorsAliases: false,
+  native: true,
   ssl: true,
   define:{
     timestamps: false
