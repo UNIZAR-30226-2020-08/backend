@@ -2,18 +2,9 @@ const dbConfig = require("../config/db.config.js");
 
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,
-  schema: dbConfig.SCHEMA,
-  dialect: dbConfig.dialect,
-  //operatorsAliases: false,
-  define:{
-    timestamps: false
-  },
-  dialectOptions: {
-    ssl: true
-}
-});
+const url = process.env.DATABASE_URL;
+
+const sequelize = new Sequelize(url);
 
 const db = {};
 

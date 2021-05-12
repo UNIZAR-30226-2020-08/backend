@@ -25,7 +25,7 @@ db.sequelize.sync();
 });*/
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Prueba del server de backend de las10ultimas" });
+  res.json({ message: "Bienvenido al servidor backend de las10ultimas" });
 });
 require("./app/routes/amigo.routes")(app);
 require('./app/routes/auth.routes')(app);
