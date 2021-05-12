@@ -4,7 +4,10 @@ const Sequelize = require("sequelize");
 
 const url = process.env.DATABASE_URL;
 
-const sequelize = new Sequelize(url);
+const sequelize = new Sequelize(url,
+  {
+  ssl: { rejectUnauthorized: false } //solved the problem with self signed sertificate
+  });
 
 const db = {};
 
