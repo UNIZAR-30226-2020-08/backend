@@ -6,7 +6,8 @@ const url = process.env.DATABASE_URL;
 
 const sequelize = new Sequelize(url,
   {
-  ssl: { rejectUnauthorized: false } //solved the problem with self signed sertificate
+    define:{ timestamps: false },
+    ssl: { rejectUnauthorized: false } //solved the problem with self signed sertificate
   });
 
 const db = {};
