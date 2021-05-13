@@ -7,7 +7,7 @@ module.exports = app => {
     router.post("/", usuario.create);
   
     // Retrieve all published usuario
-    //router.get("/findAll", usuario.findAll);
+    router.get("/findAll", usuario.findAll);
       
     // Buscar un usario
     router.get("/findUser/:username", usuario.find);
