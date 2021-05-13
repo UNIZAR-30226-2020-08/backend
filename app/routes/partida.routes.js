@@ -19,5 +19,7 @@ module.exports = app => {
 
   router.put("/partidaVueltas/:partida", partida.partidaVueltas);
 
+  router.put("/recuento/:partida", partida.recuento);
+
   app.use('/api/partida', router);
 };

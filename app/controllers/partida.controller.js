@@ -238,9 +238,45 @@ exports.cambiar7 = async (req,res) => {
   }
      
 };
+exports.recuento = async (req,res) => {
+  try{
+    const partida = req.params.partida
+    const dataPartida = await Partida.findByPk(partida)
+    const triunfo = dataPartida.triunfo[1] 
+    var p_e0 = dataPartida.puntos_e0
+    var p_e1 = dataPartida.puntos_e1
+    const palos = ['o_20','c_20','e_20','b_20']
+    for (p of palos){
+      if (dataPartida[p] !== 'NO'){
+        const dataCantante = Pertenece.findOne({where:{partida: partida, jugador: dataPartida[p]}})
+        if (dataCantante.equipo === 0){
+          if (p[0].toUpperCase() === triunfo){
+            p_e0 = p_e0 + 40
+          }else{
+            p_e0 = p_e0 + 20
+          }
+        }else{
+          if (p[0].toUpperCase() === triunfo){
+            p_e1 = p_e1 + 40
+          }else{
+            p_e1 = p_e1 + 20
+          }
+        }
+      }
+    }
+    const dataRecuento = await Partida.update({puntos_e0: p_e0, puntos_e1: p_e1}, {
+      where: { nombre: partida }
+    })
+    res.status(200).send(dataRecuento)
+  }catch(err){
+    return res.status(500).send({ message: err | 'se ha producido un error en el recuento'});
+  }
+}
 
 exports.partidaVueltas = async (req,res) => {
   try{
+    //const palos = ['O','C','E','B'];
+    //const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
     const partida = req.params.partida
     const data = await Carta.findAll()
     for (card of data)
