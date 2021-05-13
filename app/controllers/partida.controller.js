@@ -276,9 +276,12 @@ exports.recuento = async (req,res) => {
 
 exports.partidaVueltas = async (req,res) => {
   try{
-    //const palos = ['O','C','E','B'];
-    //const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
     const partida = req.params.partida
+    const palos = ['O','C','E','B'];
+    const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
+    const dataRecuento = await Partida.update({triunfo: n}, {
+      where: { nombre: partida }
+    })
     const data = await Carta.findAll()
     for (card of data)
     {
