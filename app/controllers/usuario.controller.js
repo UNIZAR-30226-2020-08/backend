@@ -66,6 +66,9 @@ exports.update = (req, res) => {
   if (req.body.password !== undefined){
     req.body.password = bcrypt.hashSync(req.body.password, 8);
   }
+  if (req.body.password === ""){
+    req.body.password = undefined
+  }
   Usuario.update(req.body, {
       where: { username: n_usuario }
   })
