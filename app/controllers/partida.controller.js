@@ -267,7 +267,8 @@ exports.recuento = async (req,res) => {
     const dataRecuento = await Partida.update({puntos_e0: p_e0, puntos_e1: p_e1}, {
       where: { nombre: partida }
     })
-    res.status(200).send(dataRecuento)
+    const dataPartida1 = await Partida.findByPk(partida)
+    res.status(200).send(dataPartida1)
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error en el recuento'});
   }
