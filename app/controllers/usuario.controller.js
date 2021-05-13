@@ -27,21 +27,28 @@ exports.create = (req, res) => {
 
 // Devuelve todos los usuarios de la base de datos 
 exports.findAll = (req, res) => {
-    const n_usuario = req.query.username;
-    var condition = n_usuario ? { n_usuario: { [Op.iLike]: `%${n_usuario}%` } } : null;
-  
-    Usuario.findAll({ where: condition })
-      .then(data => {
-        res.send(data);
+  Usuario.findAll()
+    .then(data => {
+      //Ordena por orden descendente de copas
+      data.sort(function (a,b) {
+        if (a.copas < b.copas){
+          return 1;
+        }
+        if (a.copas > b.copas) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
       })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Error recuperando usuarios."
-        });
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Error recuperando usuarios."
       });
-
-  };
+    });
+};
 
 // Busca a un usuario
 exports.find = (req, res) => {
