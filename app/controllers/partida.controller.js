@@ -11,7 +11,7 @@ exports.create = (req, res) => {
   const fecha = new Date();
   const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
   const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
-  //console.log(fechaLim);
+  console.log(fechaLim);
   const palos = ['O','C','E','B'];
   const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
   //console.log(n)
