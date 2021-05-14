@@ -184,7 +184,8 @@ exports.matchRound = async (req,res) => {
               res.status(500).send("Partida dobles llena");
             }else{
               var player = winners.pop();
-              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
+              console.log('player',player)
+              matches.push({torneo: torneo, jugador: player.jugador,partida: a.id_partida})
               const data = 
               {
                 jugador: player.jugador,
