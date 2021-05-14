@@ -119,8 +119,8 @@ exports.matchRound = async (req,res) => {
             else if (dataTorneo.tipo === 1 && dataCount.length >= 4){
               res.status(500).send("Partida dobles llena");
             }else{
-              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
               var player = array.pop();
+              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
               const data = 
               {
                 jugador: player.jugador,
@@ -183,8 +183,8 @@ exports.matchRound = async (req,res) => {
             else if (dataTorneo.tipo === 1 && dataCount.length >= 4){
               res.status(500).send("Partida dobles llena");
             }else{
-              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
               var player = winners.pop();
+              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
               const data = 
               {
                 jugador: player.jugador,
