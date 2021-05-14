@@ -137,7 +137,7 @@ exports.matchRound = async (req,res) => {
               const dataPer = await Pertenece.create(data)
             }
           }
-          //Se inicaliza la baraja de la partida
+          //Se inicializa la baraja de la partida
           const dataCartas = await Carta.findAll()
           for (card of dataCartas){
             const carta_disponible = {
