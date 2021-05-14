@@ -35,7 +35,7 @@ exports.create = async(req, res) => {
     var a;
     const fecha = new Date();
       const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
-      //const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
+      const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
       //console.log(fechaLim);
       const palos = ['O','C','E','B'];
     for (a of partidas){
@@ -46,7 +46,7 @@ exports.create = async(req, res) => {
         triunfo: n.toString(),
         estado: 1, //Se incializan en pausa y cuando se haga nextRound se ponen en juego
         tipo: dataTorneo.tipo,
-        fecha: fechaParsed,
+        fecha: fechaLim,
         o_20: 'NO',
         c_20: 'NO',
         e_20: 'NO',
