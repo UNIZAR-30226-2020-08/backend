@@ -157,7 +157,7 @@ exports.matchRound = async (req,res) => {
           const team = await Pertenece.findAll({where:{partida:a.id_partida, equipo: a.eq_winner}})
           for (i of team){
             const dataWin = {
-              juagdor: i.jugador,
+              jugador: i.jugador,
               fase: a.fase,
             }
             await winners.push(dataWin)
