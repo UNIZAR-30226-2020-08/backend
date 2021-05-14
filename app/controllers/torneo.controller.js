@@ -87,23 +87,11 @@ exports.matchRound = async (req,res) => {
     const rondaIni = req.params.ronda
     const rondaPrev = (rondaIni - 1).toString() + '.'
     const ronda = rondaIni.toString() + '.'
-    
+    var matches = []
     const dataTorneo = await Torneo.findByPk(torneo)
-    var maxEnTorneo 
-    var maxEnPartida
-    if (dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 8){
-      maxEnTorneo = 8
-      maxEnPartida = 2
-    }else if(dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 16){
-      maxEnTorneo = 16
-      maxEnPartida = 2
-    }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 8){
-      maxEnTorneo = 16
-      maxEnPartida = 4
-    }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 16){
-      maxEnTorneo = 32
-      maxEnPartida = 4
-    }
+    var maxEnTorneo = (dataTorneo.tipo + 1)*dataTorneo.nparticipantes
+    var maxEnPartida = (dataTorneo.tipo + 1)*2
+
     const dataRonda = await Cuadro.findAll({
       where: {
         id_torneo:{ [Op.eq]: `${dataTorneo.nombre}` },
@@ -131,6 +119,7 @@ exports.matchRound = async (req,res) => {
             else if (dataTorneo.tipo === 1 && dataCount.length >= 4){
               res.status(500).send("Partida dobles llena");
             }else{
+              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
               var player = array.pop();
               const data = 
               {
@@ -159,7 +148,7 @@ exports.matchRound = async (req,res) => {
             console.log(`Se ha insertado el ${data.carta}`);
           }
         }
-        res.status(200).send('se ha emparejado correctamente la ronda')
+        res.status(200).send(matches)
       }
     }else{
       //Ha habido una ronda previa clasificatoria previa 
@@ -168,7 +157,7 @@ exports.matchRound = async (req,res) => {
           const team = await Pertenece.findAll({where:{partida:a.id_partida, equipo: a.eq_winner}})
           for (i of team){
             const dataWin = {
-              nombre: i.jugador,
+              juagdor: i.jugador,
               fase: a.fase,
             }
             await winners.push(dataWin)
@@ -194,10 +183,11 @@ exports.matchRound = async (req,res) => {
             else if (dataTorneo.tipo === 1 && dataCount.length >= 4){
               res.status(500).send("Partida dobles llena");
             }else{
+              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
               var player = winners.pop();
               const data = 
               {
-                jugador: player.nombre,
+                jugador: player.jugador,
                 partida: a.id_partida,
                 equipo: (dataCount.length) % 2,
                 orden: dataCount.length + 1,
@@ -210,7 +200,6 @@ exports.matchRound = async (req,res) => {
               }
               console.log(data)
               if (dataTorneo.tipo === 1 && i < 2){
-                console.log('entra al if')
                 data.equipo = 0
                 if(i === 0){data.orden = 1}else{data.orden = 3} 
               }else if(dataTorneo.tipo === 1 && i >= 2){
@@ -233,7 +222,7 @@ exports.matchRound = async (req,res) => {
             console.log(`Se ha insertado el ${data.carta}`);
           }
         }
-      res.status(200).send(`Se ha realizado el emparejamiento de la ronda ${ronda}`)
+      res.status(200).send(matches)
     }
     
   }catch(err){
