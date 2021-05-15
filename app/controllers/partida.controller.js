@@ -412,8 +412,10 @@ exports.IA = async(req, res) => {
             //Si la carta que han lanzado es de oros
             for(c of cartas){
               const dataCarta = await Carta.findByPk(c)
+              const cartaMesa = await Carta.findByPk(carta)
+              
               //Miro si tengo en mi mano alguna carta de oros tambien que sea mejor que la suya
-              if((c[1] === 'O') && (carta.ranking < dataCarta.ranking)){
+              if((c[1] === 'O') && (cartaMesa.ranking < dataCarta.ranking)){
                 posibilidades1.push(dataCarta)
                 heEchado = true
               }
