@@ -155,13 +155,23 @@ exports.deleteAll = (req, res) => {
 exports.getRoundWinner = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;
-  var maxPlays = 0;
   await Jugada.findAll({ where: {partida: partida, nronda: nronda } })
   .then(async dataOrder => {
+     //Ordena por orden de tirada
+     dataOrder.sort(function (a,b) {
+      if (a.orden > b.orden){
+        return 1;
+      }
+      if (a.orden < b.orden) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    })
     if(dataOrder.length !== 0){
       const dataPartida = await Partida.findByPk(partida);
-      console.log(dataOrder, dataPartida.tipo);
-      (dataPartida.tipo === 0) ? maxPlays = 2 : maxPlays = 4;
+      console.log('Jugadas de la partida ',dataOrder);
+      //var maxPlays = (dataPartida.tipo + 1)*2;
       var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
       var puntosMano = 0;
       for(o of dataOrder){
@@ -190,10 +200,10 @@ exports.getRoundWinner = async (req, res) => {
         }else if(dataWinner.equipo === 0){
           team = 'puntos_e0';
         }
-        if (dataPartida.tipo === 0 & nronda === 19){
+        if ((dataPartida.tipo === 0) && (nronda === 19)){
           console.log('se cuentan las 10 ultimas en individual')
           puntosMano += (dataPartida[team] + 10);
-        }else if (dataPartida.tipo === 1 & nronda === 9){
+        }else if ((dataPartida.tipo === 1) && (nronda === 9)){
           console.log('se cuentan las 10 ultimas en individual')
           puntosMano += (dataPartida[team] + 10);
         }else {
