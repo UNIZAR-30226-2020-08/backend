@@ -355,7 +355,6 @@ exports.IA = async(req, res) => {
 
   if (carta === undefined){
     //Si no han lanzado carta
-    var posibilidades =[]
     for(c of cartas){
       const dataCarta = await Carta.findByPk(c)
       //Miro alguna carta de mi mano que no sea triunfo
@@ -372,7 +371,6 @@ exports.IA = async(req, res) => {
     //Si si han lanzado carta
       //Miro si la carta que han lanzado es triunfo 
       if(carta[1] === paloTriunfo){
-        var posibilidades = []
         //Si sí es triunfo
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
@@ -404,13 +402,14 @@ exports.IA = async(req, res) => {
           else if(dataCarta.puntuacion == 11){
             posibilidades.push(dataCarta)
           }
-          else{
-            //Echare una carta aleatoria de las 6 que tengo
-            //TODO-->Esta al final, quitar este else
-          }
+        }
+        if (posibilidades.length === 0){
+          posibilidades = cartas
         }
       }
       else{
+        //var palos = ['O','C','E','B']
+        //for (p of palos){}
         //Si la carta que han lanzado no es triunfo
         //Miro de que palo es la carta que ha lanzado
         if(carta[1] === 'O'){
