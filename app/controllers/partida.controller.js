@@ -691,7 +691,7 @@ exports.IA = async(req, res) => {
             }else if(dataCarta.puntuacion == 10){
               //Le doy un tres, que es la siguiente carta que 
             }
-          
+          }
 
 
 
