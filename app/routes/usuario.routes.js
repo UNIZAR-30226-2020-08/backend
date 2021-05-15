@@ -18,6 +18,10 @@ module.exports = app => {
     // Eliminar todos usuario
     //router.delete("/dropAll", usuario.deleteAll);
 
+    router.put("/ganarPartida/:username", usuario.ganarPartida);
+
+    router.put("/perderPartida/:username", usuario.perderPartida);
+
     // Update a usuario with id
     router.put("/updateUser/:username", usuario.update);
   

@@ -67,6 +67,41 @@ exports.find = (req, res) => {
     });
   };
 
+exports.ganarPartida = async (req,res) => {
+  try {
+    const usuario = req.params.username
+    const dataUsuario = await Usuario.findByPk(usuario)
+    var puntos = dataUsuario.copas + 30
+    const dataUpdate = await Usuario.update({copas: puntos}, {
+      where: { username: usuario }
+    })
+    console.log(dataUpdate)
+    res.status(200).send({jugador: usuario, copas: puntos})
+  }catch(err){
+    return res.status(500).send({ message: err | 'se ha producido un error sumando copas'});
+  }
+}
+
+exports.perderPartida = async (req,res) => {
+  try {
+    var puntos = 0;
+    const usuario = req.params.username
+    const dataUsuario = await Usuario.findByPk(usuario)
+    if (dataUsuario.copas >= 15){
+      puntos = dataUsuario.copas - 15
+    }else{
+      puntos = 0
+    }
+    const dataUpdate = await Usuario.update({copas: puntos}, {
+      where: { username: usuario }
+    })
+    console.log(dataUpdate)
+    res.status(200).send({jugador: usuario, copas: puntos})
+  }catch(err){
+    return res.status(500).send({ message: err | 'se ha producido un error restando copas'});
+  }
+}
+
 // Actualiza un usuario
 exports.update = (req, res) => {
   const n_usuario = req.params.username;
