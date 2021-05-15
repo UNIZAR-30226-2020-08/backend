@@ -120,7 +120,10 @@ exports.matchRound = async (req,res) => {
               res.status(500).send("Partida dobles llena");
             }else{
               var player = array.pop();
-              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida})
+              const dataR = await Cuadro.findOne({
+                where: { id_torneo: torneo, id_partida: a.id_partida }
+                })
+              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida, fase: dataR.fase})
               const data = 
               {
                 jugador: player.jugador,
@@ -185,7 +188,10 @@ exports.matchRound = async (req,res) => {
             }else{
               var player = winners.pop();
               console.log('player',player)
-              matches.push({torneo: torneo, jugador: player.jugador,partida: a.id_partida})
+              const dataR = await Cuadro.findOne({
+                where: { id_torneo: torneo, id_partida: a.id_partida }
+                })
+              matches.push({torneo: torneo, jugador: player.jugador,partida: a.id_partida, fase: dataR.fase})
               const data = 
               {
                 jugador: player.jugador,
