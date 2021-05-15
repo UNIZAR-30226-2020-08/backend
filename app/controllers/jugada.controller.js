@@ -192,10 +192,10 @@ exports.getRoundWinner = async (req, res) => {
         }
         if (dataPartida.tipo === 0 & nronda === 19){
           console.log('se cuentan las 10 ultimas en individual')
-          puntosMano += dataPartida[team] + 10;
+          puntosMano += (dataPartida[team] + 10);
         }else if (dataPartida.tipo === 1 & nronda === 9){
           console.log('se cuentan las 10 ultimas en individual')
-          puntosMano += dataPartida[team] + 10;
+          puntosMano += (dataPartida[team] + 10);
         }else {
           puntosMano += dataPartida[team];
         }
