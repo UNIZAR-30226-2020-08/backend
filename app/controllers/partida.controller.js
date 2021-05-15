@@ -337,6 +337,30 @@ async function devolverPartidas(dataPartidas,tipo)
   return partidasDisponibles;
 }
 
+exports.IA = (req, res) => {
+  const partida = req.params.partida
+  const carta = req.params.carta
+  /* dataCartas = {
+    jugador,
+    partida,
+    c1,c2,c3,c4,c5,c6,
+    orden,
+
+  }*/
+  const dataPartida = Partida.findByPk(partida)
+  const paloTriunfo = dataPartida.triunfo[1]
+  const dataCartas = Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
+  const cartas = [dataCartas.c1,dataCartas.c2,dataCartas.c3,dataCartas.c4,dataCartas.c5,dataCartas.c6]
+
+  if (carta === undefined){
+    //Si no han lanzado carta 
+    
+  }else{
+    //Si si han lanzado carta 
+
+  }
+}
+
 function devolverCantes(data,data1){
   var cantes = [];
   const triunfo = data.triunfo;
