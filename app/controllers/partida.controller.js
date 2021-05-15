@@ -340,13 +340,6 @@ async function devolverPartidas(dataPartidas,tipo)
 exports.IA = async(req, res) => {
   const partida = req.params.partida
   const carta = req.params.carta
-  /* dataCartas = {
-    jugador,
-    partida,
-    c1,c2,c3,c4,c5,c6,
-    orden,
-
-  }*/
   const dataPartida = Partida.findByPk(partida)
   const paloTriunfo = dataPartida.triunfo[1]
   const dataCartas = Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
@@ -408,8 +401,6 @@ exports.IA = async(req, res) => {
         }
       }
       else{
-        //var palos = ['O','C','E','B']
-        //for (p of palos){}
         //Si la carta que han lanzado no es triunfo
         //Miro de que palo es la carta que ha lanzado
         if(carta[1] === 'O'){
@@ -425,9 +416,21 @@ exports.IA = async(req, res) => {
           }
           if(heEchado){
             //Miro si hay más de una carta de oros mejor que la que me han echado y decido cual echar, si no echo la que haya
-            //Pasamos de posibilidades1 a posibilidades
-            //TODO
-
+            if(posibilidades1.length == 1){
+              //Si hay una única carta en posibilidades1
+              posibilidades = posibilidades1
+            }else{
+              //Si hay más de una carta en posibilidades1
+              var max = 0;
+              //Miro cual es de mayor puntuacion
+              for(p of posibilidades1){
+                const dataCarta = await Carta.findByPk(p);
+                if(p.puntuacion>= max){
+                  max=p.puntuacion
+                }
+              }
+              posibilidades.push(posibilidades1[max])//Nose si esta bien esto
+            }
           }else if(!heEchado){
             //No tenemos en nuestra mano o ninguna carta de oros o ninguna de oros mejor que la que han echado, por lo que miramos una "mala" para echar
             for(c of cartas){
@@ -460,10 +463,6 @@ exports.IA = async(req, res) => {
               else if(dataCarta.puntuacion == 11){
                 posibilidades.push(dataCarta)
               }
-              else{
-                //Echare una carta aleatoria de las 6 que tengo
-                //TODO-->Esta al final, quitar este else
-              }
             }
           }
 
@@ -481,12 +480,23 @@ exports.IA = async(req, res) => {
           }
           if(heEchado){
             //Miro si hay más de una carta de espadas mejor que la que me han echado y decido cual echar, si no echo la que haya
-            //Pasamos de posibilidades1 a posibilidades
-            //TODO
-            
-
+            if(posibilidades1.length == 1){
+              //Si hay una única carta en posibilidades1
+              posibilidades = posibilidades1
+            }else{
+              //Si hay más de una carta en posibilidades1
+              var max = 0;
+              //Miro cual es de mayor puntuacion
+              for(p of posibilidades1){
+                const dataCarta = await Carta.findByPk(p);
+                if(p.puntuacion>= max){
+                  max=p.puntuacion
+                }
+              }
+              posibilidades.push(posibilidades1[max])//Nose si esta bien esto
+            }
           }else if(!heEchado){
-            //No tenemos en nuestra mano o ninguna carta de espadas mejor que la que han echado,  por lo que miramos una "mala" para echar
+          //No tenemos en nuestra mano o ninguna carta de espadas mejor que la que han echado,  por lo que miramos una "mala" para echar
             for(c of cartas){
               const dataCarta = await Carta.findByPk(c)
               //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
@@ -516,10 +526,6 @@ exports.IA = async(req, res) => {
               //Miro si tengo algun as que no sea triunfo
               else if(dataCarta.puntuacion == 11){
                 posibilidades.push(dataCarta)
-              }
-              else{
-                //Echare una carta aleatoria de las 6 que tengo
-                //TODO-->Esta al final, quitar este else
               }
             }
           }
@@ -537,11 +543,23 @@ exports.IA = async(req, res) => {
           }
           if(heEchado){
             //Miro si hay más de una carta de copas mejor que la que me han echado y decido cual echar, si no echo la que haya
-            //Pasamos de posibilidades1 a posibilidades
-            //TODO
-
+            if(posibilidades1.length == 1){
+              //Si hay una única carta en posibilidades1
+              posibilidades = posibilidades1
+            }else{
+              //Si hay más de una carta en posibilidades1
+              var max = 0;
+              //Miro cual es de mayor puntuacion
+              for(p of posibilidades1){
+                const dataCarta = await Carta.findByPk(p);
+                if(p.puntuacion>= max){
+                  max=p.puntuacion
+                }
+              }
+              posibilidades.push(posibilidades1[max])//Nose si esta bien esto
+            }
           }else if(!heEchado){
-            //No tenemos en nuestra mano o ninguna carta de copas mejor que la que han echado, por lo que miramos una "mala" para echar
+          //No tenemos en nuestra mano o ninguna carta de copas mejor que la que han echado, por lo que miramos una "mala" para echar
             for(c of cartas){
               const dataCarta = await Carta.findByPk(c)
               //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
@@ -572,13 +590,8 @@ exports.IA = async(req, res) => {
               else if(dataCarta.puntuacion == 11){
                 posibilidades.push(dataCarta)
               }
-              else{
-                //Echare una carta aleatoria de las 6 que tengo
-                //TODO-->Esta al final, quitar este else
-              }
             }
           }
-
         }else if(carta[1] === 'B'){
           var posibilidades1 = []
           //Si la carta que han lanzado es de bastos
@@ -592,10 +605,21 @@ exports.IA = async(req, res) => {
           }
           if(heEchado){
             //Miro si hay más de una carta de bastos mejor que la que me han echado y decido cual echar, si no echo la que haya
-            //Pasamos de posibilidades1 a posibilidades
-            //TODO
-            
-
+            if(posibilidades1.length == 1){
+              //Si hay una única carta en posibilidades1
+              posibilidades = posibilidades1
+            }else{
+              //Si hay más de una carta en posibilidades1
+              var max = 0;
+              //Miro cual es de mayor puntuacion
+              for(p of posibilidades1){
+                const dataCarta = await Carta.findByPk(p);
+                if(p.puntuacion>= max){
+                  max=p.puntuacion
+                }
+              }
+              posibilidades.push(posibilidades1[max])//Nose si esta bien esto
+            }
           }else if(!heEchado){
             //No tenemos en nuestra mano o ninguna carta de bastos mejor que la que han echado,  por lo que miramos una "mala" para echar
             for(c of cartas){
@@ -628,10 +652,6 @@ exports.IA = async(req, res) => {
               else if(dataCarta.puntuacion == 11){
                 posibilidades.push(dataCarta)
               }
-              else{
-                //Echare una carta aleatoria de las 6 que tengo
-                //TODO-->Esta al final, quitar este else
-              }
             }
           }
         }
@@ -639,12 +659,13 @@ exports.IA = async(req, res) => {
   }
   //Una vez decidida que carta echar, aprovechamos el vector de posibilidades que hemos hecho y vemos qué tenemos dentro de este.
   //posibilidades-> Elijo una carta aleatoria de los componentes que tenga
-  if(posibilidades === null){
-    //Elijo cualquiera de las 6 cartas que tenemos
-    //TODO
+  if(posibilidades.length === 0){
+    var aleatorio = Math.random() * (5-0)+0;//Crea un numero aleatorio del 0 al 5
+    return cartas[aleatorio]
   }else{
-    //Elijo cualquiera de las componentes de posibilidades
-    //TODO
+    var longitud = posibilidades.length;
+    var aleatorio = Math.random() * (longitud-0)+0;//Crea un numero aleatorio del 0 al valor de la longitud de posibilidades
+    return posibilidades[aleatorio]
   }
 }
 
