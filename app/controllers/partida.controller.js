@@ -337,7 +337,7 @@ async function devolverPartidas(dataPartidas,tipo)
   return partidasDisponibles;
 }
 
-exports.IA = (req, res) => {
+exports.IA = async(req, res) => {
   const partida = req.params.partida
   const carta = req.params.carta
   /* dataCartas = {
@@ -351,13 +351,301 @@ exports.IA = (req, res) => {
   const paloTriunfo = dataPartida.triunfo[1]
   const dataCartas = Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
   const cartas = [dataCartas.c1,dataCartas.c2,dataCartas.c3,dataCartas.c4,dataCartas.c5,dataCartas.c6]
+  var posibilidades = []
 
   if (carta === undefined){
-    //Si no han lanzado carta 
-    
+    //Si no han lanzado carta
+    var posibilidades =[]
+    for(c of cartas){
+      const dataCarta = await Carta.findByPk(c)
+      //Miro alguna carta de mi mano que no sea triunfo
+      if(c[1] != paloTriunfo){
+        posibilidades.push(dataCarta)
+      }
+      //Si todas mis cartas son triunfo, busco la que no valga puntos
+      else if(dataCarta.puntuacion == 0){
+        posibilidades.push(dataCarta)
+      }
+    }
   }else{
-    //Si si han lanzado carta 
+    var heEchado = new Boolean(false); 
+    //Si si han lanzado carta
+      //Miro si la carta que han lanzado es triunfo 
+      if(carta[1] === paloTriunfo){
+        var posibilidades = []
+        //Si sí es triunfo
+        for(c of cartas){
+          const dataCarta = await Carta.findByPk(c)
+          //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
+          if(dataCarta.puntuacion == 0 && (c[1]!= paloTriunfo)){
+            posibilidades.push(dataCarta)
+          }
+          //Miro si tengo algun caballo que no sea triunfo (caballo es la carta que menos puntuacion tiene de las que tienen puntuacion)
+          else if(dataCarta.puntuacion == 2 && (c[1]!= paloTriunfo)){
+            posibilidades.push(dataCarta)
+          }
+          //Miro si tengo alguna jota que no sea triunfo (jota es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+          else if(dataCarta.puntuacion == 3 && (c[1]!= paloTriunfo)){
+            posibilidades.push(dataCarta)
+          }
+          //Miro si tengo algun rey que no sea triunfo (rey es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+          else if(dataCarta.puntuacion == 4 && (c[1]!= paloTriunfo)){
+            posibilidades.push(dataCarta)
+          }
+          //Miro si tengo algun triunfo que no valga puntos, ya que es mejor echar eso que un 3 o un as.
+          else if(dataCarta.puntuacion == 0 ){
+            posibilidades.push(dataCarta)
+          }
+          //Miro si tengo algun 3 que no sea triunfo entre mis cartas
+          else if(dataCarta.puntuacion == 10){
+            posibilidades.push(dataCarta)
+          }
+          //Miro si tengo algun as que no sea triunfo
+          else if(dataCarta.puntuacion == 11){
+            posibilidades.push(dataCarta)
+          }
+          else{
+            //Echare una carta aleatoria de las 6 que tengo
+            //TODO-->Esta al final, quitar este else
+          }
+        }
+      }
+      else{
+        //Si la carta que han lanzado no es triunfo
+        //Miro de que palo es la carta que ha lanzado
+        if(carta[1] === 'O'){
+          var posibilidades1 = []
+          //Si la carta que han lanzado es de oros
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            //Miro si tengo en mi mano alguna carta de oros tambien que sea mejor que la suya
+            if((c[1] === 'O') && (carta.ranking < dataCarta.ranking)){
+              posibilidades1.push(dataCarta)
+              heEchado = true
+            }
+          }
+          if(heEchado){
+            //Miro si hay más de una carta de oros mejor que la que me han echado y decido cual echar, si no echo la que haya
+            //Pasamos de posibilidades1 a posibilidades
+            //TODO
 
+          }else if(!heEchado){
+            //No tenemos en nuestra mano o ninguna carta de oros o ninguna de oros mejor que la que han echado, por lo que miramos una "mala" para echar
+            for(c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
+              if(dataCarta.puntuacion == 0 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun caballo que no sea triunfo (caballo es la carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 2 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo alguna jota que no sea triunfo (jota es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 3 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun rey que no sea triunfo (rey es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 4 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun triunfo que no valga puntos, ya que es mejor echar eso que un 3 o un as.
+              else if(dataCarta.puntuacion == 0 ){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun 3 que no sea triunfo entre mis cartas
+              else if(dataCarta.puntuacion == 10){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun as que no sea triunfo
+              else if(dataCarta.puntuacion == 11){
+                posibilidades.push(dataCarta)
+              }
+              else{
+                //Echare una carta aleatoria de las 6 que tengo
+                //TODO-->Esta al final, quitar este else
+              }
+            }
+          }
+
+        }
+        else if(carta[1] === 'E'){
+          var posibilidades1 = []
+          //Si la carta que han lanzado es de espadas
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            //Miro si tengo en mi mano alguna carta de espadas tambien que sea mejor que la suya
+            if((c[1] === 'E') && (carta.ranking < dataCarta.ranking)){
+              posibilidades1.push(dataCarta)
+              heEchado = true
+            }
+          }
+          if(heEchado){
+            //Miro si hay más de una carta de espadas mejor que la que me han echado y decido cual echar, si no echo la que haya
+            //Pasamos de posibilidades1 a posibilidades
+            //TODO
+            
+
+          }else if(!heEchado){
+            //No tenemos en nuestra mano o ninguna carta de espadas mejor que la que han echado,  por lo que miramos una "mala" para echar
+            for(c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
+              if(dataCarta.puntuacion == 0 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun caballo que no sea triunfo (caballo es la carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 2 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo alguna jota que no sea triunfo (jota es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 3 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun rey que no sea triunfo (rey es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 4 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun triunfo que no valga puntos, ya que es mejor echar eso que un 3 o un as.
+              else if(dataCarta.puntuacion == 0 ){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun 3 que no sea triunfo entre mis cartas
+              else if(dataCarta.puntuacion == 10){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun as que no sea triunfo
+              else if(dataCarta.puntuacion == 11){
+                posibilidades.push(dataCarta)
+              }
+              else{
+                //Echare una carta aleatoria de las 6 que tengo
+                //TODO-->Esta al final, quitar este else
+              }
+            }
+          }
+        }
+        else if(carta[1] === 'C'){
+          var posibilidades1 = []
+          //Si la carta que han lanzado es de copas
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            //Miro si tengo en mi mano alguna carta de copas tambien que sea mejor que la suya
+            if((c[1] === 'C') && (carta.ranking < dataCarta.ranking)){
+              posibilidades1.push(dataCarta)
+              heEchado = true
+            }
+          }
+          if(heEchado){
+            //Miro si hay más de una carta de copas mejor que la que me han echado y decido cual echar, si no echo la que haya
+            //Pasamos de posibilidades1 a posibilidades
+            //TODO
+
+          }else if(!heEchado){
+            //No tenemos en nuestra mano o ninguna carta de copas mejor que la que han echado, por lo que miramos una "mala" para echar
+            for(c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
+              if(dataCarta.puntuacion == 0 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun caballo que no sea triunfo (caballo es la carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 2 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo alguna jota que no sea triunfo (jota es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 3 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun rey que no sea triunfo (rey es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 4 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun triunfo que no valga puntos, ya que es mejor echar eso que un 3 o un as.
+              else if(dataCarta.puntuacion == 0 ){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun 3 que no sea triunfo entre mis cartas
+              else if(dataCarta.puntuacion == 10){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun as que no sea triunfo
+              else if(dataCarta.puntuacion == 11){
+                posibilidades.push(dataCarta)
+              }
+              else{
+                //Echare una carta aleatoria de las 6 que tengo
+                //TODO-->Esta al final, quitar este else
+              }
+            }
+          }
+
+        }else if(carta[1] === 'B'){
+          var posibilidades1 = []
+          //Si la carta que han lanzado es de bastos
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            //Miro si tengo en mi mano alguna carta de bastos tambien que sea mejor que la suya
+            if((c[1] === 'E') && (carta.ranking < dataCarta.ranking)){
+              posibilidades1.push(dataCarta)
+              heEchado = true
+            }
+          }
+          if(heEchado){
+            //Miro si hay más de una carta de bastos mejor que la que me han echado y decido cual echar, si no echo la que haya
+            //Pasamos de posibilidades1 a posibilidades
+            //TODO
+            
+
+          }else if(!heEchado){
+            //No tenemos en nuestra mano o ninguna carta de bastos mejor que la que han echado,  por lo que miramos una "mala" para echar
+            for(c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              //Miro alguna carta de mi mano que no valga puntos y no sea triunfo para echar
+              if(dataCarta.puntuacion == 0 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun caballo que no sea triunfo (caballo es la carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 2 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo alguna jota que no sea triunfo (jota es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 3 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun rey que no sea triunfo (rey es la siguiente carta que menos puntuacion tiene de las que tienen puntuacion)
+              else if(dataCarta.puntuacion == 4 && (c[1]!= paloTriunfo)){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun triunfo que no valga puntos, ya que es mejor echar eso que un 3 o un as.
+              else if(dataCarta.puntuacion == 0 ){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun 3 que no sea triunfo entre mis cartas
+              else if(dataCarta.puntuacion == 10){
+                posibilidades.push(dataCarta)
+              }
+              //Miro si tengo algun as que no sea triunfo
+              else if(dataCarta.puntuacion == 11){
+                posibilidades.push(dataCarta)
+              }
+              else{
+                //Echare una carta aleatoria de las 6 que tengo
+                //TODO-->Esta al final, quitar este else
+              }
+            }
+          }
+        }
+      }
+  }
+  //Una vez decidida que carta echar, aprovechamos el vector de posibilidades que hemos hecho y vemos qué tenemos dentro de este.
+  //posibilidades-> Elijo una carta aleatoria de los componentes que tenga
+  if(posibilidades === null){
+    //Elijo cualquiera de las 6 cartas que tenemos
+    //TODO
+  }else{
+    //Elijo cualquiera de las componentes de posibilidades
+    //TODO
   }
 }
 
