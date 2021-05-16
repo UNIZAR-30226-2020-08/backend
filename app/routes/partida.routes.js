@@ -23,7 +23,7 @@ module.exports = app => {
 
   router.put("/juegaIA/:partida/:carta", partida.IArti);
 
-  router.put("/historial/:juagdor", partida.historial);
+  router.put("/historial/:jugador", partida.historial);
 
   app.use('/api/partida', router);
 };
