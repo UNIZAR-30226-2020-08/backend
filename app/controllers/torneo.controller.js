@@ -44,7 +44,7 @@ exports.create = async(req, res) => {
       const dataP = {
         nombre: Math.random().toString(36).substring(2,7),
         triunfo: n.toString(),
-        estado: 1, //Se incializan en pausa y cuando se haga nextRound se ponen en juego
+        estado: 0, //Se incializan en pausa y cuando se haga nextRound se ponen en juego
         tipo: dataTorneo.tipo,
         fecha: fechaLim,
         o_20: 'NO',
