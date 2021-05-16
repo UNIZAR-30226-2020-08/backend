@@ -411,7 +411,6 @@ exports.IArti = async (req,res) => {
     const carta = req.params.carta
     console.log('partida: ', partida,' cartas: ', carta)
     const dataPartida = await Partida.findByPk(partida)
-    console.log('se encuentra la partida ', dataPartida)
     const paloTriunfo = dataPartida.triunfo[1]
     const dataCartas = await Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
     const cartas = [dataCartas.c1,dataCartas.c2,dataCartas.c3,dataCartas.c4,dataCartas.c5,dataCartas.c6]
@@ -460,9 +459,7 @@ exports.IArti = async (req,res) => {
       }
       //Si si han lanzado carta
       else{ 
-        console.log(`Evaluo que carta lanzar en fucnion de ${carta} `)
         const dataRecibida = await Carta.findByPk(carta)
-    
         //SI SE HA LANZADO UNA CARTA QUE NO SEA NI AS NI 3
         if (dataRecibida.ranking > 2){
           //Busco matar con el msimo palo
@@ -472,6 +469,7 @@ exports.IArti = async (req,res) => {
               posibilidadesMatar.push(c)
             }
           }
+          console.log(posibilidadesMatar)
           //Busco no matar con cartas sin puntos
           if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
             for (c of cartas){
@@ -495,7 +493,7 @@ exports.IArti = async (req,res) => {
           if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
             posibilidades = cartas
           }
-          if (posibilidadesMatar !== 0){
+          if (posibilidadesMatar.length !== 0){
             //Una vez se han evaluado todas las posibilidades se 
             //ordena por puntuacion ascendente
             posibilidadesMatar.sort(function (a,b) {
@@ -523,6 +521,7 @@ exports.IArti = async (req,res) => {
               return 0;
             })
           }
+          console.log('Posibilidades', posibilidades)
           res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
         }
         //SI SE HA JUGADO O AS O 3
