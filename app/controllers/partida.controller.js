@@ -406,91 +406,241 @@ function devolverCantes(data,data1){
 }
 
 exports.IA = async (req,res) => {
-  const partida = req.params.partida
-  const carta = req.params.carta
-  const dataPartida = Partida.findByPk(partida)
-  const paloTriunfo = dataPartida.triunfo[1]
-  const dataCartas = Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
-  const cartas = [dataCartas.c1,dataCartas.c2,dataCartas.c3,dataCartas.c4,dataCartas.c5,dataCartas.c6]
-  var posibilidades = []
-  var posibilidadesMatar = []
-  const dataCartasDisponibles = CartaDisponible.findAll({where:{partida: partida}})
-  if (dataCartasDisponibles.length !== 1){
-    //NO VAMOS DE ARRASTRE
-    if (carta === undefined){
-      //Si no han lanzado carta
-      //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
-      for(c of cartas){
-        const dataCarta = await Carta.findByPk(c)
-        if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0)){
-          posibilidades.push(dataCarta)
-        }
-      }
-      //Si no hay cartas de 0 puntos tiro una que no sea triunfo
-      if (posibilidades.length !== 0){
+  try{
+    const partida = req.params.partida
+    const carta = req.params.carta
+    const dataPartida = Partida.findByPk(partida)
+    const paloTriunfo = dataPartida.triunfo[1]
+    const dataCartas = Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
+    const cartas = [dataCartas.c1,dataCartas.c2,dataCartas.c3,dataCartas.c4,dataCartas.c5,dataCartas.c6]
+    var posibilidades = []
+    var posibilidadesMatar = []
+    const dataCartasDisponibles = CartaDisponible.findAll({where:{partida: partida}})
+    if (dataCartasDisponibles.length !== 1){
+      //NO VAMOS DE ARRASTRE
+      if (carta === undefined){
+        //Si no han lanzado carta
+        //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
-          
-          if((c[1] != paloTriunfo)){
+          if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0)){
             posibilidades.push(dataCarta)
           }
         }
-      }
-      //Si tienes todas de triunfo
-      if (posibilidades.length === 0){
-        posibilidades = cartas
-      }
-      //Una vez se han evaluado todas las posibilidades se 
-      //ordena por ranking ascendente para tirar la carta mas baja
-      posibilidades.sort(function (a,b) {
-        if (a.ranking > b.ranking){
-          return 1;
-        }
-        if (a.ranking < b.ranking) {
-          return -1;
-        }
-        // a must be equal to b
-        return 0;
-      })
-      res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
-    }
-    //Si si han lanzado carta
-    else{ 
-      console.log(`Evaluo que carta lanzar en fucnion de ${carta} `)
-      const dataRecibida = await Carta.findByPk(carta)
-  
-      //SI SE HA LANZADO UNA CARTA QUE NO SEA NI AS NI 3
-      if (dataRecibida.ranking > 2){
-        //Busco matar con el msimo palo
-        for (c of cartas){
-          const dataCarta = await Carta.findByPk(c)
-          if ((dataCarta.carta[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking)){
-            posibilidadesMatar.push(c)
-          }
-        }
-        //Busco no matar con cartas sin puntos
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
-          for (c of cartas){
+        //Si no hay cartas de 0 puntos tiro una que no sea triunfo
+        if (posibilidades.length !== 0){
+          for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
-            if ((dataCarta.ranking > dataRecibida.ranking)){
-              posibilidades.push(c)
-            }
-          }
-        }
-        //Si no puedo matar ni tengo cartas sin puntos cojo todas menos las de 
-        //triunfo y tiro la de menor puntuacion
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
-          for (c of cartas){
-            const dataCarta = await Carta.findByPk(c)
-            if ((dataCarta.carta[1] !== paloTriunfo)){
-              posibilidades.push(c)
+            
+            if((c[1] != paloTriunfo)){
+              posibilidades.push(dataCarta)
             }
           }
         }
         //Si tienes todas de triunfo
+        if (posibilidades.length === 0){
+          posibilidades = cartas
+        }
+        //Una vez se han evaluado todas las posibilidades se 
+        //ordena por ranking ascendente para tirar la carta mas baja
+        posibilidades.sort(function (a,b) {
+          if (a.ranking > b.ranking){
+            return 1;
+          }
+          if (a.ranking < b.ranking) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+        })
+        res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+      }
+      //Si si han lanzado carta
+      else{ 
+        console.log(`Evaluo que carta lanzar en fucnion de ${carta} `)
+        const dataRecibida = await Carta.findByPk(carta)
+    
+        //SI SE HA LANZADO UNA CARTA QUE NO SEA NI AS NI 3
+        if (dataRecibida.ranking > 2){
+          //Busco matar con el msimo palo
+          for (c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            if ((dataCarta.carta[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking)){
+              posibilidadesMatar.push(c)
+            }
+          }
+          //Busco no matar con cartas sin puntos
+          if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+            for (c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              if ((dataCarta.ranking > dataRecibida.ranking)){
+                posibilidades.push(c)
+              }
+            }
+          }
+          //Si no puedo matar ni tengo cartas sin puntos cojo todas menos las de 
+          //triunfo y tiro la de menor puntuacion
+          if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+            for (c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              if ((dataCarta.carta[1] !== paloTriunfo)){
+                posibilidades.push(c)
+              }
+            }
+          }
+          //Si tienes todas de triunfo
+          if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+            posibilidades = cartas
+          }
+          if (posibilidadesMatar !== 0){
+            //Una vez se han evaluado todas las posibilidades se 
+            //ordena por puntuacion ascendente
+            posibilidadesMatar.sort(function (a,b) {
+              if (a.ranking < b.ranking){
+                return 1;
+              }
+              if (a.ranking > b.ranking) {
+                return -1;
+              }
+              // a must be equal to b
+              return 0;
+            })
+            posibilidades = posibilidadesMatar
+          }else{
+            //Una vez se han evaluado todas las posibilidades se 
+            //ordena por puntuacion descendente
+            posibilidades.sort(function (a,b) {
+              if (a.ranking > b.ranking){
+                return 1;
+              }
+              if (a.ranking < b.ranking) {
+                return -1;
+              }
+              // a must be equal to b
+              return 0;
+            })
+          }
+          res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+        }
+        //SI SE HA JUGADO O AS O 3
+        else{
+          //Busco matar con el msimo palo
+          for (c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            if ((dataCarta.carta[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking)){
+              posibilidades.push(c)
+            }
+          }
+          //Si no tengo el as de ese palo busco un triunfo bajo
+          if (posibilidades.length === 0){
+            for (c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              if ((dataCarta.carta[1] === paloTriunfo) && (dataCarta.ranking > 6)){
+                posibilidades.push(c)
+              }
+            }
+          }
+          //Si no hay triunfo bajo se deja pasar
+          if (posibilidades.length === 0){
+            for (c of cartas){
+              const dataCarta = await Carta.findByPk(c)
+              if ((dataCarta.carta[1] !== paloTriunfo)){
+                posibilidades.push(c)
+              }
+            }
+          }
+          //Si tienes todas de triunfo
+          if (posibilidades.length === 0){
+            posibilidades = cartas
+          }
+          //Una vez se han evaluado todas las posibilidades se 
+          //ordena por ranking ascendente para tirar la carta mas baja
+          posibilidades.sort(function (a,b) {
+            if (a.ranking > b.ranking){
+              return 1;
+            }
+            if (a.ranking < b.ranking) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          })
+          res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+        }
+      }
+    }
+    //VAMOS DE ARRASTRE
+    else{
+      //Si no han lanzado carta
+      if (carta === undefined){
+        //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
+        for(c of cartas){
+          const dataCarta = await Carta.findByPk(c)
+          if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0)){
+            posibilidades.push(dataCarta)
+          }
+        }
+        //Si no hay cartas de 0 puntos tiro una que no sea triunfo
+        if (posibilidades.length !== 0){
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            
+            if((c[1] != paloTriunfo)){
+              posibilidades.push(dataCarta)
+            }
+          }
+        }
+        //Si tienes todas de triunfo
+        if (posibilidades.length === 0){
+          posibilidades = cartas
+        }
+        //Una vez se han evaluado todas las posibilidades se 
+        //ordena por ranking ascendente para tirar la carta mas baja
+        posibilidades.sort(function (a,b) {
+          if (a.ranking > b.ranking){
+            return 1;
+          }
+          if (a.ranking < b.ranking) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+        })
+        res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+      }
+      //Si si han lanzado carta
+      else{ 
+        const dataRecibida = await Carta.findByPk(carta)
+        //Compruebo si tengo cartas de ese palo de menor ranking (QUE PUEDA MATAR)
+        for(c of cartas){
+          const dataCarta = await Carta.findByPk(c)
+          if((c[1] === dataRecibida.carta[1]) && (c.ranking < dataRecibida.ranking)){
+            posibilidadesMatar.push(dataCarta)
+          }
+        }
+        //Compruebo si tengo cartas de ese palo
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            if((c[1] === dataRecibida.carta[1])){
+              posibilidades.push(dataCarta)
+            }
+          }
+        }
+        //Si no tengo cartas de ese palo pero si triunfo
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            if(c[1] === paloTriunfo){
+              posibilidades.push(dataCarta)
+            }
+          }
+        }
+        //Si no tengo cartas de ese palo ni triunfo 
         if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
           posibilidades = cartas
         }
+        //Lanzo carta 
         if (posibilidadesMatar !== 0){
           //Una vez se han evaluado todas las posibilidades se 
           //ordena por puntuacion ascendente
@@ -521,154 +671,8 @@ exports.IA = async (req,res) => {
         }
         res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
       }
-      //SI SE HA JUGADO O AS O 3
-      else{
-        //Busco matar con el msimo palo
-        for (c of cartas){
-          const dataCarta = await Carta.findByPk(c)
-          if ((dataCarta.carta[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking)){
-            posibilidades.push(c)
-          }
-        }
-        //Si no tengo el as de ese palo busco un triunfo bajo
-        if (posibilidades.length === 0){
-          for (c of cartas){
-            const dataCarta = await Carta.findByPk(c)
-            if ((dataCarta.carta[1] === paloTriunfo) && (dataCarta.ranking > 6)){
-              posibilidades.push(c)
-            }
-          }
-        }
-        //Si no hay triunfo bajo se deja pasar
-        if (posibilidades.length === 0){
-          for (c of cartas){
-            const dataCarta = await Carta.findByPk(c)
-            if ((dataCarta.carta[1] !== paloTriunfo)){
-              posibilidades.push(c)
-            }
-          }
-        }
-        //Si tienes todas de triunfo
-        if (posibilidades.length === 0){
-          posibilidades = cartas
-        }
-        //Una vez se han evaluado todas las posibilidades se 
-        //ordena por ranking ascendente para tirar la carta mas baja
-        posibilidades.sort(function (a,b) {
-          if (a.ranking > b.ranking){
-            return 1;
-          }
-          if (a.ranking < b.ranking) {
-            return -1;
-          }
-          // a must be equal to b
-          return 0;
-        })
-        res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
-      }
     }
-  }
-  //VAMOS DE ARRASTRE
-  else{
-    //Si no han lanzado carta
-    if (carta === undefined){
-      //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
-      for(c of cartas){
-        const dataCarta = await Carta.findByPk(c)
-        if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0)){
-          posibilidades.push(dataCarta)
-        }
-      }
-      //Si no hay cartas de 0 puntos tiro una que no sea triunfo
-      if (posibilidades.length !== 0){
-        for(c of cartas){
-          const dataCarta = await Carta.findByPk(c)
-          
-          if((c[1] != paloTriunfo)){
-            posibilidades.push(dataCarta)
-          }
-        }
-      }
-      //Si tienes todas de triunfo
-      if (posibilidades.length === 0){
-        posibilidades = cartas
-      }
-      //Una vez se han evaluado todas las posibilidades se 
-      //ordena por ranking ascendente para tirar la carta mas baja
-      posibilidades.sort(function (a,b) {
-        if (a.ranking > b.ranking){
-          return 1;
-        }
-        if (a.ranking < b.ranking) {
-          return -1;
-        }
-        // a must be equal to b
-        return 0;
-      })
-      res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
-    }
-    //Si si han lanzado carta
-    else{ 
-      const dataRecibida = await Carta.findByPk(carta)
-      //Compruebo si tengo cartas de ese palo de menor ranking (QUE PUEDA MATAR)
-      for(c of cartas){
-        const dataCarta = await Carta.findByPk(c)
-        if((c[1] === dataRecibida.carta[1]) && (c.ranking < dataRecibida.ranking)){
-          posibilidadesMatar.push(dataCarta)
-        }
-      }
-      //Compruebo si tengo cartas de ese palo
-      if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
-        for(c of cartas){
-          const dataCarta = await Carta.findByPk(c)
-          if((c[1] === dataRecibida.carta[1])){
-            posibilidades.push(dataCarta)
-          }
-        }
-      }
-      //Si no tengo cartas de ese palo pero si triunfo
-      if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
-        for(c of cartas){
-          const dataCarta = await Carta.findByPk(c)
-          if(c[1] === paloTriunfo){
-            posibilidades.push(dataCarta)
-          }
-        }
-      }
-      //Si no tengo cartas de ese palo ni triunfo 
-      if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
-        posibilidades = cartas
-      }
-      //Lanzo carta 
-      if (posibilidadesMatar !== 0){
-        //Una vez se han evaluado todas las posibilidades se 
-        //ordena por puntuacion ascendente
-        posibilidadesMatar.sort(function (a,b) {
-          if (a.ranking < b.ranking){
-            return 1;
-          }
-          if (a.ranking > b.ranking) {
-            return -1;
-          }
-          // a must be equal to b
-          return 0;
-        })
-        posibilidades = posibilidadesMatar
-      }else{
-        //Una vez se han evaluado todas las posibilidades se 
-        //ordena por puntuacion descendente
-        posibilidades.sort(function (a,b) {
-          if (a.ranking > b.ranking){
-            return 1;
-          }
-          if (a.ranking < b.ranking) {
-            return -1;
-          }
-          // a must be equal to b
-          return 0;
-        })
-      }
-      res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
-    }
+  }catch(err){
+    return res.status(500).send({ message: err | 'Error con la IA'});
   }
 }
