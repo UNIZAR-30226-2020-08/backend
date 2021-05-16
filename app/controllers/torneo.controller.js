@@ -123,7 +123,7 @@ exports.matchRound = async (req,res) => {
               const dataR = await Cuadro.findOne({
                 where: { id_torneo: torneo, id_partida: a.id_partida }
                 })
-              matches.push({torneo: torneo, juagdor: player.jugador,partida: a.id_partida, fase: dataR.fase})
+              matches.push({torneo: torneo, jugador: player.jugador,partida: a.id_partida, fase: dataR.fase})
               const data = 
               {
                 jugador: player.jugador,
