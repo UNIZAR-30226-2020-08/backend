@@ -495,12 +495,12 @@ exports.IArti = async (req,res) => {
           }
           if (posibilidadesMatar.length !== 0){
             //Una vez se han evaluado todas las posibilidades se 
-            //ordena por puntuacion ascendente
+            //ordena por ranking ascendente
             posibilidadesMatar.sort(function (a,b) {
-              if (a.ranking < b.ranking){
+              if (a.ranking > b.ranking){
                 return 1;
               }
-              if (a.ranking > b.ranking) {
+              if (a.ranking < b.ranking) {
                 return -1;
               }
               // a must be equal to b
