@@ -685,7 +685,7 @@ exports.IArti = async (req,res) => {
       var history = []
       var teamWinner;
       const dataParticipadas = await Pertenece.findAll({where: {jugador: jugador}})
-      dataParticipadas.map(async partida => {
+      for (partida of dataParticipadas) {
         const dataPartida = await Partida.findByPk(partida.partida)
         (dataPartida.puntos_e0 > 101) ?  teamWinner = 0 : teamWinner = 1
         if (partida.equipo === teamWinner){
@@ -707,7 +707,7 @@ exports.IArti = async (req,res) => {
           }
           history.push(data)
         }
-      })
+      }
       res.status(200).send(history)
     }catch(err){
       return res.status(500).send({ message: err | 'Error al crear el historial'});
