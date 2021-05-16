@@ -409,7 +409,7 @@ exports.IArti = async (req,res) => {
   try{
     const partida = req.params.partida
     const carta = req.params.carta
-    cosole.log('partida: ', partida,' cartas: ', carta)
+    console.log('partida: ', partida,' cartas: ', carta)
     const dataPartida = await Partida.findByPk(partida)
     console.log('se encuentra la partida ', dataPartida)
     const paloTriunfo = dataPartida.triunfo[1]
