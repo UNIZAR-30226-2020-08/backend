@@ -466,7 +466,7 @@ exports.IArti = async (req,res) => {
           for (c of cartas){
             const dataCarta = await Carta.findByPk(c)
             if ((dataCarta.carta[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking)){
-              posibilidadesMatar.push(c)
+              posibilidadesMatar.push(dataCarta)
             }
           }
           console.log(posibilidadesMatar)
@@ -475,7 +475,7 @@ exports.IArti = async (req,res) => {
             for (c of cartas){
               const dataCarta = await Carta.findByPk(c)
               if ((dataCarta.ranking > dataRecibida.ranking)){
-                posibilidades.push(c)
+                posibilidades.push(dataCarta)
               }
             }
           }
@@ -485,7 +485,7 @@ exports.IArti = async (req,res) => {
             for (c of cartas){
               const dataCarta = await Carta.findByPk(c)
               if ((dataCarta.carta[1] !== paloTriunfo)){
-                posibilidades.push(c)
+                posibilidades.push(dataCarta)
               }
             }
           }
@@ -522,7 +522,7 @@ exports.IArti = async (req,res) => {
             })
           }
           console.log('Posibilidades', posibilidades)
-          res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+          res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
         }
         //SI SE HA JUGADO O AS O 3
         else{
