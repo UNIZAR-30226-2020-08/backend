@@ -456,6 +456,7 @@ exports.IA = async (req,res) => {
     }
     //Si si han lanzado carta
     else{ 
+      console.log(`Evaluo que carta lanzar en fucnion de ${carta} `)
       const dataRecibida = await Carta.findByPk(carta)
   
       //SI SE HA LANZADO UNA CARTA QUE NO SEA NI AS NI 3
