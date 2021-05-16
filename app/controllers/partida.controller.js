@@ -692,14 +692,18 @@ exports.IArti = async (req,res) => {
           data = {
             estado: 'VICTORIA',
             partida: partida.partida,
-            tipo: dataPartida.tipo
+            tipo: dataPartida.tipo,
+            puntos_e0: dataPartida.puntos_e0,
+            puntos_e1: dataPartida.puntos_e1
           }
           history.push(data)
         }else{
           data = {
             estado: 'DERROTA',
             partida: partida.partida,
-            tipo: dataPartida.tipo
+            tipo: dataPartida.tipo,
+            puntos_e0: dataPartida.puntos_e0,
+            puntos_e1: dataPartida.puntos_e1
           }
           history.push(data)
         }
