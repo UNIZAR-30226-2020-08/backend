@@ -685,7 +685,7 @@ exports.IArti = async (req,res) => {
       var history = []
       var teamWinner;
       const dataParticipadas = await Pertenece.findAll({where: {jugador: jugador}})
-      dataParticipadas.map(partida => {
+      dataParticipadas.map(async partida => {
         const dataPartida = await Partida.findByPk(partida.partida)
         (dataPartida.puntos_e0 > 101) ?  teamWinner = 0 : teamWinner = 1
         if (partida.equipo === teamWinner){
