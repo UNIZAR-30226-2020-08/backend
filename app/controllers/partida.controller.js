@@ -409,7 +409,9 @@ exports.IA = async (req,res) => {
   try{
     const partida = req.params.partida
     const carta = req.params.carta
+    cosole.log('partida: ', partida,' cartas: ', carta)
     const dataPartida = Partida.findByPk(partida)
+    console.log('se encuentra la partida ', dataPartida)
     const paloTriunfo = dataPartida.triunfo[1]
     const dataCartas = Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
     const cartas = [dataCartas.c1,dataCartas.c2,dataCartas.c3,dataCartas.c4,dataCartas.c5,dataCartas.c6]
@@ -418,6 +420,7 @@ exports.IA = async (req,res) => {
     const dataCartasDisponibles = CartaDisponible.findAll({where:{partida: partida}})
     if (dataCartasDisponibles.length !== 1){
       //NO VAMOS DE ARRASTRE
+      console.log('NO VAMOS DE ARRASTRE')
       if (carta === undefined){
         //Si no han lanzado carta
         //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
