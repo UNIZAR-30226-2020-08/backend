@@ -455,7 +455,7 @@ exports.IArti = async (req,res) => {
           // a must be equal to b
           return 0;
         })
-        res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+        res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
       }
       //Si si han lanzado carta
       else{ 
@@ -509,7 +509,7 @@ exports.IArti = async (req,res) => {
             posibilidades = posibilidadesMatar
           }else{
             //Una vez se han evaluado todas las posibilidades se 
-            //ordena por ranking descendente
+            //ordena por ranking ascencdente
             posibilidades.sort(function (a,b) {
               if (a.ranking > b.ranking){
                 return 1;
@@ -530,7 +530,7 @@ exports.IArti = async (req,res) => {
           for (c of cartas){
             const dataCarta = await Carta.findByPk(c)
             if ((dataCarta.carta[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking)){
-              posibilidades.push(c)
+              posibilidades.push(dataCarta)
             }
           }
           //Si no tengo el as de ese palo busco un triunfo bajo
@@ -538,7 +538,7 @@ exports.IArti = async (req,res) => {
             for (c of cartas){
               const dataCarta = await Carta.findByPk(c)
               if ((dataCarta.carta[1] === paloTriunfo) && (dataCarta.ranking > 6)){
-                posibilidades.push(c)
+                posibilidades.push(dataCarta)
               }
             }
           }
@@ -547,7 +547,7 @@ exports.IArti = async (req,res) => {
             for (c of cartas){
               const dataCarta = await Carta.findByPk(c)
               if ((dataCarta.carta[1] !== paloTriunfo)){
-                posibilidades.push(c)
+                posibilidades.push(dataCarta)
               }
             }
           }
@@ -567,14 +567,15 @@ exports.IArti = async (req,res) => {
             // a must be equal to b
             return 0;
           })
-          res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+          console.log('Posibilidades', posibilidades)
+          res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
         }
       }
     }
     //VAMOS DE ARRASTRE
     else{
       //Si no han lanzado carta
-      if (carta === undefined){
+      if (carta === 'NO'){
         //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
@@ -608,7 +609,7 @@ exports.IArti = async (req,res) => {
           // a must be equal to b
           return 0;
         })
-        res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+        res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
       }
       //Si si han lanzado carta
       else{ 
@@ -671,7 +672,7 @@ exports.IArti = async (req,res) => {
             return 0;
           })
         }
-        res.status(200).send({jugador: 'IA', carta: posibilidades.pop()})
+        res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
       }
     }
   }catch(err){
