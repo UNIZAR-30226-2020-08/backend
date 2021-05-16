@@ -420,7 +420,7 @@ exports.IArti = async (req,res) => {
     if (dataCartasDisponibles.length !== 1){
       //NO VAMOS DE ARRASTRE
       console.log('NO VAMOS DE ARRASTRE')
-      if (carta === undefined){
+      if (carta === 'NO'){
         //Si no han lanzado carta
         //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
         for(c of cartas){
@@ -495,7 +495,7 @@ exports.IArti = async (req,res) => {
           }
           if (posibilidadesMatar.length !== 0){
             //Una vez se han evaluado todas las posibilidades se 
-            //ordena por ranking ascendente
+            //ordena por ranking descendente
             posibilidadesMatar.sort(function (a,b) {
               if (a.ranking < b.ranking){
                 return 1;
@@ -509,7 +509,7 @@ exports.IArti = async (req,res) => {
             posibilidades = posibilidadesMatar
           }else{
             //Una vez se han evaluado todas las posibilidades se 
-            //ordena por puntuacion descendente
+            //ordena por ranking descendente
             posibilidades.sort(function (a,b) {
               if (a.ranking > b.ranking){
                 return 1;
