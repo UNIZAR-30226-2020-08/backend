@@ -686,10 +686,16 @@ exports.historial = async(req,res) => {
     var history = []
     var teamWinner;
     const dataParticipadas = await Pertenece.findAll({where: {jugador: jugador}})
+    console.log(dataParticipadas)
     for (partida of dataParticipadas) {
       const dataPartida = await Partida.findByPk(partida.partida)
-      (dataPartida.puntos_e0 > 101) ?  teamWinner = 0 : teamWinner = 1
+      if (dataPartida.puntos_e0 > 101){
+        teamWinner = 0
+      }else{
+        teamWinner = 1
+      }
       if (partida.equipo === teamWinner){
+        co
         data = {
           estado: 'VICTORIA',
           partida: partida.partida,
