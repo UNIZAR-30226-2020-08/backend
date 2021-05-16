@@ -405,7 +405,7 @@ function devolverCantes(data,data1){
   }
 }
 
-exports.IA = async (req,res) => {
+exports.IArti = async (req,res) => {
   try{
     const partida = req.params.partida
     const carta = req.params.carta
