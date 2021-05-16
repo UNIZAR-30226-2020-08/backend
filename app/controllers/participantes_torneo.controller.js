@@ -11,16 +11,7 @@ exports.create = async (req, res) => {
     if (dataTorneo === null | dataPlayer === null){
       res.status(500).send('El torneo o usuario no existen')
     }else{
-      var maxPermitidoPartida 
-      if (dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 8){
-        maxPermitidoPartida = 8;
-      }else if(dataTorneo.tipo === 0 & dataTorneo.nparticipantes === 16){
-        maxPermitidoPartida = 16;
-      }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 8){
-        maxPermitidoPartida = 16;
-      }else if(dataTorneo.tipo === 1 & dataTorneo.nparticipantes === 16){
-        maxPermitidoPartida = 32;
-      }
+      var maxPermitidoPartida = (dataTorneo.tipo + 1)*dataTorneo.nparticipantes
       const dataP = await Participantes.findAndCountAll({where: { torneo: req.body.torneo }})
       if (dataP.count >= maxPermitidoPartida){
         res.status(500).send('El torneo esta completo')
@@ -88,8 +79,8 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const torneo = req.body.torneo;
-  const jugador = req.body.jugador;
+  const torneo = req.params.torneo;
+  const jugador = req.params.jugador;
   Participantes.destroy({
     where: { torneo:torneo, jugador:jugador }
   })
