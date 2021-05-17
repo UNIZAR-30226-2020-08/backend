@@ -231,7 +231,7 @@ exports.cambiar7 = async (req,res) => {
         pertenece['carta'] = triunfo
         res.status(200).send(pertenece);
     }else{
-      res.status(500).send('No puedes cambiar el 7');
+      res.status(200).send('No puedes cambiar el 7');
   }
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error cambiando el 7'});
