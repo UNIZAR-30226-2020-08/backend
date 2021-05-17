@@ -172,7 +172,7 @@ exports.cantar = (req,res) => {
         where: { nombre: dataPartida.nombre }
       })
       .then(num => {
-        res.send(dataCantes.cantes);
+          res.send(dataCantes.cantes);        
       })
       .catch(err => {
         res.status(500).send({
@@ -181,12 +181,12 @@ exports.cantar = (req,res) => {
     })
     .catch(err => {
         res.status(500).send({
-            message: err.message || "Error recuperando partida " + partida });
+            message: err.message || `Error recuperando la partida: ${partida}` });
     });
   })
   .catch(err => {
       res.status(500).send({
-          message: err.message || "Error recuperando relcion pertenece" });
+          message: err.message || "Error recuperando relacion pertenece" });
   });
 
 };
@@ -401,7 +401,7 @@ function devolverCantes(data,data1){
     }
     return {partida,cantes};
   }else{
-    return [];
+    return {cantes};
   }
 }
 
