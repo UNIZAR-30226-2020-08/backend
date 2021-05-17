@@ -19,7 +19,7 @@ module.exports = app => {
 
   router.get("/getRoundOrder/:nronda/:partida", jugada.getRoundOrder);
 
-  router.get("/buscarUltimaRonda/:partida", partida.getLastRoundPayed);
+  router.get("/buscarUltimaRonda/:partida", jugada.getLastRoundPayed);
 
   app.use('/api/jugada', router);
 };
