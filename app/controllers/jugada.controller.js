@@ -276,3 +276,25 @@ exports.getRoundOrder = async (req, res) => {
   }
     
 };
+
+exports.getLastRoundPayed = async (req, res) => {
+  try{
+    const partida = req.params.partida;
+    const dataJuadas = await Jugada.findAll({ where: {partida: partida}})
+    //Ordena por orden descendente de copas
+    dataJuadas.sort(function (a,b) {
+      if (a.nronda > b.nronda){
+        return 1;
+      }
+      if (a.nronda < b.nronda) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    })
+    const lastRound = dataJuadas.pop()
+    res.status(200).send(lastRound.nronda)
+  }catch(err){
+    return res.status(500).send({ message: err | 'se ha producido un error buscando la ultima ronda'})
+  }
+};
