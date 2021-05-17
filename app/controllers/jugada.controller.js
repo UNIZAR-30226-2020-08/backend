@@ -292,6 +292,7 @@ exports.getLastRoundPayed = async (req, res) => {
       // a must be equal to b
       return 0;
     })
+    console.log(dataJuadas)
     const lastRound = dataJuadas.pop()
     res.status(200).send(lastRound.nronda)
   }catch(err){
