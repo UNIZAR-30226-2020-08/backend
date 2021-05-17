@@ -202,7 +202,7 @@ exports.listarSolicitudes = (req, res) => {
   Amigo.findAll({ where: {amigo: usuario, aceptado: 0} })
   .then(data => {
     if (data.length === 0){
-      res.send({ message: `No se ha encontrado ninguna solicitud de amistad a este usuario: ${usuario}` });
+      res.send({ message: `No se ha encontrado ninguna solicitud de amistad` });
     }else{
       res.send(data);
     }
