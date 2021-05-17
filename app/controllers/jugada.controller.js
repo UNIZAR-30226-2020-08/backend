@@ -281,6 +281,7 @@ exports.getLastRoundPayed = async (req, res) => {
   try{
     const partida = req.params.partida;
     const dataJuadas = await Jugada.findAll({ where: {partida: partida}})
+    console.log('DATA JUGADA', dataJuadas)
     //Ordena por orden descendente de copas
     dataJuadas.sort(function (a,b) {
       if (a.nronda > b.nronda){
