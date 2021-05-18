@@ -623,7 +623,7 @@ exports.IArti = async (req,res) => {
         //Compruebo si tengo cartas de ese palo de menor ranking (QUE PUEDA MATAR)
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
-          if((c[1] === dataRecibida.carta[1]) && (c.ranking < dataRecibida.ranking) && (dataCarta.carta !== 'NO')){
+          if((c[1] === dataRecibida.carta[1]) && (dataCarta.ranking < dataRecibida.ranking) && (dataCarta.carta !== 'NO')){
             posibilidadesMatar.push(dataCarta)
           }
         }
