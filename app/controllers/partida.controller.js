@@ -91,6 +91,28 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.listarPausadas = (req, res) => {
+  try {
+    const tipo = req.params.tipo;
+    const jugador = req.params.jugador
+    var pausadas = []
+    console.log(req.params);
+    const dataPartidas = await Partida.findAll(
+      { where: { tipo: tipo, password : 'NO', id_torneo : 'NO', estado: 1} })
+    for (p of dataPartidas){
+      const dataPer = await Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+      if (dataPer !== undefined){
+        pausadas.push({nombre: dataPer.partida})
+      }
+    }
+    res.satus(200).send(pausadas) 
+  }catch(err){
+    return res.status(500).send({ message: err | 'se ha producido un error al listar las pasadas'});
+  }
+  
+
+};
+
 exports.find = (req, res) => {
   const partida = req.params.nombre;
   Partida.findByPk(partida)
