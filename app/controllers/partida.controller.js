@@ -700,22 +700,21 @@ exports.historial = async(req,res) => {
       if (p.equipo === teamWinner){
         data = {
           estado: 'VICTORIA',
-          partida: partida.partida,
+          partida: p.partida,
           tipo: dataPartida.tipo,
           puntos_e0: dataPartida.puntos_e0,
           puntos_e1: dataPartida.puntos_e1
         }
-        history.push(data)
       }else{
         data = {
           estado: 'DERROTA',
-          partida: partida.partida,
+          partida: p.partida,
           tipo: dataPartida.tipo,
           puntos_e0: dataPartida.puntos_e0,
           puntos_e1: dataPartida.puntos_e1
         }
-        history.push(data)
       }
+      history.push(data)
     }
     res.status(200).send(history)
   }catch(err){
