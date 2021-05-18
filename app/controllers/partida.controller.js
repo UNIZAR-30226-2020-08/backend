@@ -258,7 +258,7 @@ exports.recuento = async (req,res) => {
           }else{
             p_e0 = p_e0 + 20
           }
-        }else{
+        }else if (dataCantante.equipo === 1){
           if (p[0].toUpperCase() === triunfo){
             p_e1 = p_e1 + 40
           }else{
