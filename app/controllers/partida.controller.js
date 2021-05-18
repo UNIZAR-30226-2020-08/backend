@@ -245,11 +245,13 @@ exports.recuento = async (req,res) => {
   try{
     const partida = req.params.partida
     const dataPartida = await Partida.findByPk(partida)
+    console.log(dataPartida)
     const triunfo = dataPartida.triunfo[1] 
     var p_e0 = dataPartida.puntos_e0
     var p_e1 = dataPartida.puntos_e1
     const palos = ['o_20','c_20','e_20','b_20']
     for (p of palos){
+      console.log('PALO', dataPartida[p])
       if (dataPartida[p] !== 'NO'){
         const dataCantante = Pertenece.findOne({where:{partida: partida, jugador: dataPartida[p]}})
         if (dataCantante.equipo === 0){
