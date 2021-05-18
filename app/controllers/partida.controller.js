@@ -579,7 +579,7 @@ exports.IArti = async (req,res) => {
         //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
-          if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0)){
+          if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0) && (dataCarta.carta !== 'NO')){
             posibilidades.push(dataCarta)
           }
         }
@@ -588,7 +588,7 @@ exports.IArti = async (req,res) => {
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
             
-            if((c[1] != paloTriunfo)){
+            if((c[1] != paloTriunfo) && (dataCarta.carta !== 'NO')){
               posibilidades.push(dataCarta)
             }
           }
@@ -617,12 +617,12 @@ exports.IArti = async (req,res) => {
         //Compruebo si tengo cartas de ese palo de menor ranking (QUE PUEDA MATAR)
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
-          if((c[1] === dataRecibida.carta[1]) && (c.ranking < dataRecibida.ranking)){
+          if((c[1] === dataRecibida.carta[1]) && (c.ranking < dataRecibida.ranking) && (dataCarta.carta !== 'NO')){
             posibilidadesMatar.push(dataCarta)
           }
         }
         //Compruebo si tengo cartas de ese palo
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0) && (dataCarta.carta !== 'NO')){
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
             if((c[1] === dataRecibida.carta[1])){
@@ -631,7 +631,7 @@ exports.IArti = async (req,res) => {
           }
         }
         //Si no tengo cartas de ese palo pero si triunfo
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0) && (dataCarta.carta !== 'NO')){
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
             if(c[1] === paloTriunfo){
@@ -640,7 +640,7 @@ exports.IArti = async (req,res) => {
           }
         }
         //Si no tengo cartas de ese palo ni triunfo 
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0) && (dataCarta.carta !== 'NO')){
           posibilidades = cartas
         }
         //Lanzo carta 
