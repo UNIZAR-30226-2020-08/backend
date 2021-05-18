@@ -684,37 +684,41 @@ exports.historial = async(req,res) => {
   try {
     const jugador = req.params.jugador;
     var history = []
-    var teamWinner;
+    var teamWinner = null;
     var data;
     const dataParticipadas = await Pertenece.findAll({where: {jugador: jugador}})
     console.log(dataParticipadas)
     for (p of dataParticipadas) {
       const dataPartida = await Partida.findByPk(p.partida)
-      console.log('LA PARTIDA', dataPartida)
-      if (dataPartida.puntos_e0 > 101){
-        teamWinner = 0
-      }else{
-        teamWinner = 1
-      }
-      console.log('TEAM WINNER', teamWinner)
-      if (p.equipo === teamWinner){
-        data = {
-          estado: 'VICTORIA',
-          partida: p.partida,
-          tipo: dataPartida.tipo,
-          puntos_e0: dataPartida.puntos_e0,
-          puntos_e1: dataPartida.puntos_e1
+      if (dataPartida.estado === 0){
+        console.log('LA PARTIDA', dataPartida)
+        if (dataPartida.puntos_e0 > 101){
+          teamWinner = 0
+        }else if (dataPartida.puntos_e1 > 101){
+          teamWinner = 1
         }
-      }else{
-        data = {
-          estado: 'DERROTA',
-          partida: p.partida,
-          tipo: dataPartida.tipo,
-          puntos_e0: dataPartida.puntos_e0,
-          puntos_e1: dataPartida.puntos_e1
+        if (teamWinner !== null){
+          console.log('TEAM WINNER', teamWinner)
+          if (p.equipo === teamWinner){
+            data = {
+              estado: 'VICTORIA',
+              partida: p.partida,
+              tipo: dataPartida.tipo,
+              puntos_e0: dataPartida.puntos_e0,
+              puntos_e1: dataPartida.puntos_e1
+            }
+          }else{
+            data = {
+              estado: 'DERROTA',
+              partida: p.partida,
+              tipo: dataPartida.tipo,
+              puntos_e0: dataPartida.puntos_e0,
+              puntos_e1: dataPartida.puntos_e1
+            }
+          }
+          history.push(data)
         }
       }
-      history.push(data)
     }
     res.status(200).send(history)
   }catch(err){
