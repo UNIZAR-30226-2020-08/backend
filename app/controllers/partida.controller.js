@@ -631,19 +631,19 @@ exports.IArti = async (req,res) => {
           }
         }
         //Compruebo si tengo cartas de ese palo
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0) && (dataCarta.carta !== 'NO')){
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
-            if((c[1] === dataRecibida.carta[1])){
+            if((c[1] === dataRecibida.carta[1]) && (dataCarta.carta !== 'NO')){
               posibilidades.push(dataCarta)
             }
           }
         }
         //Si no tengo cartas de ese palo pero si triunfo
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0) && (dataCarta.carta !== 'NO')){
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
-            if(c[1] === paloTriunfo){
+            if((c[1] === paloTriunfo) && (dataCarta.carta !== 'NO')){
               posibilidades.push(dataCarta)
             }
           }
