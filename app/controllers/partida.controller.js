@@ -105,13 +105,12 @@ exports.listarPausadas = async (req, res) => {
       const dataPer = await Pertenece.findAll({where:{partida: p.nombre, jugador:jugador}})
       console.log('EL DATA PER', dataPer)
       if (dataPer.length !== 0){
-        console.log(dataPer[0])
-        pausadas.push({nombre: dataPer[0].dataValues.partida})
+        pausadas.push({nombre:p.nombre})
       }
     }
     res.satus(200).send(pausadas) 
   }catch(err){
-    return res.status(500).send({ message: err | 'se ha producido un error al listar las pasadas'});
+    return res.status(500).send({ message:  'se ha producido un error al listar las pasadas'});
   }
   
 

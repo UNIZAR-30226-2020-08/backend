@@ -214,6 +214,7 @@ exports.getRoundWinner = async (req, res) => {
       // a must be equal to b
       return 0;
     })
+    console.log(dataOrder)
     if(dataOrder.length !== 0){
       const dataPartida = await Partida.findByPk(partida);
       console.log('Jugadas de la partida ',dataOrder);
