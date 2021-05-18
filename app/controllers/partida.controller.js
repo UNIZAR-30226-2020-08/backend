@@ -91,7 +91,7 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.listarPausadas = (req, res) => {
+exports.listarPausadas = async (req, res) => {
   try {
     const tipo = req.params.tipo;
     const jugador = req.params.jugador
