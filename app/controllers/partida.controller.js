@@ -245,31 +245,30 @@ exports.recuento = async (req,res) => {
   try{
     const partida = req.params.partida
     const dataPartida = await Partida.findByPk(partida)
-    console.log(dataPartida)
     const triunfo = dataPartida.triunfo[1] 
     var p_e0 = dataPartida.puntos_e0
     var p_e1 = dataPartida.puntos_e1
     const palos = ['o_20','c_20','e_20','b_20']
     for (p of palos){
       if (dataPartida[p] !== 'NO'){
-        console.log('PALO', dataPartida[p])
+        //console.log('PALO', dataPartida[p])
         const dataCantante = await Pertenece.findOne({where:{partida: partida, jugador: dataPartida[p]}})
-        console.log('EL DATA', dataCantante)
+        //console.log('EL DATA', dataCantante)
         if (dataCantante.equipo === 0){
           console.log('EL PALO', p[0].toUpperCase(),triunfo)
           if (p[0].toUpperCase() === triunfo){
-            console.log(`Se suman las 40 al equipo 0 y tiene ${p_e0}`)
+            //console.log(`Se suman las 40 al equipo 0 y tiene ${p_e0}`)
             p_e0 = p_e0 + 40
           }else{
-            console.log(`Se suman las 20 al equipo 0 y tiene ${p_e0}`)
+            //console.log(`Se suman las 20 al equipo 0 y tiene ${p_e0}`)
             p_e0 = p_e0 + 20
           }
         }else if (dataCantante.equipo === 1){
           if (p[0].toUpperCase() === triunfo){
-            console.log(`Se suman las 40 al equipo 1y tiene ${p_e1}`)
+            //console.log(`Se suman las 40 al equipo 1y tiene ${p_e1}`)
             p_e1 = p_e1 + 40
           }else{
-            console.log(`Se suman las 20 al equipo 1 y tiene ${p_e1}`)
+            //console.log(`Se suman las 20 al equipo 1 y tiene ${p_e1}`)
             p_e1 = p_e1 + 20
           }
         }
