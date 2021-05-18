@@ -25,7 +25,7 @@ module.exports = app => {
 
   router.get("/listarHistorial/:jugador", partida.historial);
 
-  router.get("/listarPausadas/:jugador", partida.listarPausadas);
+  router.get("/listarPausadas/:jugador/:tipo", partida.listarPausadas);
 
   app.use('/api/partida', router);
 };
