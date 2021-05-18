@@ -102,7 +102,7 @@ exports.listarPausadas = async (req, res) => {
       console.log('DATAPARTIDAS', dataPartidas)
     for (p of dataPartidas){
       console.log('P',p)
-      const dataPer = await Pertenece.findOne({where:{partida: partida, jugador:jugador}})
+      const dataPer = await Pertenece.findOne({where:{partida: p.nombre, jugador:jugador}})
       console.log('EL DATA PER', dataPer)
       if (dataPer !== undefined){
         pausadas.push({nombre: dataPer.partida})
