@@ -198,9 +198,12 @@ exports.cambiar7 = async (req,res) => {
     const data1 = await Pertenece.findOne({where:{partida: partida, jugador:jugador}})
     const data = await Partida.findByPk(partida)
     const triunfo = data.triunfo;
+    await CartaDisponible.destroy({ where: { carta: triunfo, partida: partida }
+    })
     //console.log(triunfo);
     var carta = ['c1','c2','c3','c4','c5','c6'];
     var sieteTriunfo = '6' + triunfo[1];
+    await CartaDisponible.create({partida:partida,carta:sieteTriunfo})
     var cambio = false;
     var posicion;
     for (i = 0; i < 6; i++){
