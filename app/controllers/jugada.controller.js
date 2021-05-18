@@ -50,7 +50,7 @@ exports.create = (req, res) => {
   };
 
 exports.findAll = (req, res) => {
-    const partida = req.body.partida;
+    const partida = req.params.partida;
   
     Jugada.findAll({ where: {partida: partida} })
       .then(data => {
@@ -150,7 +150,53 @@ exports.deleteAll = (req, res) => {
       });
     });
   };
-
+exports.prevRoundWinnerIA = async (req, res) => {
+  const partida = req.params.partida;
+  const nronda = req.params.nronda;
+  await Jugada.findAll({ where: {partida: partida, nronda: nronda }})
+  .then(async dataOrder => {
+    //Ordena por orden de tirada
+    dataOrder.sort(function (a,b) {
+      if (a.orden > b.orden){
+        return 1;
+      }
+      if (a.orden < b.orden) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    })
+    if(dataOrder.length !== 0){
+      const dataPartida = await Partida.findByPk(partida);
+      console.log('Jugadas de la partida ',dataOrder);
+      //var maxPlays = (dataPartida.tipo + 1)*2;
+      var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
+      for(o of dataOrder){
+        const cartaJugada = await Carta.findByPk(o.carta);
+        //Si coinciden los palos
+        if(o.carta[1] === winnerCard.carta[1]){
+          //Busco rankings
+          const cartaWinner = await Carta.findByPk(winnerCard.carta);
+          //Comparo rankings
+          if(cartaJugada.ranking < cartaWinner.ranking){
+            winnerCard = { jugador: o.jugador, carta: o.carta }
+          }
+        // Si la que tiras es triunfo y la otra no
+        }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard[1] !== dataPartida.triunfo[1])){
+          winnerCard = { jugador: o.jugador, carta: o.carta }
+        }
+      }
+      res.status(200).send(winnerCard)
+    }else{
+      res.send('No hay jugadas en esta ronda');
+    } 
+  })
+  .catch(err => {
+      res.status(500).send({
+          message: err.message || "Error recuperando usuario con id: " + username });
+  });
+      
+}
 
 exports.getRoundWinner = async (req, res) => {
   const partida = req.params.partida;

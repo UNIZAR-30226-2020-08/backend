@@ -7,7 +7,7 @@ module.exports = app => {
 
   router.get("/findPlay/:nronda/:partida", jugada.find);
 
-  router.get("/findAllPlays", jugada.findAll);
+  router.get("/findAllPlays/:partida", jugada.findAll);
 
   router.delete("/dropPlay", jugada.delete);
 
@@ -16,6 +16,8 @@ module.exports = app => {
   router.put("/updatePlay", jugada.update);
   
   router.put("/getRoundWinner/:nronda/:partida", jugada.getRoundWinner);
+
+  router.get("/getRoundWinnerIA/:nronda/:partida", jugada.prevRoundWinnerIA);
 
   router.get("/getRoundOrder/:nronda/:partida", jugada.getRoundOrder);
 
