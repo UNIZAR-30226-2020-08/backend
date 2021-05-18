@@ -441,7 +441,10 @@ exports.IArti = async (req,res) => {
         }
         //Si tienes todas de triunfo
         if (posibilidades.length === 0){
-          posibilidades = cartas
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            posibilidades.push(dataCarta)
+          }
         }
         //Una vez se han evaluado todas las posibilidades se 
         //ordena por ranking ascendente para tirar la carta mas baja
