@@ -646,8 +646,13 @@ exports.IArti = async (req,res) => {
           }
         }
         //Si no tengo cartas de ese palo ni triunfo 
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0) && (dataCarta.carta !== 'NO')){
-          posibilidades = cartas
+        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+          for(c of cartas){
+            const dataCarta = await Carta.findByPk(c)
+            if(dataCarta.carta !== 'NO'){
+              posibilidades.push(dataCarta)
+            }
+          }
         }
         //Lanzo carta 
         if (posibilidadesMatar !== 0){
