@@ -684,7 +684,7 @@ exports.historial = async(req,res) => {
   try {
     const jugador = req.params.jugador;
     var history = []
-    var teamWinner = null;
+    var teamWinner = 2;
     var data;
     const dataParticipadas = await Pertenece.findAll({where: {jugador: jugador}})
     console.log(dataParticipadas)
@@ -697,7 +697,7 @@ exports.historial = async(req,res) => {
         }else if (dataPartida.puntos_e1 > 101){
           teamWinner = 1
         }
-        if (teamWinner !== null){
+        if (teamWinner !== 2){
           console.log('TEAM WINNER', teamWinner)
           if (p.equipo === teamWinner){
             data = {
