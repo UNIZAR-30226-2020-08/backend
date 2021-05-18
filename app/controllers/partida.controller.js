@@ -631,7 +631,7 @@ exports.IArti = async (req,res) => {
           }
         }
         //Compruebo si tengo cartas de ese palo
-        if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
+        if ((posibilidadesMatar.length === 0)){
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
             if((c[1] === dataRecibida.carta[1]) && (dataCarta.carta !== 'NO')){
@@ -658,7 +658,7 @@ exports.IArti = async (req,res) => {
           }
         }
         //Lanzo carta 
-        if (posibilidadesMatar !== 0){
+        if (posibilidadesMatar.length !== 0){
           //Una vez se han evaluado todas las posibilidades se 
           //ordena por puntuacion ascendente
           posibilidadesMatar.sort(function (a,b) {
