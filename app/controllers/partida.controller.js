@@ -425,7 +425,7 @@ exports.IArti = async (req,res) => {
         //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
-          if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0)){
+          if((c[1] !== paloTriunfo)  && (dataCarta.puntuacion === 0)){
             posibilidades.push(dataCarta)
           }
         }
@@ -434,7 +434,7 @@ exports.IArti = async (req,res) => {
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
             
-            if((c[1] != paloTriunfo)){
+            if((c[1] !== paloTriunfo)){
               posibilidades.push(dataCarta)
             }
           }
@@ -579,7 +579,7 @@ exports.IArti = async (req,res) => {
         //Lanzo una carta de mi mano que no sea triunfo y valga 0 puntos
         for(c of cartas){
           const dataCarta = await Carta.findByPk(c)
-          if((c[1] != paloTriunfo)  && (dataCarta.puntuacion == 0) && (dataCarta.carta !== 'NO')){
+          if((c[1] !== paloTriunfo)  && (dataCarta.puntuacion === 0) && (dataCarta.carta !== 'NO')){
             posibilidades.push(dataCarta)
           }
         }
@@ -588,7 +588,7 @@ exports.IArti = async (req,res) => {
           for(c of cartas){
             const dataCarta = await Carta.findByPk(c)
             
-            if((c[1] != paloTriunfo) && (dataCarta.carta !== 'NO')){
+            if((c[1] !== paloTriunfo) && (dataCarta.carta !== 'NO')){
               posibilidades.push(dataCarta)
             }
           }
