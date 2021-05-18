@@ -160,8 +160,8 @@ exports.delete = (req, res) => {
 **/
 exports.cantar = (req,res) => {
   const partida = req.params.nombre;
-  const juagdor = req.params.jugador;
-  Pertenece.findOne({where:{partida: partida, jugador:juagdor}})
+  const jugador = req.params.jugador;
+  Pertenece.findOne({where:{partida: partida, jugador:jugador}})
   .then(dataPertenece => {
     Partida.findByPk(partida)
     .then(dataPartida => {
