@@ -254,14 +254,18 @@ exports.recuento = async (req,res) => {
         const dataCantante = Pertenece.findOne({where:{partida: partida, jugador: dataPartida[p]}})
         if (dataCantante.equipo === 0){
           if (p[0].toUpperCase() === triunfo){
+            console.log(`Se suman las 40 al equipo 0 y tiene ${p_e0}`)
             p_e0 = p_e0 + 40
           }else{
+            console.log(`Se suman las 20 al equipo 0 y tiene ${p_e0}`)
             p_e0 = p_e0 + 20
           }
         }else if (dataCantante.equipo === 1){
           if (p[0].toUpperCase() === triunfo){
+            console.log(`Se suman las 40 al equipo 1y tiene ${p_e1}`)
             p_e1 = p_e1 + 40
           }else{
+            console.log(`Se suman las 20 al equipo 1 y tiene ${p_e1}`)
             p_e1 = p_e1 + 20
           }
         }
