@@ -253,7 +253,7 @@ exports.recuento = async (req,res) => {
     for (p of palos){
       if (dataPartida[p] !== 'NO'){
         console.log('PALO', dataPartida[p])
-        const dataCantante = Pertenece.findOne({where:{partida: partida, jugador: dataPartida[p]}})
+        const dataCantante = await Pertenece.findOne({where:{partida: partida, jugador: dataPartida[p]}})
         console.log('EL DATA', dataCantante)
         if (dataCantante.equipo === 0){
           console.log('EL PALO', p[0].toUpperCase(),triunfo)
