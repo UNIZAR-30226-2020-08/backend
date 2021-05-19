@@ -99,9 +99,9 @@ exports.listarPausadas = async (req, res) => {
     console.log(req.params);
     const dataPartidas = await Partida.findAll(
       { where: { tipo: tipo, password : 'NO', id_torneo : 'NO', estado: 1} })
-      console.log('DATAPARTIDAS', dataPartidas)
+      console.log('DATAPARTIDAS', dataPartidas.length)
     for (p of dataPartidas){
-      console.log('P',p)
+      console.log('P',p.nombre)
       const dataPer = await Pertenece.findAll({where:{partida: p.nombre, jugador:jugador}})
       console.log('EL DATA PER', dataPer.length)
       if (dataPer.length > 0){
