@@ -240,7 +240,7 @@ exports.getRoundWinner = async (req, res) => {
       
       //He calculado la carta ganadora y el total de puntos de la mano
       await Pertenece.findOne({where:{partida: partida, jugador: winnerCard.jugador}})
-      .then(dataWinner => {
+      .then(async dataWinner => {
         var team = '';
         if(dataWinner.equipo === 1){
           team = 'puntos_e1'; 
