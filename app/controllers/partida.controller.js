@@ -18,7 +18,7 @@ exports.create = (req, res) => {
   const partida = {
     nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
     triunfo: n.toString(),
-    estado: req.body.estado ? req.body.estado  : 0,
+    estado: req.body.estado ? req.body.estado  : 2,
     tipo: req.body.tipo,
     fecha: fechaLim,
     o_20: 'NO',
