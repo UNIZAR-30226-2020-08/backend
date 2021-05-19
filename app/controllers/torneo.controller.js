@@ -239,10 +239,10 @@ exports.matchRound = async (req,res) => {
 };
 
 exports.find = (req, res) => {
-    const nombre = req.body.nombre;
+    const nombre = req.params.nombre;
     Torneo.findByPk(nombre)
     .then(data => {
-        res.send({data});
+        res.send(data);
     })
     .catch(err => {
         res.status(500).send({

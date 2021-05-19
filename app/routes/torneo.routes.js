@@ -7,7 +7,7 @@ module.exports = app => {
 
   router.put("/matchRound/:torneo/:ronda", torneo.matchRound);
 
-  router.get("/findTournament", torneo.find);
+  router.get("/findTournament/:torneo", torneo.find);
 
   router.get("/findAllTournament/:tipo/:nEquipos", torneo.findAll);
 

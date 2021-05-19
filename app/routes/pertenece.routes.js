@@ -11,7 +11,7 @@ module.exports = app => {
 
   router.get("/findAllBelong/:partida", pertenece.findAll);
 
-  router.delete("/dropBelong", pertenece.delete);
+  router.delete("/dropBelong/:partida/:jugador", pertenece.delete);
 
   router.delete("/dropGameBelong", pertenece.deleteAll);
 

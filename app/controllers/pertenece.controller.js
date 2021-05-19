@@ -328,8 +328,8 @@ exports.update = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-  const partida = req.body.partida;
-  const jugador = req.body.jugador;
+  const partida = req.params.partida;
+  const jugador = req.params.jugador;
   Pertenece.destroy({
     where: { partida: partida, jugador: jugador }
   })
