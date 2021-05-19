@@ -242,7 +242,7 @@ exports.find = (req, res) => {
     const nombre = req.params.nombre;
     Torneo.findByPk(nombre)
     .then(data => {
-        res.send(data);
+        res.status(200).send(data);
     })
     .catch(err => {
         res.status(500).send({
