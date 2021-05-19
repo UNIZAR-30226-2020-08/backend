@@ -104,7 +104,7 @@ exports.listarPausadas = async (req, res) => {
       console.log('P',p)
       const dataPer = await Pertenece.findAll({where:{partida: p.nombre, jugador:jugador}})
       console.log('EL DATA PER', dataPer.length)
-      if (dataPer.length !== 0){
+      if (dataPer.length > 0){
         pausadas.push({nombre:p.nombre})
       }
     }
