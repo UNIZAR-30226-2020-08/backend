@@ -106,6 +106,7 @@ exports.listarPausadas = async (req, res) => {
       console.log('EL DATA PER', dataPer.length)
       if (dataPer.length > 0){
         pausadas.push({nombre:p.nombre})
+        console.log('PAUSADAS', pausadas)
       }
     }
     res.satus(200).send(pausadas) 
