@@ -39,7 +39,7 @@ exports.create = async(req, res) => {
       //console.log(fechaLim);
       const palos = ['O','C','E','B'];
     for (a of partidas){
-      console.log(a)
+      //console.log(a)
       const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
       const dataP = {
         nombre: Math.random().toString(36).substring(2,7),
@@ -148,7 +148,7 @@ exports.matchRound = async (req,res) => {
               carta: card.carta
             };
             const data = await CartaDisponible.create(carta_disponible)
-            console.log(`Se ha insertado el ${data.carta}`);
+            //console.log(`Se ha insertado el ${data.carta}`);
           }
         }
         res.status(200).send(matches)
@@ -187,7 +187,7 @@ exports.matchRound = async (req,res) => {
               res.status(500).send("Partida dobles llena");
             }else{
               var player = winners.pop();
-              console.log('player',player)
+              //console.log('player',player)
               const dataR = await Cuadro.findOne({
                 where: { id_torneo: torneo, id_partida: a.id_partida }
                 })
@@ -205,7 +205,7 @@ exports.matchRound = async (req,res) => {
                 c5: req.body.c5 ? req.body.c5 : 'NO',
                 c6: req.body.c6 ? req.body.c6 : 'NO',  
               }
-              console.log(data)
+              //console.log(data)
               if (dataTorneo.tipo === 1 && i < 2){
                 data.equipo = 0
                 if(i === 0){data.orden = 1}else{data.orden = 3} 
@@ -213,9 +213,9 @@ exports.matchRound = async (req,res) => {
                 data.equipo = 1
                 if(i === 2){data.orden = 2}else{data.orden = 4}
               }
-              console.log(data)
+              //console.log(data)
               const dataPer = await Pertenece.create(data)
-              console.log(dataPer)
+              //console.log(dataPer)
             }
           }
           //Se inicaliza la baraja de la partida
@@ -226,7 +226,7 @@ exports.matchRound = async (req,res) => {
               carta: card.carta
             };
             const data = await CartaDisponible.create(carta_disponible)
-            console.log(`Se ha insertado el ${data.carta}`);
+            //console.log(`Se ha insertado el ${data.carta}`);
           }
         }
       res.status(200).send(matches)
@@ -335,6 +335,6 @@ async function devolverTorneos(dataTorneos,tipo,nParticipantes) {
                                  jugadores_online: data.count })
     }
   }
-  console.log(torneosDisponibles);
+  //console.log(torneosDisponibles);
   return torneosDisponibles;
 }

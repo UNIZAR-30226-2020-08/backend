@@ -17,7 +17,7 @@ exports.create = (req, res) => {
         };
         CartaDisponible.create(carta_disponible)
         .then(data => {
-          console.log(`Se ha insertado el ${data.carta}`);
+          //console.log(`Se ha insertado el ${data.carta}`);
         })
         .catch(err => {
           res.status(500).send({

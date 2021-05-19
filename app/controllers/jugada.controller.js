@@ -168,7 +168,7 @@ exports.prevRoundWinnerIA = async (req, res) => {
     })
     if(dataOrder.length !== 0){
       const dataPartida = await Partida.findByPk(partida);
-      console.log('Jugadas de la partida ',dataOrder);
+      //console.log('Jugadas de la partida ',dataOrder);
       //var maxPlays = (dataPartida.tipo + 1)*2;
       var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
       for(o of dataOrder){
@@ -214,10 +214,10 @@ exports.getRoundWinner = async (req, res) => {
       // a must be equal to b
       return 0;
     })
-    console.log(dataOrder)
+    //console.log(dataOrder)
     if(dataOrder.length !== 0){
       const dataPartida = await Partida.findByPk(partida);
-      console.log('Jugadas de la partida ',dataOrder);
+      //console.log('Jugadas de la partida ',dataOrder);
       //var maxPlays = (dataPartida.tipo + 1)*2;
       var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
       var puntosMano = 0;

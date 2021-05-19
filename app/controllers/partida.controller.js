@@ -11,7 +11,7 @@ exports.create = (req, res) => {
   const fecha = new Date();
   const fechaParsed = fecha.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
   const fechaLim = (fechaParsed.split("/")[1]) +"-"+(fechaParsed.split("/")[0])+"-"+(fechaParsed.split("/")[2]);
-  console.log(fechaLim);
+  //console.log(fechaLim);
   const palos = ['O','C','E','B'];
   const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
   //console.log(n)
@@ -30,7 +30,7 @@ exports.create = (req, res) => {
     puntos_e1: 0,
     id_torneo: 'NO',
   };
-  console.log(partida)
+  //console.log(partida)
   Partida.create(partida)
   .then(dataPartida => {
     Carta.findAll()
@@ -43,7 +43,7 @@ exports.create = (req, res) => {
         };
         CartaDisponible.create(carta_disponible)
         .then(data => {
-          console.log(`Se ha insertado el ${data.carta}`);
+          //console.log(`Se ha insertado el ${data.carta}`);
         })
         .catch(err => {
           res.status(500).send({
@@ -75,7 +75,7 @@ exports.create = (req, res) => {
  **/
 exports.findAll = (req, res) => {
   const tipo = req.params.tipo;
-  console.log(req.params);
+  //console.log(req.params);
   Partida.findAll({ where: { tipo: tipo, password : 'NO', id_torneo : 'NO'} })
     .then(dataPartidas => {
       devolverPartidas(dataPartidas,tipo)
@@ -319,7 +319,7 @@ exports.partidaVueltas = async (req,res) => {
         carta: card.carta
       };
       const data1 = await CartaDisponible.create(carta_disponible)
-      console.log(`Se ha insertado el ${data1.carta}`);
+      //console.log(`Se ha insertado el ${data1.carta}`);
     }
     res.send(`Partida de vueltas ${partida} inicializada correctamente`);
   }catch(err){
@@ -356,29 +356,29 @@ async function devolverPartidas(dataPartidas,tipo)
     });
     //console.log(data);
     if (data.count < maxPermitidoPartida){
-      console.log(`La partida ${a.nombre} tiene ${data.count}`);
+      //console.log(`La partida ${a.nombre} tiene ${data.count}`);
       partidasDisponibles.push( { nombre: a.nombre, 
                                   jugadores_online: data.count });
     }
   }
   //console.log(nPartidas);
-  console.log(partidasDisponibles);
+  //console.log(partidasDisponibles);
   return partidasDisponibles;
 }
 
 function devolverCantes(data,data1){
   var cantes = [];
   const triunfo = data.triunfo;
-  console.log(triunfo[1]);
+  //console.log(triunfo[1]);
   var mano = [data1.c1,data1.c2,data1.c3,data1.c4,data1.c5,data1.c6];
-  console.log(mano);
+  //console.log(mano);
   for (i = 0; i < 6; i++){
     if ((mano[i])[0] === '7'){
       var cante = '9' + (mano[i])[1];
-      console.log(cante);
+      //console.log(cante);
       for(j = i - 1; j < 6; j++){
         if(mano[j] === cante.toString()){
-          console.log(mano[j]);
+          //console.log(mano[j]);
           if (cante[1] === triunfo[1]){
             if (data[triunfo[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las 40 en ${triunfo[1]}`);
@@ -399,10 +399,10 @@ function devolverCantes(data,data1){
       }
     }else if((mano[i])[0] === '9'){
       var cante = '7' + (mano[i])[1];
-      console.log(cante);
+      //console.log(cante);
       for(j = i; j < 6; j++){
         if(mano[j].toString() === cante.toString()){
-          console.log(mano[j]);
+          //console.log(mano[j]);
           if (cante[1] === triunfo[1]){
             if (data[triunfo[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las 40 en ${triunfo[1]}`);
@@ -438,7 +438,7 @@ exports.IArti = async (req,res) => {
   try{
     const partida = req.params.partida
     const carta = req.params.carta
-    console.log('partida: ', partida,' cartas: ', carta)
+    //console.log('partida: ', partida,' cartas: ', carta)
     const dataPartida = await Partida.findByPk(partida)
     const paloTriunfo = dataPartida.triunfo[1]
     const dataCartas = await Pertenece.findOne({where:{partida: partida, jugador: 'IA'}})
@@ -501,7 +501,7 @@ exports.IArti = async (req,res) => {
               posibilidadesMatar.push(dataCarta)
             }
           }
-          console.log(posibilidadesMatar)
+          //console.log(posibilidadesMatar)
           //Busco no matar con cartas sin puntos
           if ((posibilidades.length === 0) && (posibilidadesMatar.length === 0)){
             for (c of cartas){
@@ -553,7 +553,7 @@ exports.IArti = async (req,res) => {
               return 0;
             })
           }
-          console.log('Posibilidades', posibilidades)
+          //console.log('Posibilidades', posibilidades)
           res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
         }
         //SI SE HA JUGADO O AS O 3
@@ -599,7 +599,7 @@ exports.IArti = async (req,res) => {
             // a must be equal to b
             return 0;
           })
-          console.log('Posibilidades', posibilidades)
+          //console.log('Posibilidades', posibilidades)
           res.status(200).send({jugador: 'IA', carta: (posibilidades.pop()).carta})
         }
       }
@@ -736,10 +736,10 @@ exports.historial = async(req,res) => {
       if (dataPartida.estado === 0){
         //console.log('LA PARTIDA', dataPartida)
         if (dataPartida.puntos_e0 >= 101){
-          console.log(`En la partida ${dataPartida.nombre} ha gandado 0 con ${dataPartida.puntos_e0} puntos`)
+          //console.log(`En la partida ${dataPartida.nombre} ha gandado 0 con ${dataPartida.puntos_e0} puntos`)
           teamWinner = 0
         }else if (dataPartida.puntos_e1 >= 101){
-          console.log(`En la partida ${dataPartida.nombre} ha gandado 1 con ${dataPartida.puntos_e0} puntos`)
+          //console.log(`En la partida ${dataPartida.nombre} ha gandado 1 con ${dataPartida.puntos_e0} puntos`)
           teamWinner = 1
         }else{
           teamWinner = 2

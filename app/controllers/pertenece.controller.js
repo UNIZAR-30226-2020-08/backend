@@ -123,7 +123,7 @@ exports.repartir = async (req,res) =>{
     .then(dataPartida => {
       CartaDisponible.findAll({ where: {partida : partida} })
       .then(dataCD => {
-        console.log(dataCD)
+        //console.log(dataCD)
         var card;
         var mano = ['','','','','',''];
         i = 0;
@@ -137,7 +137,7 @@ exports.repartir = async (req,res) =>{
             i++;
           }
         }
-        console.log(mano);
+        //console.log(mano);
         pertenece.c1 = mano[0];pertenece.c2 = mano[1];pertenece.c3 = mano[2];
         pertenece.c4 = mano[3];pertenece.c5 = mano[4];pertenece.c6 = mano[5];
 
@@ -150,7 +150,7 @@ exports.repartir = async (req,res) =>{
               where: { carta: a, partida: partida }
             })
             .then(num => {
-                    console.log(`La carta ${a} ya no esta disponible`);
+                    //console.log(`La carta ${a} ya no esta disponible`);
             })
             .catch(err => {
                 res.status(500).send({
@@ -191,7 +191,7 @@ exports.robar = (req,res) => {
         do {
           place = ((Math.random().toString(9).substring(2,5)))%dataCD.length;
           card = dataCD[place].carta;
-          console.log(`la carta robada es: ${card}`)
+          //console.log(`la carta robada es: ${card}`)
         }while(card === 'NO' | card === dataPartida.triunfo);
         Pertenece.findOne({where:{partida: partida, jugador:jugador}})
         .then(dataPer => {
@@ -205,7 +205,7 @@ exports.robar = (req,res) => {
             where: { carta: card, partida: partida }
           })
           .then(num => {
-            console.log(`La carta ${card} ya no esta disponible`);
+            //console.log(`La carta ${card} ya no esta disponible`);
             Pertenece.update(dataPer.dataValues, {
               where: { partida: partida, jugador: jugador }
             })
@@ -239,7 +239,7 @@ exports.robar = (req,res) => {
             where: { carta: (dataPartida.triunfo), partida: partida }
           })
           .then(num => {
-            console.log(`La carta ${dataPartida.triunfo} ya no esta disponible`);
+            //console.log(`La carta ${dataPartida.triunfo} ya no esta disponible`);
             Pertenece.update(dataPer.dataValues, {
               where: { partida: partida, jugador: jugador }
             })

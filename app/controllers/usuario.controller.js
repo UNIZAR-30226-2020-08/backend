@@ -75,7 +75,7 @@ exports.ganarPartida = async (req,res) => {
     const dataUpdate = await Usuario.update({copas: puntos}, {
       where: { username: usuario }
     })
-    console.log(dataUpdate)
+    //console.log(dataUpdate)
     res.status(200).send({jugador: usuario, copas: puntos})
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error sumando copas'});
@@ -95,7 +95,7 @@ exports.perderPartida = async (req,res) => {
     const dataUpdate = await Usuario.update({copas: puntos}, {
       where: { username: usuario }
     })
-    console.log(dataUpdate)
+    //console.log(dataUpdate)
     res.status(200).send({jugador: usuario, copas: puntos})
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error restando copas'});
@@ -108,7 +108,7 @@ exports.update = (req, res) => {
   if (req.body.password !== undefined){
     req.body.password = bcrypt.hashSync(req.body.password, 8);
   }
-  console.log('req', req.body)
+  //console.log('req', req.body)
   if (!req.body.password){
     req.body.password = undefined
   }
