@@ -341,9 +341,9 @@ exports.getLastRoundPayed = async (req, res) => {
       return 0;
     })
     console.log('DATA JUGADA ORDENADA', dataJuadas)
-    const lastRound = dataJuadas.pop()
+    const lastRound = (dataJuadas.pop()).nronda
     console.log('EL POP', lastRound)
-    res.status(200).send(lastRound.nronda)
+    res.status(200).send(lastRound)
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error buscando la ultima ronda'})
   }
