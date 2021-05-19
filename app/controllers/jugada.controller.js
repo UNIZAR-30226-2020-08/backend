@@ -214,7 +214,7 @@ exports.getRoundWinner = async (req, res) => {
       // a must be equal to b
       return 0;
     })
-    //console.log(dataOrder)
+    console.log('EL ORDEN', dataOrder)
     if(dataOrder.length !== 0){
       const dataPartida = await Partida.findByPk(partida);
       //console.log('Jugadas de la partida ',dataOrder);
@@ -239,7 +239,7 @@ exports.getRoundWinner = async (req, res) => {
       }
       
       //He calculado la carta ganadora y el total de puntos de la mano
-      Pertenece.findOne({where:{partida: partida, jugador: winnerCard.jugador}})
+      await Pertenece.findOne({where:{partida: partida, jugador: winnerCard.jugador}})
       .then(dataWinner => {
         var team = '';
         if(dataWinner.equipo === 1){
@@ -255,7 +255,7 @@ exports.getRoundWinner = async (req, res) => {
           puntosMano += 10;
         }
         puntosMano += dataPartida[team];
-        Partida.update({[team]: puntosMano}, {
+        await Partida.update({[team]: puntosMano}, {
           where: { nombre: partida }
         })
         .then(num => {
@@ -271,7 +271,7 @@ exports.getRoundWinner = async (req, res) => {
         res.status(500).send({ message: err.message || "Error recuperando relcion pertenece" });
       });
     }else{
-      res.send('No hay jugadas en esta ronda');
+      res.status(200).send({mensaje: 'No hay jugadas en esta ronda'});
     } 
   })
   .catch(err => {
