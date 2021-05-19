@@ -328,7 +328,6 @@ exports.getLastRoundPayed = async (req, res) => {
   try{
     const partida = req.params.partida;
     const dataJuadas = await Jugada.findAll({ where: {partida: partida}})
-    //console.log('DATA JUGADA', dataJuadas)
     //Ordena por orden descendente de copas
     dataJuadas.sort(function (a,b) {
       if (a.nronda > b.nronda){
@@ -340,9 +339,8 @@ exports.getLastRoundPayed = async (req, res) => {
       // a must be equal to b
       return 0;
     })
-    console.log('DATA JUGADA ORDENADA', dataJuadas)
     const lastRound = (dataJuadas.pop()).nronda
-    console.log('EL POP', lastRound)
+    console.log('ULTIMA RONDA', lastRound)
     res.status(200).send({nronda: lastRound})
   }catch(err){
     return res.status(500).send({ message: err | 'se ha producido un error buscando la ultima ronda'})
