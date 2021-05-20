@@ -224,7 +224,7 @@ exports.getRoundWinner = async (req, res) => {
       //var maxPlays = (dataPartida.tipo + 1)*2;
       var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
       var puntosMano = 0;
-      dataOrder.map(o => {
+      dataOrder.map(async o => {
         const cartaJugada = await Carta.findByPk(o.carta);
         console.log('CARTA JUGADA', cartaJugada)
         //Si coinciden los palos
