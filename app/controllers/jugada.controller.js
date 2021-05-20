@@ -183,7 +183,7 @@ exports.prevRoundWinnerIA = async (req, res) => {
             winnerCard = { jugador: o.jugador, carta: o.carta }
           }
         // Si la que tiras es triunfo y la otra no
-        }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard[1] !== dataPartida.triunfo[1])){
+        }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard.carta[1] !== dataPartida.triunfo[1])){
           winnerCard = { jugador: o.jugador, carta: o.carta }
         }
       }
