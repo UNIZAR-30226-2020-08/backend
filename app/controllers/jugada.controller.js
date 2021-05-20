@@ -310,7 +310,7 @@ exports.getRoundOrder = async (req, res) => {
           }
         // Si la que tiras es triunfo y la otra no
         }else if ((o.carta[1] === dataPartida.triunfo[1]) && 
-                  (winnerCard[1] !== dataPartida.triunfo[1])){
+                  (winnerCard.carta[1] !== dataPartida.triunfo[1])){
           indexWinner = i;
         }
         i++;
