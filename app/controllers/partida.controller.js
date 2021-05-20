@@ -308,6 +308,7 @@ exports.partidaVueltas = async (req,res) => {
     const partida = req.params.partida
     const palos = ['O','C','E','B'];
     const n =  Math.floor(Math.random() * 10) + palos[Math.floor(Math.random() * 4)];
+    console.log('EL TRIUNFO DE VUELTAS: ', n)
     const dataRecuento = await Partida.update({triunfo: n}, {
       where: { nombre: partida }
     })
@@ -321,7 +322,7 @@ exports.partidaVueltas = async (req,res) => {
       const data1 = await CartaDisponible.create(carta_disponible)
       //console.log(`Se ha insertado el ${data1.carta}`);
     }
-    res.send(`Partida de vueltas ${partida} inicializada correctamente`);
+    res.status(200).send(`Partida de vueltas ${partida} inicializada correctamente`);
   }catch(err){
     return res.status(500).send({ message: err | 'Error inicalizando la partida de vueltas'});
   }
