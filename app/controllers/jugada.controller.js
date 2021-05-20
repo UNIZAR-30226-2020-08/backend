@@ -234,7 +234,7 @@ exports.getRoundWinner = async (req, res) => {
           console.log('CARTA WINNER', cartaWinner)
           //Comparo rankings
           if(cartaJugada.ranking < cartaWinner.ranking){
-            const dataJugador = await Jugada.findOne({ where: {partida: partida, carta: cartaJugada.carta } })
+            const dataJugador = await Jugada.findOne({ where: {partida: partida, carta: cartaJugada.carta, nronda:nronda} })
             console.log('EL O', dataJugador)
             winnerCard = { jugador: dataJugador.jugador, carta: cartaJugada.carta }
             console.log('LA NUEVA CARTA WINNER: ',winnerCard)
