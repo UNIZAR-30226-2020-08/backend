@@ -234,6 +234,7 @@ exports.getRoundWinner = async (req, res) => {
           console.log('CARTA WINNER', cartaWinner)
           //Comparo rankings
           if(cartaJugada.ranking < cartaWinner.ranking){
+            console.log('EL O', o)
             winnerCard = { jugador: o.jugador, carta: cartaJugada.carta }
             console.log('LA NUEVA CARTA WINNER: ',winnerCard)
           }
