@@ -180,11 +180,13 @@ exports.prevRoundWinnerIA = async (req, res) => {
           const cartaWinner = await Carta.findByPk(winnerCard.carta);
           //Comparo rankings
           if(cartaJugada.ranking < cartaWinner.ranking){
-            winnerCard = { jugador: o.jugador, carta: o.carta }
+            const dataJugador = await Jugada.findOne({ where: {partida: partida, carta: cartaJugada.carta, nronda:nronda} })
+            winnerCard = { jugador: dataJugador.jugador, carta: cartaJugada.carta }
           }
         // Si la que tiras es triunfo y la otra no
         }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard.carta[1] !== dataPartida.triunfo[1])){
-          winnerCard = { jugador: o.jugador, carta: o.carta }
+          const dataJugador = await Jugada.findOne({ where: {partida: partida, carta: cartaJugada.carta, nronda:nronda} })
+          winnerCard = { jugador: dataJugador.jugador, carta: cartaJugada.carta }
         }
       }
       console.log('EL GANADOR DE LA RONDA ANTERIOR IA: ', winnerCard)
@@ -241,7 +243,8 @@ exports.getRoundWinner = async (req, res) => {
           }
         // Si la que tiras es triunfo y la otra no
         }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard.carta[1] !== dataPartida.triunfo[1])){
-          winnerCard = { jugador: o.jugador, carta: o.carta }
+          const dataJugador = await Jugada.findOne({ where: {partida: partida, carta: cartaJugada.carta, nronda:nronda} })
+          winnerCard = { jugador: dataJugador.jugador, carta: cartaJugada.carta }
         }
         puntosMano += cartaJugada.puntuacion;
       }
