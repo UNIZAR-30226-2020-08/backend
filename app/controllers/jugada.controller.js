@@ -153,7 +153,7 @@ exports.deleteAll = (req, res) => {
 exports.prevRoundWinnerIA = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;
-  console.log('LO QUE ME PASAS A PREVROUNDIA: ',req.body)
+  console.log('LO QUE ME PASAS A PREVROUNDIA: ',req.params)
   await Jugada.findAll({ where: {partida: partida, nronda: nronda }})
   .then(async dataOrder => {
     //Ordena por orden de tirada
@@ -203,7 +203,7 @@ exports.prevRoundWinnerIA = async (req, res) => {
 exports.getRoundWinner = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;
-  console.log('EL BODY DE getRoundWinner: ', req.body)
+  console.log('EL BODY DE getRoundWinner: ', req.params)
   await Jugada.findAll({ where: {partida: partida, nronda: nronda } })
   .then(async dataOrder => {
      //Ordena por orden de tirada
