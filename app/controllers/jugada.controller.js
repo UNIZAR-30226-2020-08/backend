@@ -153,6 +153,7 @@ exports.deleteAll = (req, res) => {
 exports.prevRoundWinnerIA = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;
+  console.log('LO QUE ME PASAS A PREVROUNDIA: ',req.body)
   await Jugada.findAll({ where: {partida: partida, nronda: nronda }})
   .then(async dataOrder => {
     //Ordena por orden de tirada
@@ -186,6 +187,7 @@ exports.prevRoundWinnerIA = async (req, res) => {
           winnerCard = { jugador: o.jugador, carta: o.carta }
         }
       }
+      console.log('EL GANADOR DE LA RONDA ANTERIOR IA: ', winnerCard)
       res.status(200).send(winnerCard)
     }else{
       res.send('No hay jugadas en esta ronda');
@@ -201,6 +203,7 @@ exports.prevRoundWinnerIA = async (req, res) => {
 exports.getRoundWinner = async (req, res) => {
   const partida = req.params.partida;
   const nronda = req.params.nronda;
+  console.log('EL BODY DE getRoundWinner: ', req.body)
   await Jugada.findAll({ where: {partida: partida, nronda: nronda } })
   .then(async dataOrder => {
      //Ordena por orden de tirada
@@ -259,9 +262,8 @@ exports.getRoundWinner = async (req, res) => {
           where: { nombre: partida }
         })
         .then(num => {
-          if (num == 1) {
+              console.log('EL GANADOR DE LA RONDA: ',winnerCard)
               res.send(winnerCard);
-          }
         })
         .catch(err => {
             res.status(500).send({ message: err.message || `Error actualizando la partida: ${partida}`});
