@@ -83,7 +83,7 @@ exports.create = async(req, res) => {
 
 exports.matchRound = async (req,res) => {
   try {
-    console.log('EL REQ', req)
+    console.log('EL REQ', req.params)
     const torneo = req.params.torneo
     const rondaIni = req.params.ronda
     const rondaPrev = (rondaIni - 1).toString() + '.'
@@ -107,7 +107,7 @@ exports.matchRound = async (req,res) => {
     if (prevRound.length === 0){
       //Implica que es la primera ronda del torneo
       const dataPart = await Participantes.findAndCountAll({ where: { torneo: torneo } }) 
-      //console.log(dataPart.count)
+      console.log('LOS PARTICIPANTES: ',dataPart)
       if (dataPart.count < maxEnTorneo){
         res.status(500).send('El torneo no esta completo, NO SE PUEDEN EMPEZAR LOS EMPAREJAMIENTOS' )
       }else{
@@ -123,6 +123,7 @@ exports.matchRound = async (req,res) => {
               res.status(500).send("Partida dobles llena");
             }else{
               var player = array.pop();
+              console.log('EL PLAYER: ', player)
               const dataR = await Cuadro.findOne({
                 where: { id_torneo: torneo, id_partida: a.id_partida }
                 })
@@ -140,8 +141,8 @@ exports.matchRound = async (req,res) => {
                 c5: req.body.c5 ? req.body.c5 : 'NO',
                 c6: req.body.c6 ? req.body.c6 : 'NO',  
               }
+              console.log('EL DATA A METER A BASE: ', data)
               const dataPer = await Pertenece.create(data)
-              console.log('EMPAREJAMIENTO USUARIO ', dataPer)
             }
           }
           //Se inicializa la baraja de la partida
