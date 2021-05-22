@@ -83,6 +83,7 @@ exports.create = async(req, res) => {
 
 exports.matchRound = async (req,res) => {
   try {
+    console.log('EL REQ', req)
     const torneo = req.params.torneo
     const rondaIni = req.params.ronda
     const rondaPrev = (rondaIni - 1).toString() + '.'
@@ -91,16 +92,18 @@ exports.matchRound = async (req,res) => {
     const dataTorneo = await Torneo.findByPk(torneo)
     var maxEnTorneo = (dataTorneo.tipo + 1)*dataTorneo.nparticipantes
     var maxEnPartida = (dataTorneo.tipo + 1)*2
-
+    console.log('DATA TORNEO', dataTorneo)
     const dataRonda = await Cuadro.findAll({
       where: {
         id_torneo:{ [Op.eq]: `${dataTorneo.nombre}` },
         fase: { [Op.like]: `%${ronda}%` }}
       })
+      console.log('DATA RONDA', dataRonda)
     const prevRound = await Cuadro.findAll({
                                   where: {id_torneo : torneo, 
                                   fase: { [Op.like]: `%${rondaPrev}%` }}
                                 })
+    console.log('PREV ROUND', prevRound)
     if (prevRound.length === 0){
       //Implica que es la primera ronda del torneo
       const dataPart = await Participantes.findAndCountAll({ where: { torneo: torneo } }) 
@@ -138,6 +141,7 @@ exports.matchRound = async (req,res) => {
                 c6: req.body.c6 ? req.body.c6 : 'NO',  
               }
               const dataPer = await Pertenece.create(data)
+              console.log('EMPAREJAMIENTO USUARIO ', dataPer)
             }
           }
           //Se inicializa la baraja de la partida
