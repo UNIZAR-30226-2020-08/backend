@@ -11,7 +11,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = async(req, res) => {
   const torneo = {
-    nombre: req.body.nombre ? req.body.nombre : Math.random().toString(36).substring(2,7),
+    nombre: req.body.nombre ? req.body.nombre.toLowerCase() : Math.random().toString(36).substring(2,7),
     tipo: req.body.tipo,
     nparticipantes: req.body.nparticipantes,
     contrasenya: req.body.contrasenya ? req.body.contrasenya : 'NO' 
