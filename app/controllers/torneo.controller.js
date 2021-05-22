@@ -182,6 +182,7 @@ exports.matchRound = async (req,res) => {
           // a must be equal to b
           return 0;
         })
+        console.log('LOS GANADORES: ', winners)
         for (a of dataRonda){
           for (var i = 0; i < maxEnPartida; i++){
             const dataCount = await Pertenece.findAll({where: { partida: a.id_partida}})
@@ -218,7 +219,7 @@ exports.matchRound = async (req,res) => {
                 data.equipo = 1
                 if(i === 2){data.orden = 2}else{data.orden = 4}
               }
-              //console.log(data)
+              console.log('EL DATA 2 INSERT: ', data)
               const dataPer = await Pertenece.create(data)
               //console.log(dataPer)
             }
