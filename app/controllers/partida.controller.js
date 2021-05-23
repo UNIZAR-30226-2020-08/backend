@@ -383,14 +383,20 @@ function devolverCantes(data,data1){
           if (cante[1] === triunfo[1]){
             if (data[triunfo[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las 40 en ${triunfo[1]}`);
-              cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
+              var existe = cantes.find((c) => (c.partida === data.nombre) && (c.palo === (triunfo[1].toLowerCase() + '_20')))
+              if(!existe){
+                cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
+              }
             }else{
               console.log(`Ya se han cantado las 40 en ${triunfo[1]}`);
             }
           }else{
             if (data[cante[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las veinte en ${cante[1]}`);
-              cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
+              var existe = cantes.find((c) => (c.partida === data.nombre) && (c.palo === (cante[1].toLowerCase() + '_20')))
+              if(!existe){
+                cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
+              }
             }else{
               console.log(`Ya se han cantado las 20 en ${cante[1]}`);
             }
@@ -407,14 +413,20 @@ function devolverCantes(data,data1){
           if (cante[1] === triunfo[1]){
             if (data[triunfo[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las 40 en ${triunfo[1]}`);
-              cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
+              var existe = cantes.find((c) => (c.partida === data.nombre) && (c.palo === (triunfo[1].toLowerCase() + '_20')))
+              if(!existe){
+                cantes.push({partida: data.nombre, palo: triunfo[1].toLowerCase() + '_20', usuario: data1.jugador});
+              }
             }else{
               console.log(`Ya se han cantado las 40 en ${triunfo[1]}`);
             }
           }else{
             if (data[cante[1].toLowerCase() + '_20'] === 'NO'){
               console.log(`Has cantado las veinte en ${cante[1]}`);
-              cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
+              var existe = cantes.find((c) => (c.partida === data.nombre) && (c.palo === (cante[1].toLowerCase() + '_20')))
+              if(!existe){
+                cantes.push({partida: data.nombre, palo: cante[1].toLowerCase() + '_20', usuario: data1.jugador});
+              }
             }else{
               console.log(`Ya se han cantado las 20 en ${cante[1]}`);
             }
