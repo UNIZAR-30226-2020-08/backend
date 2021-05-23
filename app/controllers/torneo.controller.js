@@ -311,8 +311,7 @@ exports.findAll = async (req, res) => {
   const nEquipos = req.params.nEquipos;
   try {
     const dataTorneos = await Torneo.findAll({ 
-      where : { contrasenya: 'NO',
-                tipo: tipo, 
+      where : { tipo: tipo, 
                 nparticipantes: nEquipos 
               }})
     const torneosDisponibles = await devolverTorneos(dataTorneos,tipo,nEquipos)
