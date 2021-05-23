@@ -1,5 +1,6 @@
 const e = require("express");
 const db = require("../models");
+var bcrypt = require("bcryptjs");
 const Torneo = db.torneo;
 const Participantes = db.participantes_torneo;
 const Cuadro = db.cuadro_torneo;
