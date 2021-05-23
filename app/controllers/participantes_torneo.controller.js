@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
           res.send(dataParticipante);
         }
       }else{
-        var passwordIsValid = bcrypt.compareSync(passwd,dataTorneo.contrasenya);
+        var passwordIsValid = bcrypt.compareSync(req.body.contrasenya,dataTorneo.contrasenya);
         if (passwordIsValid === false) {
           return res.status(401).send({message: "Contrasenya incorrecta"});
         }else{
