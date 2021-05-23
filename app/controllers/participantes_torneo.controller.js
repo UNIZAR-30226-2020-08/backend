@@ -6,6 +6,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
   try {
+    console.log('EL BODY: ', req.body)
     const dataTorneo = await Torneo.findByPk(req.body.torneo)
     const dataPlayer = await Usuario.findByPk(req.body.jugador)
     if (dataTorneo === null | dataPlayer === null){
@@ -22,6 +23,7 @@ exports.create = async (req, res) => {
             jugador: req.body.jugador,
           }
           const dataParticipante = await Participantes.create(participantes_torneo)
+          console.log('EL DATA PARTICIPANTE SIN JOIN: ',dataParticipante)
           dataParticipante['message'] = 'JOIN'
           console.log('EL DATA PARTICIPANTE: ',dataParticipante)
           res.send(dataParticipante);
@@ -38,6 +40,7 @@ exports.create = async (req, res) => {
             jugador: req.body.jugador,
           }
           const dataParticipante = await Participantes.create(participantes_torneo)
+          console.log('EL DATA PARTICIPANTE SIN JOIN: ',dataParticipante)
           dataParticipante['message'] = 'JOIN'
           console.log('EL DATA PARTICIPANTE PRIVADO: ',dataParticipante)
           res.send(dataParticipante);
