@@ -24,9 +24,9 @@ exports.create = async (req, res) => {
           }
           const dataParticipante = await Participantes.create(participantes_torneo)
           console.log('EL DATA PARTICIPANTE SIN JOIN: ',dataParticipante)
-          dataParticipante['message'] = 'JOIN'
+          //dataParticipante['message'] = 'JOIN'
           console.log('EL DATA PARTICIPANTE: ',dataParticipante)
-          res.send(dataParticipante);
+          res.send({dataParticipante, message:'JOIN'});
         }
       }else{
         console.log('EL DATA DE LA CONTRASENYA: ',dataTorneo)
@@ -41,9 +41,9 @@ exports.create = async (req, res) => {
           }
           const dataParticipante = await Participantes.create(participantes_torneo)
           console.log('EL DATA PARTICIPANTE SIN JOIN: ',dataParticipante)
-          dataParticipante['message'] = 'JOIN'
+          //dataParticipante['message'] = 'JOIN'
           console.log('EL DATA PARTICIPANTE PRIVADO: ',dataParticipante)
-          res.send(dataParticipante);
+          res.send({dataParticipante, message:'JOIN'});
         }
       } 
     }
