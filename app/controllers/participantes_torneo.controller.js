@@ -33,7 +33,7 @@ exports.create = async (req, res) => {
         //var passwordIsValid = bcrypt.compareSync(req.body.contrasenya,dataTorneo.contrasenya);
         //console.log('EL PASSWORD IS: ', passwordIsValid)
         if (req.body.contrasenya !== dataTorneo.contrasenya) {
-          return res.status(401).send({message: "Contrasenya incorrecta"});
+          return res.status(200).send({message: "Contrasenya incorrecta"});
         }else{
           const participantes_torneo = {
             torneo: req.body.torneo,
