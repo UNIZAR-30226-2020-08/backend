@@ -15,7 +15,7 @@ exports.create = async(req, res) => {
     nombre: req.body.nombre ? req.body.nombre.toLowerCase() : Math.random().toString(36).substring(2,7),
     tipo: req.body.tipo,
     nparticipantes: req.body.nparticipantes,
-    contrasenya: req.body.contrasenya ? bcrypt.hashSync(req.body.contrasenya, 8) : 'NO' 
+    contrasenya: req.body.contrasenya ? req.body.contrasenya : 'NO' 
   };
   await Torneo.create(torneo)
   .then(async dataTorneo => {
