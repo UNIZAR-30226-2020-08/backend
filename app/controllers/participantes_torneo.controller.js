@@ -23,10 +23,13 @@ exports.create = async (req, res) => {
           }
           const dataParticipante = await Participantes.create(participantes_torneo)
           dataParticipante['message'] = 'JOIN'
+          console.log('EL DATA PARTICIPANTE: ',dataParticipante)
           res.send(dataParticipante);
         }
       }else{
+        console.log('EL DATA DE LA CONTRASENYA: ',dataTorneo)
         var passwordIsValid = bcrypt.compareSync(req.body.contrasenya,dataTorneo.contrasenya);
+        console.log('EL PASSWORD IS: ', passwordIsValid)
         if (passwordIsValid === false) {
           return res.status(401).send({message: "Contrasenya incorrecta"});
         }else{
@@ -36,6 +39,7 @@ exports.create = async (req, res) => {
           }
           const dataParticipante = await Participantes.create(participantes_torneo)
           dataParticipante['message'] = 'JOIN'
+          console.log('EL DATA PARTICIPANTE PRIVADO: ',dataParticipante)
           res.send(dataParticipante);
         }
       } 
