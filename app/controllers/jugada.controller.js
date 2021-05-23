@@ -226,11 +226,12 @@ exports.getRoundWinner = async (req, res) => {
       //var maxPlays = (dataPartida.tipo + 1)*2;
       var winnerCard = {jugador: dataOrder[0].jugador,carta: dataOrder[0].carta};
       var puntosMano = 0;
-      for await (o of dataOrder) {
-        const cartaJugada = await Carta.findByPk(o.carta);
+      var i = 0
+      for (i = 0; i < dataOrder.length; i++) {
+        const cartaJugada = await Carta.findByPk(dataOrder[i].carta);
         console.log('CARTA JUGADA', cartaJugada)
         //Si coinciden los palos
-        if(o.carta[1] === winnerCard.carta[1]){
+        if(dataOrder[i].carta[1] === winnerCard.carta[1]){
           //Busco rankings
           const cartaWinner = await Carta.findByPk(winnerCard.carta);
           console.log('CARTA WINNER', cartaWinner)
@@ -242,7 +243,7 @@ exports.getRoundWinner = async (req, res) => {
             console.log('LA NUEVA CARTA WINNER: ',winnerCard)
           }
         // Si la que tiras es triunfo y la otra no
-        }else if ((o.carta[1] === dataPartida.triunfo[1]) && (winnerCard.carta[1] !== dataPartida.triunfo[1])){
+        }else if ((dataOrder[i].carta[1] === dataPartida.triunfo[1]) && (winnerCard.carta[1] !== dataPartida.triunfo[1])){
           const dataJugador = await Jugada.findOne({ where: {partida: partida, carta: cartaJugada.carta, nronda:nronda} })
           winnerCard = { jugador: dataJugador.jugador, carta: cartaJugada.carta }
         }
