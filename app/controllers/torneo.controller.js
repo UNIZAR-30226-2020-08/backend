@@ -14,7 +14,7 @@ exports.create = async(req, res) => {
     nombre: req.body.nombre ? req.body.nombre.toLowerCase() : Math.random().toString(36).substring(2,7),
     tipo: req.body.tipo,
     nparticipantes: req.body.nparticipantes,
-    contrasenya: req.body.contrasenya ? req.body.contrasenya : 'NO' 
+    contrasenya: req.body.contrasenya ? bcrypt.hashSync(req.body.contrasenya, 8) : 'NO' 
   };
   await Torneo.create(torneo)
   .then(async dataTorneo => {
@@ -338,7 +338,7 @@ async function devolverTorneos(dataTorneos,tipo,nParticipantes) {
     const data = await Participantes.findAndCountAll({ where: { torneo: a.nombre } })
     if (data.count < maxPermitidoPartida){
       torneosDisponibles.push( { nombre: a.nombre, 
-                                 jugadores_online: data.count })
+                                 jugadores_online: data.count, contrasenya: a.contrasenya })
     }
   }
   //console.log(torneosDisponibles);

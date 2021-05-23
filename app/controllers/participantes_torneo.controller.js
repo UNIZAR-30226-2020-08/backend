@@ -11,18 +11,34 @@ exports.create = async (req, res) => {
     if (dataTorneo === null | dataPlayer === null){
       res.status(500).send('El torneo o usuario no existen')
     }else{
-      var maxPermitidoPartida = (dataTorneo.tipo + 1)*dataTorneo.nparticipantes
-      const dataP = await Participantes.findAndCountAll({where: { torneo: req.body.torneo }})
-      if (dataP.count >= maxPermitidoPartida){
-        res.status(500).send('El torneo esta completo')
-      }else{
-        const participantes_torneo = {
-          torneo: req.body.torneo,
-          jugador: req.body.jugador,
+      if (dataTorneo.contrasenya === 'NO'){
+        var maxPermitidoPartida = (dataTorneo.tipo + 1)*dataTorneo.nparticipantes
+        const dataP = await Participantes.findAndCountAll({where: { torneo: req.body.torneo }})
+        if (dataP.count >= maxPermitidoPartida){
+          res.status(500).send('El torneo esta completo')
+        }else{
+          const participantes_torneo = {
+            torneo: req.body.torneo,
+            jugador: req.body.jugador,
+          }
+          const dataParticipante = await Participantes.create(participantes_torneo)
+          dataParticipante['message'] = 'JOIN'
+          res.send(dataParticipante);
         }
-        const dataParticipante = await Participantes.create(participantes_torneo)
-        res.send(dataParticipante);
-      }
+      }else{
+        var passwordIsValid = bcrypt.compareSync(passwd,dataTorneo.contrasenya);
+        if (passwordIsValid === false) {
+          return res.status(401).send({message: "Contrasenya incorrecta"});
+        }else{
+          const participantes_torneo = {
+            torneo: req.body.torneo,
+            jugador: req.body.jugador,
+          }
+          const dataParticipante = await Participantes.create(participantes_torneo)
+          dataParticipante['message'] = 'JOIN'
+          res.send(dataParticipante);
+        }
+      } 
     }
   }catch(err){
     return res.status(500).send({ message: err | 
